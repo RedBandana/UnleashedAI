@@ -4,10 +4,10 @@
   border-radius: 20px;
   box-shadow: 0 0 10px darkgray;
   z-index: 1;
-  max-width: 400px;
+  max-width: 300px;
   position: absolute;
-  right: 5%;
-  bottom: 10%;
+  right: 20px;
+  bottom: 80px;
 }
 
 .settings-dialog label {
@@ -24,6 +24,10 @@
   color: #424242;
 }
 
+.settings-cancel-button {
+  display: none;
+}
+
 .settings-dialog button {
   background-color: #4caf50;
   color: #fff;
@@ -32,7 +36,6 @@
   font-size: 1rem;
   border: none;
   cursor: pointer;
-  margin-right: 10px;
   width: 50px;
 }
 

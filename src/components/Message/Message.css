@@ -24,9 +24,10 @@
 .chat-message-icons-container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   padding: 10px;
   cursor: pointer;
+  margin-bottom: 5px;
 }
 
 .chat-message-timestamp {
@@ -38,17 +39,17 @@
 
 .chat-message-options-icon {
   cursor: pointer;
-  color: #ccc;
+  color: #999;
 }
 
 .chat-message-options-container {
   position: absolute;
   right: 0px;
-  top: 70%;
+  bottom: 0px;
   background-color: #fff;
   box-shadow: 0 0 5px darkgray;
   z-index: 1;
-  padding: 8px;
+  padding: 3px 8px;
   width: 50px;
   border-radius: 20px;
   display: inline-flex;

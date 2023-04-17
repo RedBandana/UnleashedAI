@@ -59,7 +59,7 @@ const Settings = ({ settings, onSave, onClose }) => {
                                     name="temperature"
                                     step="0.1"
                                     min="0.1"
-                                    max="1.0"
+                                    max="2.0"
                                     value={formSettings.temperature}
                                     onChange={handleInputChange}
                                 />

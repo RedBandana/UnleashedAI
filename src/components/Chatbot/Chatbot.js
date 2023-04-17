@@ -3,13 +3,14 @@ import ChatHistory from './ChatHistory';
 import Settings from '../Settings/Settings';
 import './Chatbot.css';
 import { sendChatCompletion, trySendRequest } from '../../api/openai';
-import { formatText, resizeElement } from '../../utils/Utils'
+import { resizeElement } from '../../utils/Utils'
 
 function Chatbot() {
     const TOKEN_SAFE_LIMIT = 3250;
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const chatbotBodyRef = useRef(null);
+    const settingsRef = useRef(null);
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [formSettings, setFormSettings] = useState({
         model: 'gpt-3.5-turbo',
@@ -40,9 +41,9 @@ function Chatbot() {
         const newMessage = { texts: [inputValue], isUser: true, timestamp: new Date().getTime() };
         setMessages((prevState) => [...prevState, newMessage]);
         setInputValue('');
-        
+
         let requestMessages = getRequestMessages([...messages, newMessage]);
-        const requestMaxTokens = formSettings.maxTokens == 0 ? null : formSettings.maxTokens;
+        const requestMaxTokens = formSettings.maxTokens === 0 ? null : formSettings.maxTokens;
         const requestSettings = {
             ...formSettings, history: requestMessages, maxTokens: requestMaxTokens
         }
@@ -50,7 +51,7 @@ function Chatbot() {
         const response = await trySendRequest(sendChatCompletion, requestSettings);
         setMessages((prevState) => [...prevState, { texts: response, isUser: false, timestamp: new Date().getTime() }]);
     };
-    
+
     const handleDelete = (messageToDelete) => {
         setMessages(messages.filter(message => message !== messageToDelete));
     };
@@ -83,6 +84,13 @@ function Chatbot() {
         return totalWords;
     }
 
+    const handleClickOutside = (event) => {
+        if (settingsRef.current && !settingsRef.current.contains(event.target) &&
+            event.target.className !== "chatbot-settings-button" && event.target.className !== "fas fa-cog") {
+            setSettingsOpen(false);
+        }
+    };
+
     useEffect(() => {
         resizeElement("textarea-user-input");
 
@@ -91,6 +99,12 @@ function Chatbot() {
             top: chatbotBodyRef.current.scrollHeight,
             behavior: "smooth",
         });
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
     }, [messages]);
 
     return (
@@ -102,11 +116,13 @@ function Chatbot() {
                 <ChatHistory messages={messages} onDelete={handleDelete} />
             </div>
             {settingsOpen && (
-                <Settings
-                    settings={formSettings}
-                    onSave={handleSettingsSave}
-                    onClose={handleSettingsClose}
-                />
+                <div className="chatbot-settings-container" ref={settingsRef}>
+                    <Settings
+                        settings={formSettings}
+                        onSave={handleSettingsSave}
+                        onClose={handleSettingsClose}
+                    />
+                </div>
             )}
             <div className="chatbot-footer">
                 <form onSubmit={handleFormSubmit}>
@@ -122,7 +138,7 @@ function Chatbot() {
                             }
                         }}
                     />
-                    <button type="submit">
+                    <button type="submit" className='chatbot-send-button'>
                         <i className="fas fa-paper-plane"></i>
                     </button>
                     <button className="chatbot-settings-button" onClick={(event) => {

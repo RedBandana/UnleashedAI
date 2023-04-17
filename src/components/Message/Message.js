@@ -20,7 +20,8 @@ const Message = ({ message, onDelete }) => {
   };
 
   const handleClickOutside = (event) => {
-    if (optionsRef.current && !optionsRef.current.contains(event.target)) {
+    if (optionsRef.current && !optionsRef.current.contains(event.target) 
+        && event.target.className !== "chat-message-options-container") {
       setShowOptions(false);
     }
   };
@@ -77,7 +78,7 @@ const Message = ({ message, onDelete }) => {
       </div>
 
       {showOptions && (
-        <div className="chat-message-options-container">
+        <div className="chat-message-options-container" ref={optionsRef}>
           <button onClick={handleDeleteClick}>
             <i className="fa fa-trash"></i>
           </button>
@@ -92,7 +93,7 @@ Message.propTypes = {
   message: PropTypes.shape({
     texts: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
     isUser: PropTypes.bool.isRequired,
-    timestamp: PropTypes.string.isRequired,
+    timestamp: PropTypes.number.isRequired,
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
 };
