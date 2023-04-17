@@ -1,0 +1,89 @@
+.settings-dialog {
+  background: #fcfcfc;
+  padding: 10px;
+  border-radius: 20px;
+  box-shadow: 0 0 10px darkgray;
+  z-index: 1;
+  max-width: 400px;
+  position: absolute;
+  right: 5%;
+  bottom: 10%;
+}
+
+.settings-dialog label {
+  margin-right: 10px;
+  color: #424242;
+}
+
+.settings-dialog input {
+  padding: 5px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #424242;
+}
+
+.settings-dialog button {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+  width: 50px;
+}
+
+.settings-buttons {
+  margin-top: 20px;
+}
+
+.setting-inputs {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  max-height: 295px;
+  padding-right: 10px;
+  padding-top: 5px;
+}
+
+.setting-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.setting-item label {
+  margin-right: 10px;
+  flex-basis: 100px;
+}
+
+.input-container {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.input-container input,
+.input-container textarea {
+  width: 100%;
+}
+
+.input-container textarea {
+  width: 100%;
+  resize: vertical;
+  padding: 5px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  max-height: 140px;
+  color: #424242;
+}
+
+.settings-documentation {
+    float: right;
+    margin: 5px;
+}

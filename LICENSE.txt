@@ -1,0 +1,12 @@
+All Rights Reserved. This software and its source code are the property of Diamond Soul 
+and are protected by intellectual property laws. 
+
+No part of the software or its source code may be reproduced, modified, distributed, or used in any form 
+or by any means without the express written permission of Diamond Soul. This includes, 
+but is not limited to, use in commercial products, services, or applications.
+
+Any attempt to reproduce, modify, distribute, or use this software or its source code without permission 
+is a violation of intellectual property laws and will be prosecuted to the fullest extent of the law.
+
+To request permission to use this software or its source code, please contact Diamond Soul 
+at diamondsoul.contact@proton.me.

@@ -1,0 +1,77 @@
+.chat-message {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.chat-message-text {
+  white-space: break-spaces;
+}
+
+.chat-message-user .chat-message-text {
+  background-color: #0084ff;
+  color: white;
+  padding: 10px 16px;
+}
+
+.chat-message-bot .chat-message-text {
+  background-color: #f3f3f3;
+  color: #424242;
+  padding: 10px 16px;
+}
+
+.chat-message-icons-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.chat-message-timestamp {
+  font-size: 12px;
+  font-weight: 400;
+  color: #999;
+  margin-right: 15px;
+}
+
+.chat-message-options-icon {
+  cursor: pointer;
+  color: #ccc;
+}
+
+.chat-message-options-container {
+  position: absolute;
+  right: -50px;
+  top: 80%;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  padding: 8px;
+  width: 50px;
+  border-radius: 20px;
+  display: inline-flex;
+  width: 55px;
+}
+
+.chat-message-options-container button {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #999;
+}
+
+.chat-message-options-container button i {
+  margin-right: 4px;
+  font-size: 16px;
+}
+
+.chat-message-container {
+  display: flex;
+  justify-content: center;
+}
