@@ -6,6 +6,7 @@ import { sendChatCompletion, trySendRequest } from '../../api/openai';
 import { formatText, resizeElement } from '../../utils/Utils'
 
 function Chatbot() {
+    const TOKEN_SAFE_LIMIT = 3250;
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const chatbotBodyRef = useRef(null);
@@ -24,10 +25,6 @@ function Chatbot() {
         user: ''
     });
 
-    const handleDelete = (messageToDelete) => {
-        setMessages(messages.filter(message => message !== messageToDelete));
-    };
-
     const handleInputChange = (event) => {
         setInputValue(event.target.value);
         resizeElement("textarea-user-input");
@@ -43,15 +40,20 @@ function Chatbot() {
         const newMessage = { text: inputValue, isUser: true, timestamp: new Date().getTime() };
         setMessages((prevState) => [...prevState, newMessage]);
         setInputValue('');
-
+        
+        let requestMessages = getRequestMessages([...messages, newMessage]);
         const requestMaxTokens = formSettings.maxTokens == 0 ? null : formSettings.maxTokens;
         const requestSettings = {
-            ...formSettings, history: [...messages, newMessage], maxTokens: requestMaxTokens
+            ...formSettings, history: requestMessages, maxTokens: requestMaxTokens
         }
 
         const response = await trySendRequest(sendChatCompletion, requestSettings);
         const formatedText = formatText(response);
         setMessages((prevState) => [...prevState, { text: formatedText, isUser: false, timestamp: new Date().getTime() }]);
+    };
+    
+    const handleDelete = (messageToDelete) => {
+        setMessages(messages.filter(message => message !== messageToDelete));
     };
 
     const handleSettingsButtonClick = () => {
@@ -66,6 +68,21 @@ function Chatbot() {
     const handleSettingsClose = () => {
         setSettingsOpen(false);
     };
+
+    const getRequestMessages = (messages) => {
+        while (countWordsInMessages(messages) > TOKEN_SAFE_LIMIT) {
+            messages.splice(0, 1);
+        }
+        return messages;
+    }
+
+    const countWordsInMessages = (messages) => {
+        let totalWords = 0;
+        for (let message of messages) {
+            totalWords += message.text.split(' ').length;
+        }
+        return totalWords;
+    }
 
     useEffect(() => {
         resizeElement("textarea-user-input");

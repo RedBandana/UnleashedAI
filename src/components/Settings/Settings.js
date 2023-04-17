@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import "./Settings.css";
+import { parseToRightType } from '../../utils/Utils'
+
 
 const Settings = ({ settings, onSave, onClose }) => {
     const [formSettings, setFormSettings] = useState(settings);
@@ -12,9 +14,11 @@ const Settings = ({ settings, onSave, onClose }) => {
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
+        const finalValue = parseToRightType(formSettings, name, value);
+
         setFormSettings((prevState) => ({
             ...prevState,
-            [name]: value,
+            [name]: finalValue,
         }));
     };
 
