@@ -21,7 +21,7 @@ function ChatHistory(props) {
 ChatHistory.propTypes = {
   messages: PropTypes.arrayOf(
     PropTypes.shape({
-      text: PropTypes.string.isRequired,
+      texts: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
       isUser: PropTypes.bool.isRequired,
     })
   ).isRequired,

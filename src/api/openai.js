@@ -15,7 +15,9 @@ async function sendChatCompletion(settings) {
   
   settings.history.forEach(message => {
     const role = message.isUser ? "user" : "assistant";
-    apiMessages.push({role: role, content: message.text})
+    message.texts.forEach(text => {
+      apiMessages.push({role: role, content: text})
+    })
   });
 
   const completion = await openai.createChatCompletion({
@@ -33,8 +35,12 @@ async function sendChatCompletion(settings) {
     user: settings.user,
   });
 
-  let response = completion.data.choices[0].message.content;
-  return response;
+  let responses = [];
+  completion.data.choices.forEach(choice => {
+    responses.push(choice.message.content);
+  });
+
+  return responses;
 }
 
 async function sendCompletion(settings) {
@@ -90,14 +96,14 @@ async function trySendRequest(callback, param1) {
     console.log(response);
 
     if (response == null)
-      response = "Error";
+      response = ["Error"];
 
     return response;
 
   } catch (error) {
     handleError(error);
 
-    return "Error";
+    return ["Error"];
   }
 }
 

@@ -37,7 +37,7 @@ function Chatbot() {
             return;
         }
 
-        const newMessage = { text: inputValue, isUser: true, timestamp: new Date().getTime() };
+        const newMessage = { texts: [inputValue], isUser: true, timestamp: new Date().getTime() };
         setMessages((prevState) => [...prevState, newMessage]);
         setInputValue('');
         
@@ -48,8 +48,7 @@ function Chatbot() {
         }
 
         const response = await trySendRequest(sendChatCompletion, requestSettings);
-        const formatedText = formatText(response);
-        setMessages((prevState) => [...prevState, { text: formatedText, isUser: false, timestamp: new Date().getTime() }]);
+        setMessages((prevState) => [...prevState, { texts: response, isUser: false, timestamp: new Date().getTime() }]);
     };
     
     const handleDelete = (messageToDelete) => {
@@ -79,7 +78,7 @@ function Chatbot() {
     const countWordsInMessages = (messages) => {
         let totalWords = 0;
         for (let message of messages) {
-            totalWords += message.text.split(' ').length;
+            totalWords += message.texts.join('').split(' ').length;
         }
         return totalWords;
     }

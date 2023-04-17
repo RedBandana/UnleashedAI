@@ -88,15 +88,6 @@ body {
     line-height: 1.5;
 }
 
-.chat-message-text-user {
-    background-color: #e8e8e8;
-}
-
-.chat-message-text-bot {
-    background-color: #8b00ff;
-    color: #ffffff;
-}
-
 .chat-message-timestamp {
     font-size: 12px;
     color: #999999;

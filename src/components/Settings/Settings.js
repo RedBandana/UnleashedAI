@@ -80,7 +80,7 @@ const Settings = ({ settings, onSave, onClose }) => {
                             </div>
                         </div>
                         <div className="setting-item">
-                            <label htmlFor="quantity">Quantity*</label>
+                            <label htmlFor="quantity">Quantity</label>
                             <div className="input-container">
                                 <input
                                     type="number"

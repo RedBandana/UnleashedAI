@@ -5,20 +5,20 @@
   position: relative;
 }
 
-.chat-message-text {
+.chat-message-bubble {
   white-space: break-spaces;
+  border-radius: 20px;
+  padding: 2px;
 }
 
-.chat-message-user .chat-message-text {
+.chat-message-user .chat-message-bubble {
   background-color: #0084ff;
   color: white;
-  padding: 10px 16px;
 }
 
-.chat-message-bot .chat-message-text {
+.chat-message-bot .chat-message-bubble {
   background-color: #f3f3f3;
   color: #424242;
-  padding: 10px 16px;
 }
 
 .chat-message-icons-container {
@@ -74,4 +74,57 @@
 .chat-message-container {
   display: flex;
   justify-content: center;
+}
+
+.chat-message-controls-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+
+.chat-message-user .chat-message-dot-active {
+  background-color: #20245c;
+}
+
+.chat-message-user .chat-message-control .fa {
+  color: #3a3f79;
+}
+
+.chat-message-control {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: 2px;
+  color: #555;
+}
+
+.chat-message-control:disabled {
+  cursor: default;
+  color: #bbb;
+}
+
+.chat-message-dots-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 8px;
+}
+
+.chat-message-dot {
+  background-color: #bbb;
+  border-radius: 50%;
+  width: 5px;
+  height: 5px;
+  margin: 0 2.5px;
+}
+
+.chat-message-dot-active {
+  background-color: #555;
+}
+
+.chat-message-controls-container .fa-chevron-left,
+.chat-message-controls-container .fa-chevron-right {
+  font-size: 0.8rem;
 }

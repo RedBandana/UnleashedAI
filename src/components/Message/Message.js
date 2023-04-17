@@ -5,6 +5,7 @@ import "./Message.css";
 
 const Message = ({ message, onDelete }) => {
   const [showOptions, setShowOptions] = useState(false);
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const messageClass = message.isUser ? "chat-message-user" : "chat-message-bot";
   const textClass = message.isUser ? "chat-message-text-user" : "chat-message-text-bot";
   const timestamp = moment(message.timestamp).format("h:mm A");
@@ -24,6 +25,14 @@ const Message = ({ message, onDelete }) => {
     }
   };
 
+  const handlePrevClick = () => {
+    setCurrentTextIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+  };
+
+  const handleNextClick = () => {
+    setCurrentTextIndex((prevIndex) => Math.min(prevIndex + 1, message.texts.length - 1));
+  };
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
 
@@ -35,28 +44,57 @@ const Message = ({ message, onDelete }) => {
   return (
     <div className={`chat-message ${messageClass}`}>
       <div className="chat-message-container">
-        <div className={`chat-message-text ${textClass}`}>
-          {message.text}
+        <div className={`chat-message-bubble ${textClass}`}>
+          <div className="chat-message-text">
+            {message.texts[currentTextIndex]}
+          </div>
+          {message.texts.length > 1 && (
+            <div className={`chat-message-controls-container ${textClass}`}>
+              <button className="chat-message-control" onClick={handlePrevClick} disabled={currentTextIndex === 0}>
+                <i className="fa fa-chevron-left"></i>
+              </button>
+              <div className="chat-message-dots-container">
+                {message.texts.map((text, index) => (
+                  <div
+                    key={index}
+                    className={`chat-message-dot ${index === currentTextIndex ? "chat-message-dot-active" : ""}`}
+                  ></div>
+                ))}
+              </div>
+              <button
+                className="chat-message-control"
+                onClick={handleNextClick}
+                disabled={currentTextIndex === message.texts.length - 1}
+              >
+                <i className="fa fa-chevron-right"></i>
+              </button>
+            </div>
+          )}
         </div>
         <div className="chat-message-icons-container" onClick={handleOptionsClick} ref={optionsRef}>
           <i className="fa fa-ellipsis-v chat-message-options-icon"></i>
         </div>
       </div>
-      
+
       {showOptions && (
-          <div className="chat-message-options-container">
-            <button onClick={handleDeleteClick}>
-              <i className="fa fa-trash"></i>
-            </button>
-            <div className="chat-message-timestamp">{timestamp}</div>
-          </div>
-        )}
+        <div className="chat-message-options-container">
+          <button onClick={handleDeleteClick}>
+            <i className="fa fa-trash"></i>
+          </button>
+          <div className="chat-message-timestamp">{timestamp}</div>
+        </div>
+      )}
     </div>
   );
 };
 
 Message.propTypes = {
-  message: PropTypes.object.isRequired,
+  message: PropTypes.shape({
+    texts: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+    isUser: PropTypes.bool.isRequired,
+    timestamp: PropTypes.string.isRequired,
+  }).isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default Message;
