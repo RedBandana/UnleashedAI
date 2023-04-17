@@ -46,7 +46,7 @@
   right: 0px;
   top: 70%;
   background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 5px darkgray;
   z-index: 1;
   padding: 8px;
   width: 50px;
