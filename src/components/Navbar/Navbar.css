@@ -1,0 +1,39 @@
+.navbar {
+  background-color: #ffffff;
+  padding: 10px;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  transition: left 0.5s ease-in-out;
+  width: 100%;
+}
+
+.navbar[data-sidebar-is-open="true"] {
+  left: 300px;
+}
+
+.navbar-left {
+  float: left;
+}
+
+.navbar-right {
+  float: right;
+  margin-right: 40px;
+}
+
+.navbar-toggle {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #333333;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 20px;
+  color: #333333;
+}

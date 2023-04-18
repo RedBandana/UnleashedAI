@@ -7,13 +7,14 @@ import { resizeElement } from '../../utils/Utils'
 import TextInput from '../TextInput/TextInput';
 import TypingDots from '../TypingDots/TypingDots'
 
-function Chatbot() {
+function Chatbot(props) {
+    const { sidebarIsOpen } = props;
     const TOKEN_SAFE_LIMIT = 3250;
     const [isWaiting, setIsWaiting] = useState(false);
-    const [messages, setMessages] = useState([]);
-    const [inputValue, setInputValue] = useState('');
     const chatbotBodyRef = useRef(null);
     const settingsRef = useRef(null);
+    const [messages, setMessages] = useState([]);
+    const [inputValue, setInputValue] = useState('');
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [formSettings, setFormSettings] = useState({
         model: 'gpt-3.5-turbo',
@@ -125,10 +126,7 @@ function Chatbot() {
     }, [messages]);
 
     return (
-        <div className="chatbot">
-            <div className="chatbot-header">
-                <div className="chatbot-title">GPT Unlimited</div>
-            </div>
+        <div className="chatbot" data-sidebar-is-open={sidebarIsOpen}>
             <div className="chatbot-body" ref={chatbotBodyRef}>
                 <ChatHistory messages={messages} onDelete={handleDelete} />
             </div>
