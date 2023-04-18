@@ -129,3 +129,11 @@
 .chat-message-controls-container .fa-chevron-right {
   font-size: 0.8rem;
 }
+
+.chat-message-icons-container .fa{
+  color: rgba(0, 0, 0, 0);
+}
+
+.chat-message-container:hover .chat-message-icons-container .fa {
+  color: #999;
+}

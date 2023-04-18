@@ -4,9 +4,11 @@ import Settings from '../Settings/Settings';
 import './Chatbot.css';
 import { sendChatCompletion, trySendRequest } from '../../api/openai';
 import { resizeElement } from '../../utils/Utils'
+import TypingDots from '../TypingDots/TypingDots';
 
 function Chatbot() {
     const TOKEN_SAFE_LIMIT = 3250;
+    const [isWaiting, setIsWaiting] = useState(false);
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const chatbotBodyRef = useRef(null);
@@ -31,6 +33,18 @@ function Chatbot() {
         resizeElement("textarea-user-input");
     };
 
+    function canSubmitForm(event) {
+        if (event.key === 'Enter' && !event.shiftKey){
+            if (!isWaiting) {
+                return true;
+            }
+            else {
+                event.preventDefault();
+            }
+        } 
+        return false;
+    }
+
     const handleFormSubmit = async (event) => {
         event.preventDefault();
 
@@ -41,6 +55,7 @@ function Chatbot() {
         const newMessage = { texts: [inputValue], isUser: true, timestamp: new Date().getTime() };
         setMessages((prevState) => [...prevState, newMessage]);
         setInputValue('');
+        setIsWaiting(true);
 
         let requestMessages = getRequestMessages([...messages, newMessage]);
         const requestMaxTokens = formSettings.maxTokens === 0 ? null : formSettings.maxTokens;
@@ -50,6 +65,7 @@ function Chatbot() {
 
         const response = await trySendRequest(sendChatCompletion, requestSettings);
         setMessages((prevState) => [...prevState, { texts: response, isUser: false, timestamp: new Date().getTime() }]);
+        setIsWaiting(false);
     };
 
     const handleDelete = (messageToDelete) => {
@@ -125,6 +141,11 @@ function Chatbot() {
                 </div>
             )}
             <div className="chatbot-footer">
+                {isWaiting && (
+                    <div className='chatbot-dots'>
+                        <TypingDots />
+                    </div>
+                )}
                 <form onSubmit={handleFormSubmit}>
                     <textarea
                         id="textarea-user-input"
@@ -133,7 +154,7 @@ function Chatbot() {
                         value={inputValue}
                         onChange={handleInputChange}
                         onKeyDown={(event) => {
-                            if (event.key === 'Enter' && !event.shiftKey) {
+                            if (canSubmitForm(event)) {
                                 handleFormSubmit(event);
                             }
                         }}

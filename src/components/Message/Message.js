@@ -17,6 +17,7 @@ const Message = ({ message, onDelete }) => {
 
   const handleDeleteClick = () => {
     onDelete(message);
+    setShowOptions(false);
   };
 
   const handleClickOutside = (event) => {

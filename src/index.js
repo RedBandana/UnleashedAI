@@ -1,11 +1,12 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import Chatbot from './components/Chatbot/Chatbot';
 import '@fortawesome/fontawesome-free/css/all.css';
+import './index.css'
 
-ReactDOM.render(
+const rootElement = document.getElementById('root');
+createRoot(rootElement).render(
   <React.StrictMode>
     <Chatbot />
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );
