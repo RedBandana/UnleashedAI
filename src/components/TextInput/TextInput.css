@@ -1,0 +1,50 @@
+.text-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .text-input textarea {
+    width: 100%;
+    max-width: 700px;
+    resize: vertical;
+    padding: 5px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    max-height: 140px;
+    box-shadow: 0 0 10px darkgray;
+    color: #424242;
+  }
+  
+  .text-input button {
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 0 5px black;
+  }
+  
+  .text-input button.chatbot-settings-button {
+    margin-left: 5px;
+  }
+  
+  .text-input button.chatbot-send-button {
+    display: none;
+  }
+  
+  .text-input button i {
+    font-size: 1.2rem;
+  }
+  
+  .text-input .chatbot-dots {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 10px;
+  }

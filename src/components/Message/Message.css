@@ -9,6 +9,7 @@
   white-space: break-spaces;
   border-radius: 20px;
   padding: 2px;
+  margin-left: 24px;
 }
 
 .chat-message-user .chat-message-bubble {

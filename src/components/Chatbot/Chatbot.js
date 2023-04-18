@@ -4,7 +4,8 @@ import Settings from '../Settings/Settings';
 import './Chatbot.css';
 import { sendChatCompletion, trySendRequest } from '../../api/openai';
 import { resizeElement } from '../../utils/Utils'
-import TypingDots from '../TypingDots/TypingDots';
+import TextInput from '../TextInput/TextInput';
+import TypingDots from '../TypingDots/TypingDots'
 
 function Chatbot() {
     const TOKEN_SAFE_LIMIT = 3250;
@@ -34,14 +35,14 @@ function Chatbot() {
     };
 
     function canSubmitForm(event) {
-        if (event.key === 'Enter' && !event.shiftKey){
+        if (event.key === 'Enter' && !event.shiftKey) {
             if (!isWaiting) {
                 return true;
             }
             else {
                 event.preventDefault();
             }
-        } 
+        }
         return false;
     }
 
@@ -146,29 +147,13 @@ function Chatbot() {
                         <TypingDots />
                     </div>
                 )}
-                <form onSubmit={handleFormSubmit}>
-                    <textarea
-                        id="textarea-user-input"
-                        rows="1"
-                        placeholder="Type your message here..."
-                        value={inputValue}
-                        onChange={handleInputChange}
-                        onKeyDown={(event) => {
-                            if (canSubmitForm(event)) {
-                                handleFormSubmit(event);
-                            }
-                        }}
-                    />
-                    <button type="submit" className='chatbot-send-button'>
-                        <i className="fas fa-paper-plane"></i>
-                    </button>
-                    <button className="chatbot-settings-button" onClick={(event) => {
-                        event.preventDefault();
-                        handleSettingsButtonClick();
-                    }}>
-                        <i className="fas fa-cog"></i>
-                    </button>
-                </form>
+                <TextInput
+                    inputValue={inputValue}
+                    onInputChange={handleInputChange}
+                    onSubmit={handleFormSubmit}
+                    canSubmit={canSubmitForm}
+                    onSettings={handleSettingsButtonClick}
+                />
             </div>
         </div>
     );
