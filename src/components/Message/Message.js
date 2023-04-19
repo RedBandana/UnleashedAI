@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import "./Message.css";
+import "./Message.scss";
 
 const Message = ({ message, onDelete }) => {
   const [showOptions, setShowOptions] = useState(false);

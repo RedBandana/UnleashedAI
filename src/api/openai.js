@@ -2,7 +2,8 @@
 // https://github.com/openai/openai-node
 // https://platform.openai.com/docs/guides/images/usage?lang=node.js
 
-const fs = require('fs');
+// fs is server side, should use browser's built-in `FileReader` and `FileWriter` APIs
+// const fs = require('fs');
 const { Configuration, OpenAIApi } = require("openai");
 const configuration = new Configuration({
   apiKey: process.env.REACT_APP_OPENAI_API_KEY,
@@ -68,8 +69,8 @@ async function createImage(settings) {
 
 async function editImage(settings) {
   const response = await openai.createImageEdit(
-    fs.createReadStream(settings.image),
-    fs.createReadStream(settings.maskimage),
+    // fs.createReadStream(settings.image),
+    // fs.createReadStream(settings.maskimage),
     settings.prompt,
     settings.quantity,
     settings.size
@@ -81,7 +82,7 @@ async function editImage(settings) {
 
 async function varyImage(settings) {
   const response = await openai.createImageVariation(
-    fs.createReadStream(settings.image),
+    // fs.createReadStream(settings.image),y
     settings.quantity,
     settings.size
   );

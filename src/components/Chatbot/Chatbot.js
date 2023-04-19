@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ChatHistory from './ChatHistory';
 import Settings from '../Settings/Settings';
-import './Chatbot.css';
+import './Chatbot.scss';
 import { sendChatCompletion, trySendRequest } from '../../api/openai';
 import { resizeElement } from '../../utils/Utils'
 import TextInput from '../TextInput/TextInput';

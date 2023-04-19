@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import "./Settings.css";
+import "./Settings.scss";
 import { parseToRightType } from '../../utils/Utils'
 
 

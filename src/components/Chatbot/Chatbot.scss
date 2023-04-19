@@ -1,3 +1,4 @@
+@import '../../variables.scss';
 
 .chatbot {
   display: flex;
@@ -11,7 +12,7 @@
 }
 
 .chatbot[data-sidebar-is-open="true"] {
-  left: 300px;
+  left: $sidebar-width;
 }
 
 .chatbot-header {
@@ -37,7 +38,7 @@
   flex-direction: column;
   flex-grow: 1;
   overflow-y: auto;
-  margin: 0 10%;
+  margin: 50px 10% 0 10%;
 }
 
 .chatbot-messages {

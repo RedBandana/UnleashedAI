@@ -4,7 +4,7 @@ import Chatbot from './components/Chatbot/Chatbot';
 import Sidebar from './components/Sidebar/Sidebar';
 import Navbar from './components/Navbar/Navbar';
 import '@fortawesome/fontawesome-free/css/all.css';
-import './index.css'
+import './index.scss'
 
 const rootElement = document.getElementById('root');
 createRoot(rootElement).render(

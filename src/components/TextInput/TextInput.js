@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './TextInput.css';
+import './TextInput.scss';
 
 function TextInput({ inputValue, onInputChange, onSubmit, canSubmit, onSettings }) {
     return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import './TypingDots.css';
+import './TypingDots.scss';
 
 function TypingDots() {
   return (
