@@ -1,0 +1,61 @@
+@import "../../variables.scss";
+
+.sidebaritem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: $background-color;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sidebaritem:hover {
+    cursor: pointer;
+    background-color: #f6f6f6;
+}
+
+.sidebaritem-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.sidebaritem-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.sidebaritem-button-edit,
+.sidebaritem-button-trash {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.sidebaritem-button-edit:hover,
+.sidebaritem-button-trash:hover {
+  transform: translateY(-2px);
+}
+
+.sidebaritem-button-edit:focus,
+.sidebaritem-button-trash:focus {
+  outline: none;
+}
+
+.sidebaritem-button-edit i,
+.sidebaritem-button-trash i {
+  font-size: 16px;
+}
+
+.sidebaritem-button-edit {
+  color: #7f8c8d;
+}
+
+.sidebaritem-button-trash {
+  color: #e74c3c;
+}
