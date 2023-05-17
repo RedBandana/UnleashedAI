@@ -1,7 +1,23 @@
-@import 'variables.scss';
+@import "variables.scss";
 
 body {
     margin: 0;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: $font-family-main;
     background-color: $background-color;
+}
+
+.no_conversation {
+    margin-top: 25%;
+    width: 100%;
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: bold;
+    position: fixed;
+    left: 0;
+    transition: left 0.5s ease-in-out;
+    color: $text-color-main;
+}
+
+.no_conversation[data-is-open="true"] {
+    left: $sidebar-width;
 }

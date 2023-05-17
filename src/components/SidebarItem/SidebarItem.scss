@@ -4,10 +4,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  padding: 15px 20px;
   background-color: $background-color;
-  border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1px;
 }
 
 .sidebaritem:hover {
@@ -16,8 +16,18 @@
 }
 
 .sidebaritem-title {
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 1rem;
+  font-weight: 600;
+  color: $text-color-main;
+  max-width: 190px;
+}
+
+.sidebaritem-title input {
+  font-family: $font-family-main;
+  font-size: 1rem;
+  font-weight: 600;
+  color: $text-color-main;
+  max-width: 170px;
 }
 
 .sidebaritem-buttons {
@@ -53,9 +63,9 @@
 }
 
 .sidebaritem-button-edit {
-  color: #7f8c8d;
+  color: $options-button-color;
 }
 
 .sidebaritem-button-trash {
-  color: #e74c3c;
+  color: $options-button-color;
 }

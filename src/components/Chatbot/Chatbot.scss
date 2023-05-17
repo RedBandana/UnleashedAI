@@ -16,7 +16,7 @@
 }
 
 .chatbot-header {
-  background-color: #000000;
+  background-color: $color-main;
   color: #ffffff;
   display: flex;
   justify-content: center;
@@ -62,7 +62,7 @@
 }
 
 .chatbot-footer button {
-  background-color: #000000;
+  background-color: $color-main;
   color: #ffffff;
   border: none;
   border-radius: 20px;
@@ -95,7 +95,7 @@
 
 .chat-message-timestamp {
   font-size: 12px;
-  color: #999999;
+  color: $options-button-color;
   margin-top: 5px;
   align-self: center;
 }

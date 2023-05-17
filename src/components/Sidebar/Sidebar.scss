@@ -20,7 +20,6 @@
 
 .sidebar-body {
   flex: 1;
-  padding: 10px;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -37,46 +36,55 @@
 }
 
 .sidebar-footer {
-  padding: 10px;
+  border-top: 1px solid #d2d2d2;
+  background-color: #ffffff;
   display: flex;
   justify-content: space-between;
-  position: absolute;
-  bottom: 0;
-  left: 0;
 }
 
-.sidebar-clear-button,
-.sidebar-help-button {
-  background-color: #ffffff;
-  padding: 10px;
-  border: 1px solid #d2d2d2;
-  border-radius: 5px;
+.sidebar-footer:hover {
   cursor: pointer;
+  background-color: #f3f3f3;
+}
+
+.sidebar-clear-button {
+  padding: 10px;
   text-align: center;
   font-weight: bold;
-  color: #333333;
-  margin-right: 10px;
+  color: $text-color-main;
+  text-decoration: none;
+  width: 225px;
 }
 
-.sidebar-clear-button:hover,
-.sidebar-help-button:hover {
-  background-color: #f3f3f3;
+.sidebar-help-button {
+  font-size: 1.65rem;
+  font-weight: bold;
+  color: $options-button-color;
+  text-decoration: none;
+  padding-left: 10px;
+  padding-right: 14px;
+  padding-top: 2px;
 }
 
 .sidebar-add-button {
-  background-color: #f3f3f3;
+  background-color: #fff;
+  box-shadow: 0px 1px 10px darkgray;
   padding: 10px;
-  border: 1px solid #d2d2d2;
-  border-radius: 5px;
-  margin-bottom: 10px;
+  border-bottom: 1px solid #d2d2d2;
   cursor: pointer;
   text-align: center;
   font-weight: bold;
-  color: #333333;
+  color: $text-color-main;
+  height: 27px;
+  z-index: 1;
+}
+
+.sidebar-add-button:hover {
+  background-color: #f3f3f3;
 }
 
 .sidebar-title {
-  color: #333333;
+  color: $text-color-main;
   margin-bottom: 10px;
   font-weight: bold;
   font-size: 18px;

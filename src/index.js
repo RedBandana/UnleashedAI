@@ -101,9 +101,18 @@ function App() {
         <Sidebar isOpen={isSidebarOpen} onClose={handleCloseSidebar} sidebarItems={getSidebarItem()}
           onClickItem={(index) => handleClick(index)} onEditItem={(index, newTitle) => handleEdit(index, newTitle)}
           onDeleteItem={(index) => handleDelete(index)} onAddItem={handleAdd} onClearItems={handleClear} />
-        {conversations.length > 0 && (
-          <Chatbot conversation={conversations[selectedConversationIndex]} sidebarIsOpen={isSidebarOpen} onToggleSidebar={handleToggleSidebar} />
-        )}
+        {conversations.length > 0 ?
+          (selectedConversationIndex < conversations.length ?
+            (
+              <Chatbot conversation={conversations[selectedConversationIndex]} sidebarIsOpen={isSidebarOpen} onToggleSidebar={handleToggleSidebar} />
+            ) :
+            (
+              <Chatbot conversation={conversations[conversations.length - 1]} sidebarIsOpen={isSidebarOpen} onToggleSidebar={handleToggleSidebar} />
+            )
+          ) :
+          (
+            <div data-is-open={isSidebarOpen} className='no_conversation'>No conversation left.</div>
+          )}
 
       </div>
     </div>

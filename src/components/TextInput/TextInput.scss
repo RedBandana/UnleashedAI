@@ -1,3 +1,5 @@
+@import "../../variables.scss";
+
 .text-input {
     display: flex;
     justify-content: center;
@@ -20,7 +22,7 @@
   }
   
   .text-input button {
-    background-color: #000000;
+    background-color: $color-main;
     color: #ffffff;
     border: none;
     border-radius: 20px;

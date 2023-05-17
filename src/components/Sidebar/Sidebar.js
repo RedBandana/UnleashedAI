@@ -12,7 +12,7 @@ function Sidebar(props) {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target) &&
         event.target.className.includes("sidebaritem") === false &&
         (event.target.parentElement == null ||
-        event.target.parentElement.className.includes("sidebaritem") === false)) {
+          event.target.parentElement.className.includes("sidebaritem") === false)) {
         onClose();
       }
     }
@@ -37,8 +37,8 @@ function Sidebar(props) {
       </div>
       <div className="sidebar-footer">
         <div className="sidebar-clear-button" onClick={onClearItems}>Clear Conversations</div>
-        <a href="https://www.google.com" target="_blank" rel="noopener noreferrer">
-          <div className="sidebar-help-button">Get Help</div>
+        <a className='sidebar-help-button' href="https://www.google.com" target="_blank" rel="noopener noreferrer">
+          <div className="fas fa-question-circle"></div>
         </a>
       </div>
     </div>

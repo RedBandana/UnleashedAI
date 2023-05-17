@@ -115,6 +115,11 @@ function Chatbot(props) {
         <div className="chatbot" data-sidebar-is-open={sidebarIsOpen}>
             <div className="chatbot-body" ref={chatbotBodyRef}>
                 <ChatHistory messages={conversation.messages} onDelete={handleDelete} />
+                {isWaiting && (
+                    <div className='chatbot-dots'>
+                        <TypingDots />
+                    </div>
+                )}
             </div>
             {settingsOpen && (
                 <div className="chatbot-settings-container" ref={settingsRef}>
@@ -126,11 +131,6 @@ function Chatbot(props) {
                 </div>
             )}
             <div className="chatbot-footer">
-                {isWaiting && (
-                    <div className='chatbot-dots'>
-                        <TypingDots />
-                    </div>
-                )}
                 <TextInput
                     inputValue={inputValue}
                     onInputChange={handleInputChange}

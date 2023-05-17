@@ -20,6 +20,11 @@ const Message = ({ message, onDelete }) => {
     setShowOptions(false);
   };
 
+  const handleCopyClick = () => {
+    navigator.clipboard.writeText(message.texts[currentTextIndex]);
+    setShowOptions(false);
+  }
+
   const handleClickOutside = (event) => {
     if (optionsRef.current && !optionsRef.current.contains(event.target) 
         && event.target.className !== "chat-message-options-container") {
@@ -82,6 +87,9 @@ const Message = ({ message, onDelete }) => {
         <div className="chat-message-options-container" ref={optionsRef}>
           <button onClick={handleDeleteClick}>
             <i className="fa fa-trash"></i>
+          </button>
+          <button onClick={handleCopyClick}>
+            <i className="fa fas fa-clipboard"></i>
           </button>
           <div className="chat-message-timestamp">{timestamp}</div>
         </div>
