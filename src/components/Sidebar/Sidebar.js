@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './Sidebar.scss';
 import SidebarItem from '../SidebarItem/SidebarItem';
@@ -6,6 +6,7 @@ import SidebarItem from '../SidebarItem/SidebarItem';
 function Sidebar(props) {
   const { sidebarItems, isOpen, onClose, onClickItem, onEditItem, onDeleteItem, onAddItem, onClearItems } = props;
   const sidebarRef = useRef(null);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -24,6 +25,11 @@ function Sidebar(props) {
     };
   }, [onClose]);
 
+  function handleOnClickItem(index) {
+    onClickItem(index);
+    setSelectedIndex(index);
+  }
+
   return (
     <div className="sidebar" data-is-open={isOpen} ref={sidebarRef}>
       <div className="sidebar-body">
@@ -31,7 +37,7 @@ function Sidebar(props) {
         <div className="sidebar-list">
           {sidebarItems.map((item, index) => (
             <SidebarItem key={index} index={index} title={item.title}
-              onClick={onClickItem} onDelete={onDeleteItem} onEdit={onEditItem} />
+              onClick={handleOnClickItem} onDelete={onDeleteItem} onEdit={onEditItem} isSelected={index === selectedIndex} />
           ))}
         </div>
       </div>

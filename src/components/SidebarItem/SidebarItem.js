@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './SidebarItem.scss';
 
 function SidebarItem(props) {
-  const { title, onClick, onDelete, onEdit, index } = props;
+  const { title, onClick, onDelete, onEdit, index, isSelected } = props;
   const [editing, setEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
 
@@ -29,7 +29,7 @@ function SidebarItem(props) {
   }
 
   return (
-    <div className="sidebaritem" onClick={handleOnClick}>
+    <div className="sidebaritem" data-is-selected={isSelected} onClick={handleOnClick}>
       {editing ? (
         <div className="sidebaritem-title">
           <input
