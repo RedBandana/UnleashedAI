@@ -14,10 +14,12 @@ createRoot(rootElement).render(
 );
 
 function App() {
+  const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [conversations, setConversations] = useState([
-    {
-      title: 'Programmer Expert',
+  const [conversations, setConversations] = useState([{
+    title: 'Programmer Expert',
+    messages: [],
+    settings: {
       model: 'gpt-3.5-turbo',
       system: 'You are a professional programmer.',
       temperature: 0.7,
@@ -28,18 +30,50 @@ function App() {
       maxTokens: 0,
       presencePenalty: 0,
       frequencyPenalty: 0,
-      user: ''
+      user: '',
+      messages: []
     }
+  }
   ]);
 
-  const handleClick = (conversationToDelete) => {
+  const handleClick = (conversationIndex) => {
+    setSelectedConversationIndex(conversationIndex);
   };
 
-  const handleDelete = (conversationToDeleteTitle) => {
-    setConversations(conversations.filter(conversation => conversation.title !== conversationToDeleteTitle));
+  const handleAdd = () => {
+    setConversations([
+      ...conversations, {
+        title: 'New Conversation',
+        messages: [],
+        settings: {
+          model: 'gpt-3.5-turbo',
+          system: 'You are a dumb programmer.',
+          temperature: 0.7,
+          topP: 1,
+          quantity: 1,
+          stream: false,
+          stop: '',
+          maxTokens: 0,
+          presencePenalty: 0,
+          frequencyPenalty: 0,
+          user: ''
+        }
+      },
+    ]);
+  }
+
+  const handleEdit = (conversationIndex, newTitle) => {
+    const updatedConversations = [...conversations];
+    updatedConversations[conversationIndex].title = newTitle;
+    setConversations(updatedConversations);
   };
 
-  const handleEdit = (messageToDelete) => {
+  const handleDelete = (conversationIndex) => {
+    setConversations(conversations.filter((_, index) => index !== conversationIndex));
+  };
+
+  const handleClear = () => {
+    setConversations([]);
   };
 
   function handleToggleSidebar(event) {
@@ -52,10 +86,10 @@ function App() {
   }
 
   function getSidebarItem() {
-    let sidebarItems = [];
-    conversations.forEach(convo => {
-      sidebarItems.push({"title": convo.title});
-    });
+    const sidebarItems = conversations.map((convo, index) => ({
+      title: convo.title,
+      index: index,
+    }));
 
     return sidebarItems;
   }
@@ -65,8 +99,12 @@ function App() {
       <Navbar onToggleSidebar={handleToggleSidebar} sidebarIsOpen={isSidebarOpen} />
       <div className="main">
         <Sidebar isOpen={isSidebarOpen} onClose={handleCloseSidebar} sidebarItems={getSidebarItem()}
-          onClickItem={handleClick} onEditItem={handleEdit} onDeleteItem={handleDelete} />
-        <Chatbot sidebarIsOpen={isSidebarOpen} onToggleSidebar={handleToggleSidebar} />
+          onClickItem={(index) => handleClick(index)} onEditItem={(index, newTitle) => handleEdit(index, newTitle)}
+          onDeleteItem={(index) => handleDelete(index)} onAddItem={handleAdd} onClearItems={handleClear} />
+        {conversations.length > 0 && (
+          <Chatbot conversation={conversations[selectedConversationIndex]} sidebarIsOpen={isSidebarOpen} onToggleSidebar={handleToggleSidebar} />
+        )}
+
       </div>
     </div>
   );

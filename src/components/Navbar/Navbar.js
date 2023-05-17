@@ -12,7 +12,7 @@ function Navbar(props) {
         </button>
       </div>
       <div className="navbar-right">
-        <div className="navbar-brand">GPT Unlimited</div>
+        <div className="navbar-brand">GPT Unleashed</div>
       </div>
     </nav>
   );

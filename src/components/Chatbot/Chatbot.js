@@ -8,27 +8,13 @@ import TextInput from '../TextInput/TextInput';
 import TypingDots from '../TypingDots/TypingDots'
 
 function Chatbot(props) {
-    const { sidebarIsOpen } = props;
-    const TOKEN_SAFE_LIMIT = 3250;
+    const { sidebarIsOpen, conversation } = props;
+    const TOKEN_SAFE_LIMIT = 10000000;
     const [isWaiting, setIsWaiting] = useState(false);
     const chatbotBodyRef = useRef(null);
     const settingsRef = useRef(null);
-    const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const [settingsOpen, setSettingsOpen] = useState(false);
-    const [formSettings, setFormSettings] = useState({
-        model: 'gpt-3.5-turbo',
-        system: 'You are a professional programmer.',
-        temperature: 0.7,
-        topP: 1,
-        quantity: 1,
-        stream: false,
-        stop: '',
-        maxTokens: 0,
-        presencePenalty: 0,
-        frequencyPenalty: 0,
-        user: ''
-    });
 
     const handleInputChange = (event) => {
         setInputValue(event.target.value);
@@ -55,23 +41,23 @@ function Chatbot(props) {
         }
 
         const newMessage = { texts: [inputValue], isUser: true, timestamp: new Date().getTime() };
-        setMessages((prevState) => [...prevState, newMessage]);
+        conversation.messages.push(newMessage);
         setInputValue('');
         setIsWaiting(true);
 
-        let requestMessages = getRequestMessages([...messages, newMessage]);
-        const requestMaxTokens = formSettings.maxTokens === 0 ? null : formSettings.maxTokens;
+        let requestMessages = getRequestMessages([...conversation.messages, newMessage]);
+        const requestMaxTokens = conversation.settings.maxTokens === 0 ? null : conversation.settings.maxTokens;
         const requestSettings = {
-            ...formSettings, history: requestMessages, maxTokens: requestMaxTokens
+            ...conversation.settings, history: requestMessages, maxTokens: requestMaxTokens
         }
 
         const response = await trySendRequest(sendChatCompletion, requestSettings);
-        setMessages((prevState) => [...prevState, { texts: response, isUser: false, timestamp: new Date().getTime() }]);
+        conversation.messages.push({ texts: response, isUser: false, timestamp: new Date().getTime() });
         setIsWaiting(false);
     };
 
     const handleDelete = (messageToDelete) => {
-        setMessages(messages.filter(message => message !== messageToDelete));
+        conversation.messages = conversation.messages.filter(message => message !== messageToDelete);
     };
 
     const handleSettingsButtonClick = () => {
@@ -79,7 +65,7 @@ function Chatbot(props) {
     };
 
     const handleSettingsSave = (settings) => {
-        setFormSettings(settings);
+        conversation.settings = settings;
         setSettingsOpen(false);
     };
 
@@ -123,17 +109,17 @@ function Chatbot(props) {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [messages]);
+    }, [conversation.messages]);
 
     return (
         <div className="chatbot" data-sidebar-is-open={sidebarIsOpen}>
             <div className="chatbot-body" ref={chatbotBodyRef}>
-                <ChatHistory messages={messages} onDelete={handleDelete} />
+                <ChatHistory messages={conversation.messages} onDelete={handleDelete} />
             </div>
             {settingsOpen && (
                 <div className="chatbot-settings-container" ref={settingsRef}>
                     <Settings
-                        settings={formSettings}
+                        settings={conversation.settings}
                         onSave={handleSettingsSave}
                         onClose={handleSettingsClose}
                     />

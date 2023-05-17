@@ -2,18 +2,26 @@ import PropTypes from 'prop-types';
 import './SidebarItem.scss';
 
 function SidebarItem(props) {
-    const { title, onClick, onDelete, onEdit } = props;
+    const { title, onClick, onDelete, onEdit, index } = props;
+
+    function handleOnClick() {
+        onClick(index);
+    }
 
     function handleOnDelete() {
-        onDelete(title);
+        onDelete(index);
+    }
+
+    function handleOnEdit(newTitle) {
+        onEdit(index, "Work in Progress");
     }
 
     return (
-        <div className="sidebaritem" onClick={onClick}>
+        <div className="sidebaritem" onClick={handleOnClick}>
             <div className="sidebaritem-title">{title}</div>
             <div className="sidebaritem-buttons">
                 {onEdit != null && (
-                    <button className="sidebaritem-button-edit">
+                    <button className="sidebaritem-button-edit" onClick={handleOnEdit}>
                         <i className="fas fa-edit"></i>
                     </button>
                 )}
