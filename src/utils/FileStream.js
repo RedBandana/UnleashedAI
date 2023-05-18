@@ -1,7 +1,30 @@
+import crypto from 'crypto-browserify';
+
+const algorithm = 'aes-256-ctr';
+const secretKey = 'mE2ggXIIpZn9MPO1iIln3X0ywajtI1Y=';
+const iv = crypto.randomBytes(16);
+
+const encryptJson = (jsonObj) => {
+  const jsonString = JSON.stringify(jsonObj);
+  const cipher = crypto.createCipheriv(algorithm, secretKey, iv);
+  let encrypted = cipher.update(jsonString, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  return {
+    iv: iv.toString('hex'),
+    content: encrypted,
+  };
+};
+
+const decryptJson = (encryptedJson) => {
+  const decipher = crypto.createDecipheriv(algorithm, secretKey, Buffer.from(encryptedJson.iv, 'hex'));
+  let decrypted = decipher.update(encryptedJson.content, 'hex', 'utf8');
+  decrypted += decipher.final('utf8');
+  return JSON.parse(decrypted);
+};
 
 const saveJSONToFile = (jsonObject, filename) => {
-    const data = JSON.stringify(jsonObject);
-    const blob = new Blob([data], { type: 'application/json' });
+    const data = encryptJson(jsonObject)
+    const blob = new Blob([data], { type: 'application/octet-stream' });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
@@ -24,7 +47,9 @@ const readJSONFromUserInput = (inputFile) => {
 
         fileReader.onload = () => {
             try {
-                const jsonObject = JSON.parse(fileReader.result);
+                const encryptedData = fileReader.result;
+                const decryptedData = decryptJson(encryptedData);
+                const jsonObject = JSON.parse(decryptedData);
                 resolve(jsonObject);
             } catch (error) {
                 reject(error);
@@ -51,4 +76,4 @@ const readJSONFromFile = (filename) => {
     });
 }
 
-export { saveJSONToFile, readJSONFromFile, readJSONFromUserInput }
+export { saveJSONToFile, readJSONFromFile, readJSONFromUserInput, encryptJson, decryptJson }
