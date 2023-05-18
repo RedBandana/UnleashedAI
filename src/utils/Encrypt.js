@@ -1,5 +1,4 @@
-import crypto from 'crypto-browserify';
-
+const crypto = require('crypto');
 const algorithm = 'aes-256-ctr';
 const secretKey = 'mySecretKey';
 const iv = crypto.randomBytes(16);
