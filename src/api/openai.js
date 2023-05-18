@@ -94,7 +94,6 @@ async function varyImage(settings) {
 async function trySendRequest(callback, param1) {
   try {
     let response = await callback(param1);
-    console.log(response);
 
     if (response == null)
       response = ["Error"];

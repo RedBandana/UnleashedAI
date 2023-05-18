@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import './Sidebar.scss';
 import SidebarItem from '../SidebarItem/SidebarItem';
 
@@ -50,13 +49,5 @@ function Sidebar(props) {
     </div>
   );
 }
-
-Sidebar.propTypes = {
-  conversationsTitles: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string.isRequired,
-    })
-  ).isRequired
-};
 
 export default Sidebar;

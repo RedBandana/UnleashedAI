@@ -18,7 +18,10 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [conversations, setConversations] = useState([{
     title: 'Programmer Expert',
-    messages: [],
+    messages: [{ 
+      texts: ['Hello, how can I help you?'], 
+      isUser: false, 
+      timestamp: new Date().getTime() }],
     settings: {
       model: 'gpt-3.5-turbo',
       system: 'You are a professional programmer.',
@@ -31,7 +34,6 @@ function App() {
       presencePenalty: 0,
       frequencyPenalty: 0,
       user: '',
-      messages: []
     }
   }
   ]);
