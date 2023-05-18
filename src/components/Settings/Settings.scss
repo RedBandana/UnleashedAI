@@ -1,3 +1,5 @@
+@import '../../variables.scss';
+
 .settings-dialog {
   background: white;
   padding: 10px;
@@ -29,11 +31,11 @@
 }
 
 .settings-dialog button {
-  background-color: #4caf50;
-  color: #fff;
-  padding: 10px;
+  background-color: rgba(0,0,0,0);
+  color: $color-accent-main;
+  padding: 5px;
   border-radius: 20px;
-  font-size: 1rem;
+  font-size: 2rem;
   border: none;
   cursor: pointer;
   width: 50px;

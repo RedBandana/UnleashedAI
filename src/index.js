@@ -17,28 +17,7 @@ createRoot(rootElement).render(
 function App() {
   const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [conversations, setConversations] = useState([{
-    title: 'Programmer Expert',
-    messages: [{
-      texts: ['Hello, how can I help you?'],
-      isUser: false,
-      timestamp: new Date().getTime()
-    }],
-    settings: {
-      model: 'gpt-3.5-turbo',
-      system: 'You are a professional programmer.',
-      temperature: 0.7,
-      topP: 1,
-      quantity: 1,
-      stream: false,
-      stop: '',
-      maxTokens: 0,
-      presencePenalty: 0,
-      frequencyPenalty: 0,
-      user: '',
-    }
-  }
-  ]);
+  const [conversations, setConversations] = useState([]);
 
   const handleRead = async (fileInput) => {
     try {
@@ -78,7 +57,7 @@ function App() {
         messages: [],
         settings: {
           model: 'gpt-3.5-turbo',
-          system: 'You are a dumb programmer.',
+          system: '',
           temperature: 0.7,
           topP: 1,
           quantity: 1,
@@ -143,7 +122,15 @@ function App() {
             )
           ) :
           (
-            <div data-is-open={isSidebarOpen} className='no_conversation'>No conversation left.</div>
+            <div data-is-open={isSidebarOpen} className='no-conversation-container'>
+              No conversation to display
+              <div className='no-conversation-open'>
+                <label>
+                  <input className='hide' type="file" onChange={handleRead} />
+                  Open a conversation <div className="fas fa-folder-open"></div>
+                </label>
+              </div>
+            </div>
           )}
 
       </div>

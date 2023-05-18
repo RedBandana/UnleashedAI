@@ -67,20 +67,13 @@
 }
 
 .sidebar-add-button {
-  background-color: #fff;
-  box-shadow: 0px 1px 10px darkgray;
-  padding: 10px;
-  border-bottom: 1px solid #d2d2d2;
-  cursor: pointer;
+  padding-top: 10px;
   text-align: center;
   font-weight: bold;
   color: $text-color-main;
   height: 27px;
   z-index: 2;
-}
-
-.sidebar-add-button:hover {
-  background-color: #f3f3f3;
+  width: 225px;
 }
 
 .sidebar-title {
@@ -105,13 +98,17 @@
   flex-direction: row;
   justify-content: space-between;
   box-shadow: 0px 1px 5px rgb(207, 207, 207);
-  width: 100%;
   z-index: 1;
+  padding: 0 15px;
+  height: 47px;
+}
+
+.sidebar-filestream-container:hover {
+  cursor: pointer;
+  background-color: #f3f3f3;
 }
 
 .sidebar-filestream-options {
-  background-color: #fff;
-  width: 100%;
   text-align: center;
   color: $options-button-color;
 }
@@ -125,13 +122,14 @@
 .sidebar-filestream-open,
 .sidebar-filestream-options button {
   background-color: rgba(0,0,0,0);
-  width: 100%;
   padding: 5px;
+  padding-top: 10px;
   border: hidden;
   font-family: $font-family-main;
   font-size: 1.2rem;
   color: $options-button-color;
+  color: $color-accent-main;
   outline: none;
   text-shadow: none;
-  transform: translateY(-2px);
+  margin-left: 8px;
 }

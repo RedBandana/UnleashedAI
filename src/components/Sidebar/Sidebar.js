@@ -9,10 +9,11 @@ function Sidebar(props) {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target) &&
-        event.target.className.includes("sidebaritem") === false &&
-        (event.target.parentElement == null ||
-          event.target.parentElement.className.includes("sidebaritem") === false)) {
+      const isOutsideSideBar = sidebarRef.current && !sidebarRef.current.contains(event.target);
+      const canMoveSidebar = event.target.className.includes("sidebar-no-move") === false &&
+        (event.target.parentElement == null || event.target.parentElement.className.includes("sidebar-no-move-parent") === false);
+
+      if (isOutsideSideBar || canMoveSidebar) {
         onClose();
       }
     }
@@ -36,16 +37,16 @@ function Sidebar(props) {
   return (
     <div className="sidebar" data-is-open={isOpen} ref={sidebarRef}>
       <div className="sidebar-body">
-        <div className="sidebar-add-button" onClick={onAddItem}>Add Conversation</div>
-        <div className='sidebar-filestream-container'>
-          <div className='sidebar-filestream-options sidebar-filestream-save'>
+        <div className='sidebar-filestream-container sidebar-no-move-parent'>
+          <div className="sidebar-add-button" onClick={onAddItem}>Add Conversation</div>
+          <div className='sidebar-filestream-options sidebar-filestream-save hide'>
             <button onClick={onSave}>
-            <div className="fas fa-save"></div>
+              <div className="fas fa-save"></div>
             </button>
           </div>
           <div className='sidebar-filestream-options sidebar-filestream-saveas'>
             <button onClick={onSaveAs}>
-            <div className="fas fa-file-download"></div>
+              <div className="fas fa-file-download"></div>
             </button>
           </div>
           <label className='sidebar-filestream-options sidebar-filestream-open'>
@@ -60,7 +61,7 @@ function Sidebar(props) {
           ))}
         </div>
       </div>
-      <div className="sidebar-footer">
+      <div className="sidebar-footer sidebar-no-move-parent">
         <div className="sidebar-clear-button" onClick={onClearItems}>Clear Conversations</div>
         <a className='sidebar-help-button' href="https://www.google.com" target="_blank" rel="noopener noreferrer">
           <div className="fas fa-question-circle"></div>

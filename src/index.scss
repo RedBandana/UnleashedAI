@@ -6,7 +6,7 @@ body {
     background-color: $background-color;
 }
 
-.no_conversation {
+.no-conversation-container {
     margin-top: 25%;
     width: 100%;
     text-align: center;
@@ -18,8 +18,18 @@ body {
     color: $text-color-main;
 }
 
-.no_conversation[data-is-open="true"] {
+.no-conversation-container[data-is-open="true"] {
     left: $sidebar-width;
+}
+
+.no-conversation-open {
+    margin-top: 25px;
+    color: $color-accent-main;
+    transition: transform 0.25s ease-in-out;
+}
+
+.no-conversation-open:hover {
+    transform: translateY(-3px);
 }
 
 .hide {

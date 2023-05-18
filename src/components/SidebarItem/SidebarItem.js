@@ -51,12 +51,12 @@ function SidebarItem(props) {
       <div className="sidebaritem-buttons">
         {onEdit != null && (
           <button className="sidebaritem-button-edit" onClick={handleOnEdit}>
-            <i className="fas fa-edit"></i>
+            <i className="fas fa-edit sidebar-no-move"></i>
           </button>
         )}
         {onDelete != null && (
           <button className="sidebaritem-button-trash" onClick={handleOnDelete}>
-            <i className="fas fa-trash"></i>
+            <i className="fas fa-trash sidebar-no-move"></i>
           </button>
         )}
       </div>
