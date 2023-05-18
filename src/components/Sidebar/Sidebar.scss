@@ -76,7 +76,7 @@
   font-weight: bold;
   color: $text-color-main;
   height: 27px;
-  z-index: 1;
+  z-index: 2;
 }
 
 .sidebar-add-button:hover {
@@ -98,4 +98,40 @@
   text-align: center;
   font-weight: bold;
   font-size: 18px;
+}
+
+.sidebar-filestream-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  box-shadow: 0px 1px 5px rgb(207, 207, 207);
+  width: 100%;
+  z-index: 1;
+}
+
+.sidebar-filestream-options {
+  background-color: #fff;
+  width: 100%;
+  text-align: center;
+  color: $options-button-color;
+}
+
+.sidebar-filestream-options:hover,
+.sidebar-filestream-options button:hover,
+.sidebar-filestream-options .fas:hover {
+  cursor: pointer;
+}
+
+.sidebar-filestream-open,
+.sidebar-filestream-options button {
+  background-color: rgba(0,0,0,0);
+  width: 100%;
+  padding: 5px;
+  border: hidden;
+  font-family: $font-family-main;
+  font-size: 1.2rem;
+  color: $options-button-color;
+  outline: none;
+  text-shadow: none;
+  transform: translateY(-2px);
 }

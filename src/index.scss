@@ -21,3 +21,7 @@ body {
 .no_conversation[data-is-open="true"] {
     left: $sidebar-width;
 }
+
+.hide {
+    display: none;
+}

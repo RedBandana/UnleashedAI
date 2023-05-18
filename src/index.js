@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import Chatbot from './components/Chatbot/Chatbot';
 import Sidebar from './components/Sidebar/Sidebar';
 import Navbar from './components/Navbar/Navbar';
+import { saveJSONToFile, readJSONFromFile, readJSONFromUserInput } from './utils/FileStream'
 import '@fortawesome/fontawesome-free/css/all.css';
 import './index.scss'
 
@@ -18,10 +19,11 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [conversations, setConversations] = useState([{
     title: 'Programmer Expert',
-    messages: [{ 
-      texts: ['Hello, how can I help you?'], 
-      isUser: false, 
-      timestamp: new Date().getTime() }],
+    messages: [{
+      texts: ['Hello, how can I help you?'],
+      isUser: false,
+      timestamp: new Date().getTime()
+    }],
     settings: {
       model: 'gpt-3.5-turbo',
       system: 'You are a professional programmer.',
@@ -37,6 +39,23 @@ function App() {
     }
   }
   ]);
+
+  const handleRead = async (fileInput) => {
+    try {
+      const conversations = await readJSONFromUserInput(fileInput);
+      setConversations(conversations);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSave = () => {
+    saveJSONToFile(conversations);
+  };
+
+  const handleSaveAs = () => {
+    saveJSONToFile(conversations);
+  };
 
   const handleClick = (conversationIndex) => {
     setSelectedConversationIndex(conversationIndex);
@@ -102,7 +121,8 @@ function App() {
       <div className="main">
         <Sidebar isOpen={isSidebarOpen} onClose={handleCloseSidebar} sidebarItems={getSidebarItem()}
           onClickItem={(index) => handleClick(index)} onEditItem={(index, newTitle) => handleEdit(index, newTitle)}
-          onDeleteItem={(index) => handleDelete(index)} onAddItem={handleAdd} onClearItems={handleClear} />
+          onDeleteItem={(index) => handleDelete(index)} onAddItem={handleAdd} onClearItems={handleClear} 
+          onSave={handleSave} onSaveAs={handleSaveAs} onRead={handleRead}/>
         {conversations.length > 0 ?
           (selectedConversationIndex < conversations.length ?
             (
