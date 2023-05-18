@@ -1,7 +1,7 @@
 import React from "react";
 import { encryptJson } from '../../utils/Encrypt'
+import fsExtra from 'fs-extra';
 
-const fs = require('fs');
 const { dialog } = require('electron');
 
 const saveObjectToFile = (jsonObj) => {
@@ -9,8 +9,13 @@ const saveObjectToFile = (jsonObj) => {
   const filePath = dialog.showSaveDialogSync();
 
   if (filePath) {
-    fs.writeFileSync(filePath, encryptedJsonString);
-    console.log('File saved successfully.');
+    fsExtra.writeFile(filePath, encryptedJsonString, (err) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      console .log('File saved successfully.');
+    });
   } 
   else {
     console.log('No file selected.');
