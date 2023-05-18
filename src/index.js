@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import Chatbot from './components/Chatbot/Chatbot';
 import Sidebar from './components/Sidebar/Sidebar';
 import Navbar from './components/Navbar/Navbar';
-import { saveJSONToFile, readJSONFromFile, readJSONFromUserInput } from './utils/FileStream'
+import { saveJSONToFile, readJSONFromUserInput } from './utils/FileStream'
 import '@fortawesome/fontawesome-free/css/all.css';
 import './index.scss'
 
@@ -49,12 +49,22 @@ function App() {
     }
   };
 
-  const handleSave = () => {
-    saveJSONToFile(conversations);
+  const handleSave = async () => {
+    try {
+      await saveJSONToFile(conversations, 'chat.gptu');
+    }
+    catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleSaveAs = () => {
-    saveJSONToFile(conversations);
+  const handleSaveAs = async () => {
+    try {
+      await saveJSONToFile(conversations, 'chat.gptu');
+    }
+    catch (error) {
+      console.log(error);
+    }
   };
 
   const handleClick = (conversationIndex) => {
@@ -121,8 +131,8 @@ function App() {
       <div className="main">
         <Sidebar isOpen={isSidebarOpen} onClose={handleCloseSidebar} sidebarItems={getSidebarItem()}
           onClickItem={(index) => handleClick(index)} onEditItem={(index, newTitle) => handleEdit(index, newTitle)}
-          onDeleteItem={(index) => handleDelete(index)} onAddItem={handleAdd} onClearItems={handleClear} 
-          onSave={handleSave} onSaveAs={handleSaveAs} onRead={handleRead}/>
+          onDeleteItem={(index) => handleDelete(index)} onAddItem={handleAdd} onClearItems={handleClear}
+          onSave={handleSave} onSaveAs={handleSaveAs} onRead={handleRead} />
         {conversations.length > 0 ?
           (selectedConversationIndex < conversations.length ?
             (
