@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import Chatbot from './components/Chatbot/Chatbot';
 import Sidebar from './components/Sidebar/Sidebar';
 import Navbar from './components/Navbar/Navbar';
+import SaveObject from './components/SaveObject/SaveObject';
+import ReadObject from './components/ReadObject/ReadObject';
 import '@fortawesome/fontawesome-free/css/all.css';
 import './index.scss'
 
@@ -18,10 +20,11 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [conversations, setConversations] = useState([{
     title: 'Programmer Expert',
-    messages: [{ 
-      texts: ['Hello, how can I help you?'], 
-      isUser: false, 
-      timestamp: new Date().getTime() }],
+    messages: [{
+      texts: ['Hello, how can I help you?'],
+      isUser: false,
+      timestamp: new Date().getTime()
+    }],
     settings: {
       model: 'gpt-3.5-turbo',
       system: 'You are a professional programmer.',
@@ -37,6 +40,10 @@ function App() {
     }
   }
   ]);
+
+  const handleConversationsRead = (conversationsRead) => {
+    setConversations(conversationsRead);
+  };
 
   const handleClick = (conversationIndex) => {
     setSelectedConversationIndex(conversationIndex);
@@ -100,6 +107,18 @@ function App() {
     <div className="app">
       <Navbar onToggleSidebar={handleToggleSidebar} sidebarIsOpen={isSidebarOpen} />
       <div className="main">
+        <div>
+          <SaveObject objectToSave={conversations} />
+        </div>
+        <div>
+          <ReadObject onObjectRead={handleConversationsRead} />
+          {conversations && (
+            <div>
+              <h2>{conversations[0].title}</h2>
+              <p>{conversations[0].settings.system}</p>
+            </div>
+          )}
+        </div>
         <Sidebar isOpen={isSidebarOpen} onClose={handleCloseSidebar} sidebarItems={getSidebarItem()}
           onClickItem={(index) => handleClick(index)} onEditItem={(index, newTitle) => handleEdit(index, newTitle)}
           onDeleteItem={(index) => handleDelete(index)} onAddItem={handleAdd} onClearItems={handleClear} />
