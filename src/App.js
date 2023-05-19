@@ -118,7 +118,6 @@ function App() {
             ) :
             (
               <div data-is-open={isSidebarOpen} className='no-conversation-container'>
-                No conversation to display
                 <div className='no-conversation-options'>
                   <div className='no-conversation-options-child no-conversation-open'>
                     <label>
