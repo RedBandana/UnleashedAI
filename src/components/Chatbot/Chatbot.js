@@ -14,6 +14,7 @@ function Chatbot(props) {
     const settingsRef = useRef(null);
     const [inputValue, setInputValue] = useState('');
     const [settingsOpen, setSettingsOpen] = useState(false);
+    const [receivedNewMessage, setReceivedNewMessage] = useState(false);
     const TOKEN_SAFE_DELTA = 500;
 
     const handleInputChange = (event) => {
@@ -42,9 +43,10 @@ function Chatbot(props) {
 
         const newMessage = { texts: [inputValue], isUser: true, timestamp: new Date().getTime() };
         conversation.messages.push(newMessage);
-        
+
         emptyTextArea();
         setIsWaiting(true);
+        setReceivedNewMessage(true);
 
         let requestMessages = getRequestMessages([...conversation.messages]);
         const requestMaxTokens = conversation.settings.maxTokens === 0 ? null : conversation.settings.maxTokens;
@@ -55,6 +57,7 @@ function Chatbot(props) {
         trySendRequest(sendChatCompletion, requestSettings).then((response) => {
             conversation.messages.push({ texts: response, isUser: false, timestamp: new Date().getTime() });
             setIsWaiting(false);
+            setReceivedNewMessage(false);
         });
     };
 
@@ -107,6 +110,7 @@ function Chatbot(props) {
     function emptyTextArea() {
         setInputValue('');
         const element = document.getElementById("textarea-user-input");
+        element.style.height = "auto";
         element.style.height = `${31}px`;
     }
 
@@ -124,7 +128,7 @@ function Chatbot(props) {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [conversation.messages]);
+    }, [receivedNewMessage]);
 
     return (
         <div className="chatbot" data-sidebar-is-open={sidebarIsOpen}>
