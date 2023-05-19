@@ -1,9 +1,9 @@
 @import "variables.scss";
 
-body {
+.app {
     margin: 0;
     font-family: $font-family-main;
-    background-color: $background-color;
+    background-color: $color-background;
 }
 
 .no-conversation-container {
@@ -15,7 +15,7 @@ body {
     position: fixed;
     left: 0;
     transition: left 0.5s ease-in-out;
-    color: $text-color-main;
+    color: $color-text-main;
 }
 
 .no-conversation-container[data-is-open="true"] {
@@ -40,4 +40,16 @@ body {
 
 .hide {
     display: none;
+}
+
+.theme-dark {
+    background-color: $color-background-dark;
+}
+
+.theme-dark .no-conversation-container {
+    color: $color-text-main-dark;
+}
+
+.theme-dark .no-conversation-options {
+    color: $color-accent-main-dark;
 }

@@ -5,24 +5,24 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  background-color: $background-color;
+  background-color: $color-background;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 1px;
 }
 
 .sidebaritem:hover {
     cursor: pointer;
-    background-color: #f6f6f6;
+    background-color: $color-second;
 }
 
 .sidebaritem[data-is-selected="true"] {
-  background-color: #f6f6f6;
+  background-color: $color-second;
 }
 
 .sidebaritem-title {
   font-size: 1rem;
   font-weight: 600;
-  color: $text-color-main;
+  color: $color-text-main;
   max-width: 190px;
 }
 
@@ -30,7 +30,7 @@
   font-family: $font-family-main;
   font-size: 1rem;
   font-weight: 600;
-  color: $text-color-main;
+  color: $color-text-main;
   max-width: 170px;
 }
 
@@ -57,9 +57,42 @@
 }
 
 .sidebaritem-button-edit {
-  color: $options-button-color;
+  color: $color-button-options;
 }
 
 .sidebaritem-button-trash {
-  color: $options-button-color;
+  color: $color-button-options;
+}
+
+
+
+
+
+.theme-dark .sidebaritem {
+  background-color: $color-background-dark;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.theme-dark .sidebaritem:hover {
+    background-color: $color-second-dark;
+}
+
+.theme-dark .sidebaritem[data-is-selected="true"] {
+  background-color: $color-second-dark;
+}
+
+.theme-dark .sidebaritem-title {
+  color: $color-text-main-dark;
+}
+
+// .theme-dark .sidebaritem-title input {
+//   color: $color-text-main-dark;
+// }
+
+.theme-dark .sidebaritem-button-edit {
+  color: $color-button-options-dark;
+}
+
+.theme-dark .sidebaritem-button-trash {
+  color: $color-button-options-dark;
 }

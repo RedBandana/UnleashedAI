@@ -63,21 +63,6 @@ const Settings = ({ settings, onSave, onClose }) => {
                             </div>
                         </div>
                         <div className="setting-item">
-                            <label htmlFor="temperature">Randomize</label>
-                            <div className="input-container">
-                                <input
-                                    type="number"
-                                    id="temperature"
-                                    name="temperature"
-                                    step="0.1"
-                                    min="0.1"
-                                    max="2.0"
-                                    value={formSettings.temperature}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                        </div>
-                        <div className="setting-item">
                             <label htmlFor="maxTokens">Max Words</label>
                             <div className="input-container">
                                 <input
@@ -92,7 +77,7 @@ const Settings = ({ settings, onSave, onClose }) => {
                             </div>
                         </div>
                         <div className="setting-item">
-                            <label htmlFor="quantity">Quantity</label>
+                            <label htmlFor="quantity">Answers</label>
                             <div className="input-container">
                                 <input
                                     type="number"
@@ -102,6 +87,21 @@ const Settings = ({ settings, onSave, onClose }) => {
                                     min="1"
                                     max="10"
                                     value={formSettings.quantity}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                        </div>
+                        <div className="setting-item">
+                            <label htmlFor="temperature">Randomize</label>
+                            <div className="input-container">
+                                <input
+                                    type="number"
+                                    id="temperature"
+                                    name="temperature"
+                                    step="0.1"
+                                    min="0.1"
+                                    max="2.0"
+                                    value={formSettings.temperature}
                                     onChange={handleInputChange}
                                 />
                             </div>

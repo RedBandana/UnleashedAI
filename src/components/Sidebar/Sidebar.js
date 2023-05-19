@@ -3,7 +3,8 @@ import './Sidebar.scss';
 import SidebarItem from '../SidebarItem/SidebarItem';
 
 function Sidebar(props) {
-  const { sidebarItems, isOpen, onClose, onClickItem, onEditItem, onDeleteItem, onAddItem, onClearItems, onSave, onSaveAs, onRead } = props;
+  const { sidebarItems, isOpen, onClose, onClickItem, onEditItem, onDeleteItem, 
+    onAddItem, onClearItems, onSave, onSaveAs, onRead, onToggleTheme } = props;
   const sidebarRef = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
@@ -63,9 +64,9 @@ function Sidebar(props) {
       </div>
       <div className="sidebar-footer sidebar-no-move-parent">
         <div className="sidebar-clear-button" onClick={onClearItems}>Clear Conversations</div>
-        <a className='sidebar-help-button' href="https://openai.com/blog/chatgpt" target="_blank" rel="noopener noreferrer">
-          <div className="fas fa-question-circle"></div>
-        </a>
+        <div className='sidebar-help-button' onClick={onToggleTheme}>
+          <div className="fas fa-moon"></div>
+        </div>
       </div>
     </div>
   );

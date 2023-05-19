@@ -16,8 +16,8 @@
 }
 
 .chatbot-header {
-  background-color: $color-main;
-  color: #ffffff;
+  background-color: $color-accent-second;
+  color: $color-main;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,7 +38,9 @@
   flex-direction: column;
   flex-grow: 1;
   overflow-y: auto;
-  margin: 50px 5% 0 5%;
+  margin: 0 5%;
+  padding-top: 60px;
+  padding-bottom: 25px;
 }
 
 .chatbot-messages {
@@ -48,11 +50,10 @@
 }
 
 .chatbot-footer {
-  padding: 10px;
   position: sticky;
   bottom: 0; /* Stick the footer to the bottom of the viewport */
   margin: 0 5%;
-  margin-bottom: 15px;
+  margin-bottom: 25px;
 }
 
 .chatbot-footer form {
@@ -63,7 +64,7 @@
 
 .chatbot-footer button {
   background-color: $color-accent-main;
-  color: #ffffff;
+  color: $color-main;
   border: none;
   border-radius: 20px;
   padding: 10px 15px;
@@ -95,14 +96,14 @@
 
 .chat-message-timestamp {
   font-size: 12px;
-  color: $options-button-color;
+  color: $color-button-options;
   margin-top: 5px;
   align-self: center;
 }
 
 .chatbot-footer textarea {
   width: 100%;
-  max-width: 700px;
+  max-width: 1000px;
   resize: vertical;
   padding: 5px;
   font-size: 1rem;
@@ -112,7 +113,7 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   max-height: 140px;
   box-shadow: 0 0 10px darkgray;
-  color: #424242;
+  color: $color-text-main;
 }
 
 .chatbot-send-button {
@@ -126,3 +127,24 @@
   margin-bottom: 10px;
   transform: translateX(5px);
 }
+
+.theme-dark .chatbot-header {
+  background-color: $color-accent-second-dark;
+  color: $color-main-dark;
+  box-shadow: 0 0 10px black;
+}
+
+.theme-dark .chatbot-footer button {
+  background-color: $color-accent-main-dark;
+  color: $color-main-dark;
+  box-shadow: 0 0 5px rgb(66, 66, 66);
+}
+
+.theme-dark .chat-message-timestamp {
+  color: $color-button-options-dark;
+}
+
+// .theme-dark .chatbot-footer textarea {
+//   color: $color-text-main-dark;
+//   box-shadow: 0 0 10px darkgray;
+// }
