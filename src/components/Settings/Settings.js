@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import "./Settings.scss";
 import { parseToRightType } from '../../utils/Utils'
 
-
 const Settings = ({ settings, onSave, onClose }) => {
     const [formSettings, setFormSettings] = useState(settings);
 
@@ -21,6 +20,14 @@ const Settings = ({ settings, onSave, onClose }) => {
             [name]: finalValue,
         }));
     };
+
+    const handleCheckboxChange = (event) => {
+        const { name, checked } = event.target;
+        setFormSettings((prevState) => ({
+            ...prevState,
+            [name]: checked,
+        }));
+    }
 
     return (
         <div className="settings-dialog">
@@ -41,17 +48,22 @@ const Settings = ({ settings, onSave, onClose }) => {
                         <div className="setting-item">
                             <label htmlFor="model">Model</label>
                             <div className="input-container">
-                                <input
-                                    type="text"
+                                <select
                                     id="model"
                                     name="model"
                                     value={formSettings.model}
-                                    onChange={handleInputChange}
-                                />
+                                    onChange={handleInputChange}>
+                                    <option value="gpt-4">gpt-4</option>
+                                    <option value="gpt-4-0314">gpt-4-0314</option>
+                                    <option value="gpt-4-32k">gpt-4-32k</option>
+                                    <option value="gpt-4-32k-0314">gpt-4-32k-0314</option>
+                                    <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+                                    <option value="gpt-3.5-turbo-0301">gpt-3.5-turbo-0301</option>
+                                </select>
                             </div>
                         </div>
                         <div className="setting-item">
-                            <label htmlFor="temperature">Temperature</label>
+                            <label htmlFor="temperature">Randomize</label>
                             <div className="input-container">
                                 <input
                                     type="number"
@@ -94,7 +106,7 @@ const Settings = ({ settings, onSave, onClose }) => {
                                 />
                             </div>
                         </div>
-                        <div className="setting-item">
+                        <div className="setting-item hide">
                             <label htmlFor="user">User</label>
                             <div className="input-container">
                                 <input
@@ -106,79 +118,94 @@ const Settings = ({ settings, onSave, onClose }) => {
                                 />
                             </div>
                         </div>
-                        <div className="setting-item">
-                            <label htmlFor="topP">Top P</label>
-                            <div className="input-container">
-                                <input
-                                    type="number"
-                                    id="topP"
-                                    name="topP"
-                                    step="0.1"
-                                    min="0.1"
-                                    max="1.0"
-                                    value={formSettings.topP}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                        </div>
-                        <div className="setting-item">
-                            <label htmlFor="stream">Stream*</label>
+                        <div className="setting-item dev-options">
+                            <label htmlFor="devOptions">Show Developer Options</label>
                             <div className="input-container">
                                 <input
                                     type="checkbox"
-                                    id="stream"
-                                    name="stream"
-                                    checked={formSettings.stream}
-                                    onChange={handleInputChange}
+                                    id="devOptions"
+                                    name="devOptions"
+                                    checked={formSettings.devOptions}
+                                    onChange={handleCheckboxChange}
                                 />
                             </div>
                         </div>
-                        <div className="setting-item">
-                            <label htmlFor="stop">Stop Sequences</label>
-                            <div className="input-container">
-                                <input
-                                    type="text"
-                                    id="stop"
-                                    name="stop"
-                                    value={formSettings.stop}
-                                    onChange={handleInputChange}
-                                />
+                        <div className="dev-options-container" data-show-dev-options={formSettings.devOptions}>
+                            <div className="settings-documentation">
+                                <a href="https://platform.openai.com/docs/api-reference/chat" target="_blank" rel="noopener noreferrer">Documentation</a>
                             </div>
-                        </div>
-                        <div className="setting-item">
-                            <label htmlFor="presencePenalty">Presence Penalty</label>
-                            <div className="input-container">
-                                <input
-                                    type="number"
-                                    id="presencePenalty"
-                                    name="presencePenalty"
-                                    step="0.1"
-                                    min="-2.0"
-                                    max="2.0"
-                                    value={formSettings.presencePenalty}
-                                    onChange={handleInputChange}
-                                />
+                            <div className="setting-item">
+                                <label htmlFor="topP">Top P</label>
+                                <div className="input-container">
+                                    <input
+                                        type="number"
+                                        id="topP"
+                                        name="topP"
+                                        step="0.1"
+                                        min="0.1"
+                                        max="1.0"
+                                        value={formSettings.topP}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <div className="setting-item">
-                            <label htmlFor="frequencyPenalty">Frequency Penalty</label>
-                            <div className="input-container">
-                                <input
-                                    type="number"
-                                    id="frequencyPenalty"
-                                    name="frequencyPenalty"
-                                    step="0.1"
-                                    min="-2.0"
-                                    max="2.0"
-                                    value={formSettings.frequencyPenalty}
-                                    onChange={handleInputChange}
-                                />
+                            <div className="setting-item hide">
+                                <label htmlFor="stream">Stream*</label>
+                                <div className="input-container">
+                                    <input
+                                        type="checkbox"
+                                        id="stream"
+                                        name="stream"
+                                        checked={formSettings.stream}
+                                        onChange={handleCheckboxChange}
+                                    />
+                                </div>
+                            </div>
+                            <div className="setting-item">
+                                <label htmlFor="stop">Stop Sequences</label>
+                                <div className="input-container">
+                                    <input
+                                        type="text"
+                                        id="stop"
+                                        name="stop"
+                                        value={formSettings.stop}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                            </div>
+                            <div className="setting-item">
+                                <label htmlFor="presencePenalty">Presence Penalty</label>
+                                <div className="input-container">
+                                    <input
+                                        type="number"
+                                        id="presencePenalty"
+                                        name="presencePenalty"
+                                        step="0.1"
+                                        min="-2.0"
+                                        max="2.0"
+                                        value={formSettings.presencePenalty}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                            </div>
+                            <div className="setting-item">
+                                <label htmlFor="frequencyPenalty">Frequency Penalty</label>
+                                <div className="input-container">
+                                    <input
+                                        type="number"
+                                        id="frequencyPenalty"
+                                        name="frequencyPenalty"
+                                        step="0.1"
+                                        min="-2.0"
+                                        max="2.0"
+                                        value={formSettings.frequencyPenalty}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div className="settings-documentation">
-                        <a href="https://platform.openai.com/docs/api-reference/chat" target="_blank" rel="noopener noreferrer">Documentation</a>
-                    </div>
+
                     <div className="settings-buttons">
                         <button className="settings-cancel-button" onClick={onClose}>
                             <i className="fa fa-times"></i>
@@ -206,6 +233,7 @@ Settings.propTypes = {
         presencePenalty: PropTypes.number.isRequired,
         frequencyPenalty: PropTypes.number.isRequired,
         user: PropTypes.string.isRequired,
+        devOptions: PropTypes.bool.isRequired
     }).isRequired,
     onSave: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,

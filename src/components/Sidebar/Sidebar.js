@@ -63,7 +63,7 @@ function Sidebar(props) {
       </div>
       <div className="sidebar-footer sidebar-no-move-parent">
         <div className="sidebar-clear-button" onClick={onClearItems}>Clear Conversations</div>
-        <a className='sidebar-help-button' href="https://www.google.com" target="_blank" rel="noopener noreferrer">
+        <a className='sidebar-help-button' href="https://openai.com/blog/chatgpt" target="_blank" rel="noopener noreferrer">
           <div className="fas fa-question-circle"></div>
         </a>
       </div>

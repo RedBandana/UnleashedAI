@@ -1,20 +1,3 @@
-function formatText(text) {
-  // const codeRegex = /```([\s\S]*?)```/g;
-  // let text = text.replace(codeRegex, '<pre>$1</pre>');
-
-  return text;
-}
-
-function resizeElement(elementId) {
-  const element = document.getElementById(elementId);
-  if (element == null) {
-    return;
-  }
-
-  element.style.height = "auto";
-  element.style.height = `${element.scrollHeight}px`;
-}
-
 function parseToRightType(obj, property, value) {
   if (typeof obj[property] == "number") {
     return parseFloat(value);
@@ -27,4 +10,22 @@ function parseToRightType(obj, property, value) {
   }
 }
 
-export { formatText, resizeElement, parseToRightType}
+function getModelMaxTokens(model) {
+  if (model === 'gpt-4' || model === 'gpt-4-0314') {
+    return 8192;
+  }
+  else if (model === 'gpt-4-32k' || model === 'gpt-4-32k-0314') {
+    return 32768;
+  }
+  else if (model === 'gpt-3.5-turbo' || model === 'gpt-3.5-turbo-0301') {
+    return 4096;
+  }
+  else if (model === 'code-davinci-002') {
+    return 80001;
+  }
+  else {
+    return null;
+  }
+}
+
+export { parseToRightType, getModelMaxTokens }

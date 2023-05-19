@@ -41,15 +41,11 @@
   width: 50px;
 }
 
-.settings-buttons {
-  margin-top: 20px;
-}
-
 .setting-inputs {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  max-height: 278px;
+  height: 278px;
   padding-right: 10px;
   padding-top: 5px;
 }
@@ -72,11 +68,14 @@
 }
 
 .input-container input,
+.input-container select,
 .input-container textarea {
   width: 100%;
 }
 
+.input-container select,
 .input-container textarea {
+  background-color: #fff;
   width: 100%;
   resize: vertical;
   padding: 5px;
@@ -89,6 +88,23 @@
 }
 
 .settings-documentation {
-    float: right;
-    margin: 5px;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+}
+
+.dev-options-container[data-show-dev-options="false"] {
+  display: none;
+}
+
+.dev-options {
+  margin: 0px;
+}
+
+.dev-options label {
+  flex-basis: 200px;
+  margin: 0;
+}
+
+#devOptions {
+  width: 20%;
 }

@@ -7,7 +7,7 @@ body {
 }
 
 .no-conversation-container {
-    margin-top: 25%;
+    margin-top: 150px;
     width: 100%;
     text-align: center;
     font-size: 1.25rem;
@@ -22,14 +22,20 @@ body {
     left: $sidebar-width;
 }
 
-.no-conversation-open {
-    margin-top: 25px;
+.no-conversation-options {
+    margin-top: 20px;
     color: $color-accent-main;
+}
+
+.no-conversation-options-child {
+    margin-top: 5px;
     transition: transform 0.25s ease-in-out;
 }
 
-.no-conversation-open:hover {
-    transform: translateY(-3px);
+.no-conversation-options-child:hover,
+.no-conversation-options-child label:hover {
+    transform: translateY(-2px);
+    cursor: pointer;
 }
 
 .hide {

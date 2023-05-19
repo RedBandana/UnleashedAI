@@ -36,7 +36,6 @@
   font-size: 12px;
   font-weight: 400;
   color: $options-button-color;
-  margin-right: 15px;
 }
 
 .chat-message-options-icon {
@@ -52,10 +51,9 @@
   box-shadow: 0 0 5px darkgray;
   z-index: 1;
   padding: 3px 8px;
-  width: 50px;
   border-radius: 20px;
   display: inline-flex;
-  width: 70px;
+  width: 75px;
 }
 
 .chat-message-options-container button {

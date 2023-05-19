@@ -3,22 +3,22 @@ import ChatHistory from './ChatHistory';
 import Settings from '../Settings/Settings';
 import './Chatbot.scss';
 import { sendChatCompletion, trySendRequest } from '../../api/openai';
-import { resizeElement } from '../../utils/Utils'
+import { getModelMaxTokens } from '../../utils/Utils'
 import TextInput from '../TextInput/TextInput';
 import TypingDots from '../TypingDots/TypingDots'
 
 function Chatbot(props) {
     const { sidebarIsOpen, conversation } = props;
-    const TOKEN_SAFE_LIMIT = 10000000;
     const [isWaiting, setIsWaiting] = useState(false);
     const chatbotBodyRef = useRef(null);
     const settingsRef = useRef(null);
     const [inputValue, setInputValue] = useState('');
     const [settingsOpen, setSettingsOpen] = useState(false);
+    const TOKEN_SAFE_DELTA = 500;
 
     const handleInputChange = (event) => {
         setInputValue(event.target.value);
-        resizeElement("textarea-user-input");
+        resizeTextAreaHeight();
     };
 
     function canSubmitForm(event) {
@@ -33,7 +33,7 @@ function Chatbot(props) {
         return false;
     }
 
-    const handleFormSubmit = async (event) => {
+    const handleFormSubmit = (event) => {
         event.preventDefault();
 
         if (inputValue === '') {
@@ -42,18 +42,20 @@ function Chatbot(props) {
 
         const newMessage = { texts: [inputValue], isUser: true, timestamp: new Date().getTime() };
         conversation.messages.push(newMessage);
-        setInputValue('');
+        
+        emptyTextArea();
         setIsWaiting(true);
 
-        let requestMessages = getRequestMessages([...conversation.messages, newMessage]);
+        let requestMessages = getRequestMessages([...conversation.messages]);
         const requestMaxTokens = conversation.settings.maxTokens === 0 ? null : conversation.settings.maxTokens;
         const requestSettings = {
             ...conversation.settings, history: requestMessages, maxTokens: requestMaxTokens
         }
 
-        const response = await trySendRequest(sendChatCompletion, requestSettings);
-        conversation.messages.push({ texts: response, isUser: false, timestamp: new Date().getTime() });
-        setIsWaiting(false);
+        trySendRequest(sendChatCompletion, requestSettings).then((response) => {
+            conversation.messages.push({ texts: response, isUser: false, timestamp: new Date().getTime() });
+            setIsWaiting(false);
+        });
     };
 
     const handleDelete = (messageToDelete) => {
@@ -73,8 +75,16 @@ function Chatbot(props) {
         setSettingsOpen(false);
     };
 
+    const handleClickOutside = (event) => {
+        if (settingsRef.current && !settingsRef.current.contains(event.target) &&
+            event.target.className !== "chatbot-settings-button" && event.target.className !== "fas fa-cog") {
+            setSettingsOpen(false);
+        }
+    };
+
     const getRequestMessages = (messages) => {
-        while (countWordsInMessages(messages) > TOKEN_SAFE_LIMIT) {
+        while (messages.length > 1 &&
+            countWordsInMessages(messages) > getModelMaxTokens(conversation.settings.model) - TOKEN_SAFE_DELTA) {
             messages.splice(0, 1);
         }
         return messages;
@@ -88,15 +98,20 @@ function Chatbot(props) {
         return totalWords;
     }
 
-    const handleClickOutside = (event) => {
-        if (settingsRef.current && !settingsRef.current.contains(event.target) &&
-            event.target.className !== "chatbot-settings-button" && event.target.className !== "fas fa-cog") {
-            setSettingsOpen(false);
-        }
-    };
+    function resizeTextAreaHeight() {
+        const element = document.getElementById("textarea-user-input");
+        element.style.height = "auto";
+        element.style.height = `${element.scrollHeight}px`;
+    }
+
+    function emptyTextArea() {
+        setInputValue('');
+        const element = document.getElementById("textarea-user-input");
+        element.style.height = `${31}px`;
+    }
 
     useEffect(() => {
-        resizeElement("textarea-user-input");
+        resizeTextAreaHeight();
 
         // Scroll down chatbot-body when messages change
         chatbotBodyRef.current.scrollTo({

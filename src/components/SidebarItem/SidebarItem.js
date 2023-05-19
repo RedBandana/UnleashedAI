@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './SidebarItem.scss';
 
@@ -19,6 +19,13 @@ function SidebarItem(props) {
     setEditing(true);
   }
 
+  useEffect(() => {
+    if (editing) {
+      const input = document.getElementById("sidebarItemTitle");
+        input.select();
+    }
+  },[editing])
+
   function handleTitleChange(event) {
     setNewTitle(event.target.value);
   }
@@ -33,6 +40,7 @@ function SidebarItem(props) {
       {editing ? (
         <div className="sidebaritem-title">
           <input
+            id="sidebarItemTitle"
             type="text"
             value={newTitle}
             onChange={handleTitleChange}

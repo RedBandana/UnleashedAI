@@ -2,16 +2,12 @@ const encryptionKey = process.env.REACT_APP_ENCRYPTION_KEY;
 
 const saveJSONToFile = async (jsonObject, filename) => {
     const data = JSON.stringify(jsonObject);
-    const salt = crypto.getRandomValues(new Uint8Array(16));
-    const iv = crypto.getRandomValues(new Uint8Array(12));
-    const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(encryptionKey), 'AES-GCM', true, ['encrypt']);
-    const encryptedData = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv, additionalData: salt }, key, new TextEncoder().encode(data));
-    const blob = new Blob([salt, iv, encryptedData], { type: 'application/octet-stream' });
+    const blob = await encryptDataToBlob(data);
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
     link.download = filename;
-    document.body.appendChild(link);
+    document.body.appendChild(link);    
     link.click();
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
@@ -37,6 +33,16 @@ const readJSONFromUserInput = (inputFile) => {
             }
         };
     });
+}
+
+async function encryptDataToBlob(data) {
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(encryptionKey), 'AES-GCM', true, ['encrypt']);
+    const encryptedData = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv, additionalData: salt }, key, new TextEncoder().encode(data));
+    const blob = new Blob([salt, iv, encryptedData], { type: 'application/octet-stream' });
+
+    return blob;
 }
 
 async function decryptData(result) {
