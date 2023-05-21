@@ -15,8 +15,8 @@ function createWindow() {
     });
 
     mainWindow.setMenuBarVisibility(false);
-    mainWindow.loadURL('http://localhost:3000');
-    //mainWindow.loadURL(path.join(__dirname, '/build/index.html'));
+    // mainWindow.loadURL('http://localhost:3000');
+    mainWindow.loadURL(path.join(__dirname, '/build/index.html'));
     mainWindow.on('closed', () => {
         mainWindow = null;
     });

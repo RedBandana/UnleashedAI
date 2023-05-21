@@ -5,14 +5,14 @@ import Message from '../Message/Message';
 function ChatHistory(props) {
   const { messages, onDelete } = props;
 
-  const handleDelete = (message) => {
-    onDelete(message);
+  const handleDelete = (index) => {
+    onDelete(index);
   };
 
   return (
     <div className="chatbot-messages">
       {messages.map((message, index) => (
-        <Message key={index} message={message} onDelete={handleDelete} />
+        <Message key={index} index={index} message={message} onDelete={handleDelete} />
       ))}
     </div>
   );

@@ -10,11 +10,11 @@
 
 .sidebaritem:hover {
     cursor: pointer;
-    background-color: var(--color-second);
+    background-color: var(--color-hover-main);
 }
 
 .sidebaritem[data-is-selected="true"] {
-  background-color: var(--color-second);
+  background-color: var(--color-hover-main);
 }
 
 .sidebaritem-title {
@@ -55,11 +55,11 @@
 }
 
 .sidebaritem-button-edit {
-  color: var(--color-button-options);
+  color: var(--color-options-main);
 }
 
 .sidebaritem-button-trash {
-  color: var(--color-button-options);
+  color: var(--color-options-main);
 }
 
 .theme-dark .sidebaritem-title input {

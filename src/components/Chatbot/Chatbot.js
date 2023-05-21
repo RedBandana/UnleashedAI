@@ -15,6 +15,7 @@ function Chatbot(props) {
     const [inputValue, setInputValue] = useState('');
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [receivedNewMessage, setReceivedNewMessage] = useState(false);
+    const [messageUpdate, setMessageUpdate] = useState(false);
     const TOKEN_SAFE_DELTA = 500;
 
     const handleInputChange = (event) => {
@@ -61,8 +62,12 @@ function Chatbot(props) {
         });
     };
 
-    const handleDelete = (messageToDelete) => {
-        conversation.messages = conversation.messages.filter(message => message !== messageToDelete);
+    const handleDelete = (messageIndex) => {
+        const newMessages = [...conversation.messages];
+        newMessages.splice(messageIndex, 1);
+        conversation.messages = newMessages;
+
+        setMessageUpdate(!messageUpdate);
     };
 
     const handleSettingsButtonClick = () => {
@@ -116,24 +121,27 @@ function Chatbot(props) {
 
     useEffect(() => {
         resizeTextAreaHeight();
-
-        // Scroll down chatbot-body when messages change
-        chatbotBodyRef.current.scrollTo({
-            top: chatbotBodyRef.current.scrollHeight,
-            behavior: "smooth",
-        });
-
+        scrollToBottom("smooth");
         document.addEventListener("mousedown", handleClickOutside);
-
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [receivedNewMessage]);
 
+    function scrollToBottom(behavior) {
+        chatbotBodyRef.current.scrollTo({
+            top: chatbotBodyRef.current.scrollHeight,
+            behavior: behavior,
+        });
+    }
+
     return (
         <div className="chatbot" data-sidebar-is-open={sidebarIsOpen}>
             <div className="chatbot-body" ref={chatbotBodyRef}>
-                <ChatHistory messages={conversation.messages} onDelete={handleDelete} />
+                {(messageUpdate || !messageUpdate) && (
+                    <ChatHistory messages={conversation.messages} onDelete={handleDelete} />
+                )}
+
                 {isWaiting && (
                     <div className='chatbot-dots'>
                         <TypingDots />

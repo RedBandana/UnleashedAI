@@ -2,25 +2,27 @@ $sidebar-width: 300px;
 
 body {
     --font-family-main: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    --navbar-heigth: 47px;
 
     --color-background: #fff;
-    --color-button-options: #ccc;
+    --color-options-main: #bbb;
+    --color-hover-main: #f5f5f5;
     --color-text-main: #050505;
     --color-main: #fff;
     --color-second: #eee;
-    --color-third: #aaa;
+    --color-third: #999;
     --color-none: transparent;
     --color-accent-main: #2374E1;
     --color-accent-second: #333;
     --color-text-main-default: #050505;
-    --color-button-options-default: #999;
+    --color-options-main-default: #bbb;
     --color-main-default: #fff;
     --color-second-default: #eee;
 
     --box-shadow-main: 0 1px 10px darkgray;
     --box-shadow-second: 0 0 5px darkgray;
     --box-shadow-third: 0 0 5px black;
-    --box-shadow-sidebar-open: 0px 0 300px #ccc;
+    --box-shadow-sidebar-open: 0px 0 300px #bbb;
     
     --border-main: 1px solid #ccc;
     --border-none: none;
@@ -31,11 +33,12 @@ body {
 
 .theme-dark {
     --color-background: #313338;
-    --color-button-options: #777;
+    --color-options-main: #666;
+    --color-hover-main: #3f4248;
     --color-text-main: #E4E6EB;
     --color-main: #2b2d31;
     --color-second: #3f4248;
-    --color-third: #bbb;
+    --color-third: #aaa;
     --color-accent-main: #2374E1;
     --color-accent-second: #ccc;
     --color-shadow-main: #454545;

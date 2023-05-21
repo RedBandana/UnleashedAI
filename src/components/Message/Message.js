@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "./Message.scss";
 
-const Message = ({ message, onDelete }) => {
+const Message = ({ message, onDelete, index }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const messageClass = message.isUser ? "chat-message-user" : "chat-message-bot";
@@ -16,7 +16,7 @@ const Message = ({ message, onDelete }) => {
   };
 
   const handleDeleteClick = () => {
-    onDelete(message);
+    onDelete(index);
     setShowOptions(false);
   };
 

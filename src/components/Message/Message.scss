@@ -43,7 +43,7 @@
 
 .chat-message-options-icon {
   cursor: pointer;
-  color: var(--color-button-options);
+  color: var(--color-options-main);
 }
 
 .chat-message-options-container {
@@ -108,26 +108,8 @@
 }
 
 .chat-message-icons-container .fa {
-  color: var(--color-button-options);
+  color: var(--color-options-main);
 }
-
-// .theme-dark .chat-message-options-container {
-//   box-shadow: var(--box-shadow-second);
-//   background-color: var(--color-main-default);
-// }
-
-// .theme-dark .chat-message-options-container button {
-//   color: var(--color-button-options-default);
-// }
-
-// .theme-dark .chat-message-options-icon {
-//   color: var(--color-button-options-default);
-// }
-
-// .theme-dark .chat-message-bot .chat-message-bubble {
-//   background-color: var(--color-second-default);
-//   color: var(--color-text-main-default);
-// }
 
 .theme-dark .chat-message-user .chat-message-bubble {
   color: var(--color-main-default)

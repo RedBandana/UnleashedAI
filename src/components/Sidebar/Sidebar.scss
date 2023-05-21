@@ -47,7 +47,7 @@
 
 .sidebar-footer:hover {
   cursor: pointer;
-  background-color: var(--color-second);
+  background-color: var(--color-hover-main);
 }
 
 .sidebar-clear-button {
@@ -62,7 +62,7 @@
 .sidebar-help-button {
   font-size: 1.65rem;
   font-weight: bold;
-  color: var(--color-button-options);
+  color: var(--color-options-main);
   text-decoration: none;
   padding-left: 10px;
   padding-right: 14px;
@@ -87,14 +87,6 @@
   text-align: center;
 }
 
-.sidebar-header {
-  background-color: var(--color-second);
-  padding: 10px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 18px;
-}
-
 .sidebar-filestream-container {
   display: flex;
   flex-direction: row;
@@ -102,17 +94,17 @@
   box-shadow: var(--box-shadow-main);
   z-index: 1;
   padding: 0 15px;
-  height: 47px;
+  height: var(--navbar-heigth);
 }
 
 .sidebar-filestream-container:hover {
   cursor: pointer;
-  background-color: var(--color-second);
+  background-color: var(--color-hover-main);
 }
 
 .sidebar-filestream-options {
   text-align: center;
-  color: var(--color-button-options);
+  color: var(--color-options-main);
 }
 
 .sidebar-filestream-options:hover,
@@ -129,7 +121,7 @@
   border: var(--border-none);
   font-family: var(--font-family-main);
   font-size: 1.2rem;
-  color: var(--color-button-options);
+  color: var(--color-options-main);
   color: var(--color-accent-main);
   outline: none;
   text-shadow: none;
