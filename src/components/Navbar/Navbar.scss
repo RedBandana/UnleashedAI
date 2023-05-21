@@ -1,9 +1,9 @@
 @import '../../variables.scss';
 
 .navbar {
-  background-color: $color-main;
+  background-color: var(--color-main);
   padding: 10px;
-  box-shadow: 0px 1px 10px darkgray;
+  box-shadow: var(--box-shadow-main);
   position: fixed;
   top: 0;
   left: 0;
@@ -27,28 +27,15 @@
 }
 
 .navbar-toggle {
-  background-color: transparent;
-  border: none;
+  background-color: var(--color-none);
+  border: var(--border-none);
   cursor: pointer;
   font-size: 20px;
-  color: $color-text-main;
+  color: var(--color-text-main);
 }
 
 .navbar-brand {
   font-weight: bold;
   font-size: 20px;
-  color: $color-text-main;
-}
-
-.theme-dark .navbar {
-  background-color: $color-main-dark;
-  box-shadow: 0px 1px 10px darkgray;
-}
-
-.theme-dark .navbar-toggle {
-  color: $color-text-main-dark;
-}
-
-.theme-dark .navbar-brand {
-  color: $color-text-main-dark;
+  color: var(--color-text-main);
 }

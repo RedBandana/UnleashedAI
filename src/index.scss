@@ -1,9 +1,9 @@
 @import "variables.scss";
 
-.app {
+body {
     margin: 0;
-    font-family: $font-family-main;
-    background-color: $color-background;
+    font-family: var(--font-family-main);
+    background-color: var(--color-background);
 }
 
 .no-conversation-container {
@@ -15,7 +15,7 @@
     position: fixed;
     left: 0;
     transition: left 0.5s ease-in-out;
-    color: $color-text-main;
+    color: var(--color-text-main);
 }
 
 .no-conversation-container[data-is-open="true"] {
@@ -24,7 +24,7 @@
 
 .no-conversation-options {
     margin-top: 20px;
-    color: $color-accent-main;
+    color: var(--color-accent-main);
 }
 
 .no-conversation-options-child {
@@ -40,16 +40,4 @@
 
 .hide {
     display: none;
-}
-
-.theme-dark {
-    background-color: $color-background-dark;
-}
-
-.theme-dark .no-conversation-container {
-    color: $color-text-main-dark;
-}
-
-.theme-dark .no-conversation-options {
-    color: $color-accent-main-dark;
 }

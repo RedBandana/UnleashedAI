@@ -16,13 +16,13 @@
 }
 
 .chatbot-header {
-  background-color: $color-accent-second;
-  color: $color-main;
+  background-color: var(--color-accent-second);
+  color: var(--color-main);
   display: flex;
   justify-content: center;
   align-items: center;
   height: 70px;
-  box-shadow: 0 0 10px black;
+  box-shadow: var(--box-shadow-third);
   z-index: 1;
 }
 
@@ -62,14 +62,14 @@
 }
 
 .chatbot-footer button {
-  background-color: $color-accent-main;
-  color: $color-main;
-  border: none;
-  border-radius: 20px;
-  padding: 10px 15px;
-  font-size: 16px;
+  background-color: var(--color-accent-main);
+  color: var(--color-main);
+  border: var(--border-none);
+  border-radius: var(--border-radius-main);
+  padding: 7px 15px;
+  font-size: 1.5rem;
   cursor: pointer;
-  box-shadow: 0 0 5px rgb(66, 66, 66);
+  box-shadow: var(--box-shadow-third);
 }
 
 .chat-message {
@@ -88,16 +88,9 @@
 
 .chat-message-text {
   padding: 10px;
-  border-radius: 20px;
+  border-radius: var(--border-radius-main);
   font-size: 16px;
   line-height: 1.5;
-}
-
-.chat-message-timestamp {
-  font-size: 12px;
-  color: $color-button-options;
-  margin-top: 5px;
-  align-self: center;
 }
 
 .chatbot-footer textarea {
@@ -106,13 +99,13 @@
   resize: vertical;
   padding: 5px;
   font-size: 1rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  border-radius: var(--border-radius-second);
+  border: var(--border-main);
   margin-right: 10px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   max-height: 140px;
-  box-shadow: 0 0 10px darkgray;
-  color: $color-text-main;
+  box-shadow: var(--box-shadow-second);
+  color: var(--color-text-main);
 }
 
 .chatbot-send-button {
@@ -127,23 +120,10 @@
   transform: translateX(5px);
 }
 
-.theme-dark .chatbot-header {
-  background-color: $color-accent-second-dark;
-  color: $color-main-dark;
-  box-shadow: 0 0 10px black;
+.theme-dark .chatbot-footer textarea {
+  color: var(----color-text-main-default);
 }
 
 .theme-dark .chatbot-footer button {
-  background-color: $color-accent-main-dark;
-  color: $color-main-dark;
-  box-shadow: 0 0 5px rgb(66, 66, 66);
+  color: var(--color-main-default);
 }
-
-.theme-dark .chat-message-timestamp {
-  color: $color-button-options-dark;
-}
-
-// .theme-dark .chatbot-footer textarea {
-//   color: $color-text-main-dark;
-//   box-shadow: 0 0 10px darkgray;
-// }

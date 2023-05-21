@@ -5,32 +5,30 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  background-color: $color-background;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1px;
+  background-color: var(--color-main);
 }
 
 .sidebaritem:hover {
     cursor: pointer;
-    background-color: $color-second;
+    background-color: var(--color-second);
 }
 
 .sidebaritem[data-is-selected="true"] {
-  background-color: $color-second;
+  background-color: var(--color-second);
 }
 
 .sidebaritem-title {
   font-size: 1rem;
   font-weight: 600;
-  color: $color-text-main;
+  color: var(--color-text-main);
   max-width: 190px;
 }
 
 .sidebaritem-title input {
-  font-family: $font-family-main;
+  font-family: var(--font-family-main);
   font-size: 1rem;
   font-weight: 600;
-  color: $color-text-main;
+  color: var(--color-text-main);
   max-width: 170px;
 }
 
@@ -44,8 +42,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: transparent;
-  border: none;
+  background-color: var(--color-none);
+  border: var(--border-none);
   margin-left: 10px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
@@ -57,42 +55,13 @@
 }
 
 .sidebaritem-button-edit {
-  color: $color-button-options;
+  color: var(--color-button-options);
 }
 
 .sidebaritem-button-trash {
-  color: $color-button-options;
+  color: var(--color-button-options);
 }
 
-
-
-
-
-.theme-dark .sidebaritem {
-  background-color: $color-background-dark;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.theme-dark .sidebaritem:hover {
-    background-color: $color-second-dark;
-}
-
-.theme-dark .sidebaritem[data-is-selected="true"] {
-  background-color: $color-second-dark;
-}
-
-.theme-dark .sidebaritem-title {
-  color: $color-text-main-dark;
-}
-
-// .theme-dark .sidebaritem-title input {
-//   color: $color-text-main-dark;
-// }
-
-.theme-dark .sidebaritem-button-edit {
-  color: $color-button-options-dark;
-}
-
-.theme-dark .sidebaritem-button-trash {
-  color: $color-button-options-dark;
+.theme-dark .sidebaritem-title input {
+  color: var(--color-text-main-default);
 }

@@ -3,7 +3,7 @@ import './Sidebar.scss';
 import SidebarItem from '../SidebarItem/SidebarItem';
 
 function Sidebar(props) {
-  const { sidebarItems, isOpen, onClose, onClickItem, onEditItem, onDeleteItem, 
+  const { sidebarItems, isOpen, onClose, onClickItem, onEditItem, onDeleteItem,
     onAddItem, onClearItems, onSave, onSaveAs, onRead, onToggleTheme } = props;
   const sidebarRef = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -61,11 +61,11 @@ function Sidebar(props) {
               onClick={handleOnClickItem} onDelete={onDeleteItem} onEdit={onEditItem} isSelected={index === selectedIndex} />
           ))}
         </div>
-      </div>
-      <div className="sidebar-footer sidebar-no-move-parent">
-        <div className="sidebar-clear-button" onClick={onClearItems}>Clear Conversations</div>
-        <div className='sidebar-help-button' onClick={onToggleTheme}>
-          <div className="fas fa-moon"></div>
+        <div className="sidebar-footer sidebar-no-move-parent">
+          <div className="sidebar-clear-button" onClick={onClearItems}>Clear Conversations</div>
+          <div className='sidebar-help-button sidebar-no-move-parent' onClick={onToggleTheme}>
+            <div className="fas fa-moon"></div>
+          </div>
         </div>
       </div>
     </div>

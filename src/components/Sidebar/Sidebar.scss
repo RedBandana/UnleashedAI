@@ -1,7 +1,7 @@
 @import '../../variables.scss';
 
 .sidebar {
-  background-color: $color-main;
+  background-color: var(--color-main);
   width: $sidebar-width;
   height: 100%;
   position: fixed;
@@ -11,7 +11,7 @@
   display: flex;
   flex-direction: column;
   transition: left 0.5s ease-in-out;
-  border-right: 1px solid #ccc;
+  border-right: var(--border-none);
 }
 
 .sidebar[data-is-open="true"] {
@@ -27,31 +27,34 @@
 }
 
 .sidebar[data-is-open="true"] .sidebar-body {
-  box-shadow: 0px 0 300px #ccc;
+  box-shadow: var(--box-shadow-sidebar-open);
   left: 0;
 }
 
 .sidebar-list {
   flex: 1;
+  overflow-y: inherit;
 }
 
 .sidebar-footer {
-  border-top: 1px solid #d2d2d2;
-  background-color: $color-main;
+  border-top: var(--border-none);
+  background-color: var(--color-main);
   display: flex;
   justify-content: space-between;
+  box-shadow: var(--box-shadow-main);
+  clip-path: inset(-10px 0px 0px 0px);
 }
 
 .sidebar-footer:hover {
   cursor: pointer;
-  background-color: $color-second;
+  background-color: var(--color-second);
 }
 
 .sidebar-clear-button {
   padding: 10px;
   text-align: center;
   font-weight: bold;
-  color: $color-text-main;
+  color: var(--color-text-main);
   text-decoration: none;
   width: 225px;
 }
@@ -59,7 +62,7 @@
 .sidebar-help-button {
   font-size: 1.65rem;
   font-weight: bold;
-  color: $color-button-options;
+  color: var(--color-button-options);
   text-decoration: none;
   padding-left: 10px;
   padding-right: 14px;
@@ -70,14 +73,14 @@
   padding-top: 10px;
   text-align: center;
   font-weight: bold;
-  color: $color-text-main;
+  color: var(--color-text-main);
   height: 27px;
   z-index: 2;
   width: 225px;
 }
 
 .sidebar-title {
-  color: $color-text-main;
+  color: var(--color-text-main);
   margin-bottom: 10px;
   font-weight: bold;
   font-size: 18px;
@@ -85,9 +88,8 @@
 }
 
 .sidebar-header {
-  background-color: $color-second;
+  background-color: var(--color-second);
   padding: 10px;
-  border-bottom: 1px solid #d2d2d2;
   text-align: center;
   font-weight: bold;
   font-size: 18px;
@@ -97,7 +99,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  box-shadow: 0px 1px 5px rgb(207, 207, 207);
+  box-shadow: var(--box-shadow-main);
   z-index: 1;
   padding: 0 15px;
   height: 47px;
@@ -105,12 +107,12 @@
 
 .sidebar-filestream-container:hover {
   cursor: pointer;
-  background-color: $color-second;
+  background-color: var(--color-second);
 }
 
 .sidebar-filestream-options {
   text-align: center;
-  color: $color-button-options;
+  color: var(--color-button-options);
 }
 
 .sidebar-filestream-options:hover,
@@ -121,72 +123,15 @@
 
 .sidebar-filestream-open,
 .sidebar-filestream-options button {
-  background-color: rgba(0,0,0,0);
+  background-color: var(--color-none);
   padding: 5px;
   padding-top: 10px;
-  border: hidden;
-  font-family: $font-family-main;
+  border: var(--border-none);
+  font-family: var(--font-family-main);
   font-size: 1.2rem;
-  color: $color-button-options;
-  color: $color-accent-main;
+  color: var(--color-button-options);
+  color: var(--color-accent-main);
   outline: none;
   text-shadow: none;
   margin-left: 8px;
-}
-
-.theme-dark .sidebar {
-  background-color: $color-main-dark;
-  border-right: 1px solid #ccc;
-}
-
-.theme-dark .sidebar-footer {
-  background-color: $color-main-dark;
-}
-
-.theme-dark .sidebar-footer:hover {
-  background-color: $color-second-dark;
-}
-
-.theme-dark .sidebar-clear-button {
-  color: $color-text-main-dark;
-}
-
-.theme-dark .sidebar-help-button {
-  color: $color-button-options-dark;
-}
-
-.theme-dark .sidebar-add-button {
-  color: $color-text-main-dark;
-}
-
-.theme-dark .sidebar-title {
-  color: $color-text-main-dark;
-}
-
-.theme-dark .sidebar-header {
-  background-color: $color-second-dark;
-}
-
-.theme-dark .sidebar-filestream-container:hover {
-  background-color: $color-second-dark;
-}
-
-.theme-dark .sidebar-filestream-options {
-  color: $color-button-options-dark;
-}
-
-.theme-dark .sidebar-filestream-open,
-.theme-dark .sidebar-filestream-options button {
-  background-color: rgba(0,0,0,0);
-  color: $color-button-options-dark;
-  color: $color-accent-main-dark;
-}
-
-
-.theme-dark .sidebar[data-is-open="true"] .sidebar-body {
-  box-shadow: 0px 0 300px #ccc;
-}
-
-.theme-dark .sidebar-filestream-container {
-  box-shadow: 0px 1px 5px rgb(207, 207, 207);
 }

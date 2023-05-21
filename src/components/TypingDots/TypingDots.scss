@@ -6,11 +6,11 @@
   }
 
   33% {
-    opacity: 0.6;
+    opacity: 0.33;
   }
 
   66% {
-    opacity: 0.3;
+    opacity: 0.66;
   }
 
   100% {
@@ -22,10 +22,10 @@
   display: inline-block;
   width: 6px;
   height: 6px;
-  border-radius: 50%;
+  border-radius: var(--border-radius-third);
   margin-right: 8px;
   animation: typing 1.4s infinite;
-  background-color: $color-fifth;
+  background-color: var(--color-third);
 }
 
 .typing-dots div:nth-child(2) {
@@ -34,8 +34,4 @@
 
 .typing-dots div:nth-child(3) {
   animation-delay: 0.4s;
-}
-
-.theme-dark .typing-dots div {
-  background-color: $color-fifth-dark;
 }

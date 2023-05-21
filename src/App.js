@@ -13,6 +13,14 @@ function App() {
   const [isLightMode, setIsLightMode] = useState(true);
 
   useEffect(() => {
+    const savedTheme = localStorage.getItem("isLightMode");
+    if (savedTheme != null) {
+      const savedThemeIsLightMode = savedTheme === "true";
+      if (savedThemeIsLightMode !== isLightMode) {
+        setIsLightMode(savedThemeIsLightMode);
+      }
+    }
+
     if (isLightMode === false) {
       document.body.classList.add("theme-dark");
     }
@@ -22,7 +30,9 @@ function App() {
   }, [isLightMode])
 
   function toggleTheme() {
-    setIsLightMode(!isLightMode);
+    const updatedIsLightMode = !isLightMode;
+    setIsLightMode(updatedIsLightMode);
+    localStorage.setItem("isLightMode", updatedIsLightMode);
   }
 
   function handleOnRead(event) {

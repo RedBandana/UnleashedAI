@@ -1,10 +1,10 @@
 @import '../../variables.scss';
 
 .settings-dialog {
-  background: $color-main;
+  background: var(--color-main);
   padding: 10px;
-  border-radius: 20px;
-  box-shadow: 0 0 10px darkgray;
+  border-radius: var(--border-radius-main);
+  box-shadow: var(--box-shadow-second);
   z-index: 1;
   max-width: 300px;
   position: absolute;
@@ -14,16 +14,16 @@
 
 .settings-dialog label {
   margin-right: 10px;
-  color: $color-text-main;
+  color: var(--color-text-main);
 }
 
 .settings-dialog input {
   padding: 5px;
   font-size: 1rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  border-radius: var(--border-radius-second);
+  border: var(--border-main);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: $color-text-main;
+  color: var(--color-text-main);
 }
 
 .settings-cancel-button {
@@ -31,12 +31,12 @@
 }
 
 .settings-dialog button {
-  background-color: rgba(0,0,0,0);
-  color: $color-accent-main;
+  background-color: var(--color-none);
+  color: var(--color-accent-main);
   padding: 5px;
-  border-radius: 20px;
+  border-radius: var(--border-radius-main);
   font-size: 2rem;
-  border: none;
+  border: var(--border-none);
   cursor: pointer;
   width: 50px;
 }
@@ -75,16 +75,16 @@
 
 .input-container select,
 .input-container textarea {
-  background-color: $color-main;
+  background-color: var(--color-main);
   width: 100%;
   resize: vertical;
   padding: 5px;
   font-size: 1rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  border-radius: var(--border-radius-second);
+  border: var(--border-main);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   max-height: 140px;
-  color: $color-text-main;
+  color: var(--color-text-main);
 }
 
 .settings-documentation {
@@ -109,28 +109,12 @@
   width: 20%;
 }
 
-
-
-.theme-dark .settings-dialog {
-  background: $color-main-dark;
+.theme-dark .settings-dialog input {
+  color: var(--color-text-main-default);
 }
 
-.theme-dark .settings-dialog label {
-  color: $color-text-main-dark;
+.theme-dark .input-container select,
+.theme-dark .input-container textarea {
+  background-color: var(--color-main-default);
+  color: var(--color-text-main-default);
 }
-
-
-.theme-dark .settings-dialog button {
-  background-color: rgba(0,0,0,0);
-  color: $color-accent-main-dark;
-}
-
-// .theme-dark .settings-dialog input {
-//   color: $color-text-main-dark;
-// }
-
-// .theme-dark .input-container select,
-// .theme-dark .input-container textarea {
-//   background-color: $color-main-dark;
-//   color: $color-text-main-dark;
-// }
