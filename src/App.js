@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Chatbot from './components/Chatbot/Chatbot';
 import Sidebar from './components/Sidebar/Sidebar';
 import Navbar from './components/Navbar/Navbar';
@@ -11,6 +11,7 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [isLightMode, setIsLightMode] = useState(true);
+  const [conversationUpdate, setConversationUpdate] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("isLightMode");
@@ -68,6 +69,7 @@ function App() {
 
   const handleClick = (conversationIndex) => {
     setSelectedConversationIndex(conversationIndex);
+    setConversationUpdate(!conversationIndex);
   };
 
   const handleAdd = () => {
@@ -136,10 +138,18 @@ function App() {
         {conversations.length > 0 ?
           (selectedConversationIndex < conversations.length ?
             (
-              <Chatbot conversation={conversations[selectedConversationIndex]} sidebarIsOpen={isSidebarOpen} onToggleSidebar={handleToggleSidebar} />
+              <Chatbot
+                conversation={conversations[selectedConversationIndex]}
+                sidebarIsOpen={isSidebarOpen}
+                onToggleSidebar={handleToggleSidebar}
+                conversationUpdate={conversationUpdate} />
             ) :
             (
-              <Chatbot conversation={conversations[conversations.length - 1]} sidebarIsOpen={isSidebarOpen} onToggleSidebar={handleToggleSidebar} />
+              <Chatbot
+                conversation={conversations[conversations.length - 1]}
+                sidebarIsOpen={isSidebarOpen}
+                onToggleSidebar={handleToggleSidebar}
+                conversationUpdate={conversationUpdate} />
             )
           ) :
           (

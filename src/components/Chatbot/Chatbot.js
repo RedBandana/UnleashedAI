@@ -8,7 +8,7 @@ import TextInput from '../TextInput/TextInput';
 import TypingDots from '../TypingDots/TypingDots'
 
 function Chatbot(props) {
-    const { sidebarIsOpen, conversation } = props;
+    const { sidebarIsOpen, conversation, conversationUpdate } = props;
     const [isWaiting, setIsWaiting] = useState(false);
     const chatbotBodyRef = useRef(null);
     const settingsRef = useRef(null);
@@ -16,7 +16,11 @@ function Chatbot(props) {
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [receivedNewMessage, setReceivedNewMessage] = useState(false);
     const [messageUpdate, setMessageUpdate] = useState(false);
-    const TOKEN_SAFE_DELTA = 500;
+    const TOKEN_SAFE_DELTA = 1500;
+
+    useEffect(() => {
+        scrollToBottom("auto");
+    }, [conversationUpdate]);
 
     const handleInputChange = (event) => {
         setInputValue(event.target.value);
@@ -92,18 +96,21 @@ function Chatbot(props) {
 
     const getRequestMessages = (messages) => {
         while (messages.length > 1 &&
-            countWordsInMessages(messages) > getModelMaxTokens(conversation.settings.model) - TOKEN_SAFE_DELTA) {
+            getMessagesTokens(messages) > getModelMaxTokens(conversation.settings.model) - TOKEN_SAFE_DELTA) {
             messages.splice(0, 1);
         }
         return messages;
     }
 
-    const countWordsInMessages = (messages) => {
-        let totalWords = 0;
+    const getMessagesTokens = (messages) => {
+        let totalTokens = 0;
         for (let message of messages) {
-            totalWords += message.texts.join('').split(' ').length;
+            for (let text of message.texts) {
+                totalTokens += text.split(' ').length;
+            }
         }
-        return totalWords;
+
+        return totalTokens;
     }
 
     function resizeTextAreaHeight() {
