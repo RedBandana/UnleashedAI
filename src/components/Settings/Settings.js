@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./Settings.scss";
 import { parseToRightType } from '../../utils/Utils'
@@ -10,6 +10,10 @@ const Settings = ({ settings, onSave, onClose }) => {
         event.preventDefault();
         onSave(formSettings);
     };
+
+    useEffect(() => {
+        onSave(formSettings);
+    }, [formSettings, onSave])
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -54,11 +58,9 @@ const Settings = ({ settings, onSave, onClose }) => {
                                     value={formSettings.model}
                                     onChange={handleInputChange}>
                                     <option value="gpt-4">gpt-4</option>
-                                    <option value="gpt-4-0314">gpt-4-0314</option>
                                     <option value="gpt-4-32k">gpt-4-32k</option>
-                                    <option value="gpt-4-32k-0314">gpt-4-32k-0314</option>
                                     <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
-                                    <option value="gpt-3.5-turbo-0301">gpt-3.5-turbo-0301</option>
+                                    <option value="gpt-3.5-turbo-16k">gpt-3.5-turbo-16k</option>
                                 </select>
                             </div>
                         </div>
@@ -210,7 +212,7 @@ const Settings = ({ settings, onSave, onClose }) => {
                         <button className="settings-cancel-button" onClick={onClose}>
                             <i className="fa fa-times"></i>
                         </button>
-                        <button className="settings-save-button" type="submit">
+                        <button className="settings-save-button hide" type="submit">
                             <i className="fa fa-save"></i>
                         </button>
                     </div>

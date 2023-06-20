@@ -72,6 +72,10 @@
   box-shadow: var(--box-shadow-third);
 }
 
+.chatbot-footer .fas {
+  padding-top: 2px;
+}
+
 .chat-message {
   display: flex;
   flex-direction: column;

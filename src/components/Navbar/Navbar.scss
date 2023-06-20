@@ -11,6 +11,10 @@
   z-index: 9999;
   transition: left 0.5s ease-in-out;
   width: 100%;
+  min-width: 375px;
+  max-height: 47px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .navbar[data-sidebar-is-open="true"] {
@@ -24,6 +28,12 @@
 .navbar-right {
   float: right;
   margin-right: 40px;
+}
+
+.navbar-center {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--color-text-main);
 }
 
 .navbar-toggle {

@@ -22,9 +22,9 @@ function SidebarItem(props) {
   useEffect(() => {
     if (editing) {
       const input = document.getElementById("sidebarItemTitle");
-        input.select();
+      input.select();
     }
-  },[editing])
+  }, [editing])
 
   function handleTitleChange(event) {
     setNewTitle(event.target.value);
@@ -40,6 +40,7 @@ function SidebarItem(props) {
       {editing ? (
         <div className="sidebaritem-title">
           <input
+            className="sidebar-no-move"
             id="sidebarItemTitle"
             type="text"
             value={newTitle}

@@ -36,8 +36,8 @@
   font-size: 12px;
   font-weight: 400;
   color: var(--color-third);
-  margin-top: 5px;
   align-self: center;
+  margin-left: 4px;
 }
 
 
@@ -53,10 +53,11 @@
   background-color: var(--color-main);
   box-shadow: var(--box-shadow-second);
   z-index: 1;
-  padding: 3px 8px;
+  padding: 6px;
   border-radius: var(--border-radius-main);
-  display: inline-flex;
-  width: 75px;
+  display: flex;
+  justify-content: space-between;
+  width: 85px;
 }
 
 .chat-message-options-container button {
@@ -71,7 +72,6 @@
 }
 
 .chat-message-options-container button i {
-  margin-right: 4px;
   font-size: 16px;
 }
 
@@ -100,6 +100,18 @@
   align-items: center;
   justify-content: center;
   margin: 0 8px;
+}
+
+.chat-message-dot {
+  width: 5px;
+  margin: 0 2px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--color-options-main);
+}
+
+.chat-message-dot-active {
+  background-color: var(--color-accent-second);
 }
 
 .chat-message-controls-container .fa-chevron-left,

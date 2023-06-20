@@ -129,7 +129,7 @@ function App() {
 
   return (
     <div className={`app ${isLightMode ? 'theme-light' : 'theme-dark'}`}>
-      <Navbar onToggleSidebar={handleToggleSidebar} sidebarIsOpen={isSidebarOpen} />
+      <Navbar onToggleSidebar={handleToggleSidebar} sidebarIsOpen={isSidebarOpen} conversationTitle={conversations[selectedConversationIndex]?.title ?? ''} />
       <div className="main">
         <Sidebar isOpen={isSidebarOpen} onClose={handleCloseSidebar} sidebarItems={getSidebarItem()}
           onClickItem={(index) => handleClick(index)} onEditItem={(index, newTitle) => handleEdit(index, newTitle)}

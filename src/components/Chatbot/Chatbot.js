@@ -80,7 +80,6 @@ function Chatbot(props) {
 
     const handleSettingsSave = (settings) => {
         conversation.settings = settings;
-        setSettingsOpen(false);
     };
 
     const handleSettingsClose = () => {
