@@ -6,6 +6,9 @@
   "main": "main.js",
   "homepage": ".",
   "dependencies": {
+    "@capacitor/android": "^5.0.5",
+    "@capacitor/core": "^5.0.5",
+    "@capacitor/ios": "^5.0.5",
     "@fortawesome/fontawesome-free": "^6.4.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -81,6 +84,7 @@
     "os": false
   },
   "devDependencies": {
+    "@capacitor/cli": "^5.0.5",
     "electron": "^24.3.1",
     "electron-builder": "^23.6.0",
     "uglify-js": "^3.17.4"
