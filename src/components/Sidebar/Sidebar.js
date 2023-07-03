@@ -40,7 +40,7 @@ function Sidebar(props) {
   }
 
   return (
-    <div className="sidebar" data-is-open={isOpen} ref={sidebarRef}>
+    <div className="sidebar" data-sidebar-is-open={isOpen} data-is-mobile={process.env.REACT_APP_CLIENT_TYPE === 'mobile'} ref={sidebarRef}>
       <div className="sidebar-body">
         <div className='sidebar-filestream-container sidebar-no-move-parent'>
           <div className="sidebar-add-button" onClick={onAddItem}>+ New chat</div>

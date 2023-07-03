@@ -11,7 +11,7 @@
   left: $sidebar-width;
 }
 
-.chatbot[data-sidebar-is-open="true"] .chatbot-container {
+.chatbot[data-sidebar-is-open="true"][data-is-mobile="false"] .chatbot-container {
   width: calc(100vw - 300px);
 }
 

@@ -143,7 +143,7 @@ function Chatbot(props) {
     }
 
     return (
-        <div className="chatbot" data-sidebar-is-open={sidebarIsOpen}>
+        <div className="chatbot" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={process.env.REACT_APP_CLIENT_TYPE === 'mobile'}>
             <div className='chatbot-container'>
                 <div className="chatbot-body" ref={chatbotBodyRef}>
                     {(messageUpdate || !messageUpdate) && (

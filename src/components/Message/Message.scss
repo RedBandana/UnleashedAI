@@ -6,7 +6,7 @@
   position: relative;
 }
 
-.chatbot[data-sidebar-is-open="true"] .chat-message-bubble {
+.chatbot[data-sidebar-is-open="true"][data-is-mobile="false"] .chat-message-bubble {
   max-width: calc(95vw - 300px);
 }
 

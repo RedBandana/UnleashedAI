@@ -18,11 +18,11 @@ body {
     color: var(--color-text-main);
 }
 
-.no-conversation-container[data-is-open="true"] {
+.no-conversation-container[data-sidebar-is-open="true"] {
     left: $sidebar-width;
 }
 
-.no-conversation-container[data-is-open="true"] .no-conversation-options {
+.no-conversation-container[data-sidebar-is-open="true"][data-is-mobile="false"] .no-conversation-options {
     width: calc(100vw - 300px);
 }
 

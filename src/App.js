@@ -198,7 +198,7 @@ function App() {
             )
           ) :
           (
-            <div data-is-open={isSidebarOpen} className='no-conversation-container'>
+            <div data-sidebar-is-open={isSidebarOpen} data-is-mobile={process.env.REACT_APP_CLIENT_TYPE === 'mobile'} className='no-conversation-container'>
               <div className='no-conversation-options'>
                 <div className='no-conversation-options-child no-conversation-open'>
                   <label>

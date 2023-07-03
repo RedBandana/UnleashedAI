@@ -24,7 +24,8 @@ body {
     --box-shadow-second: 0 0 2px darkgray;
     --box-shadow-third: 0 0 0 black;
     --box-shadow-sidebar-open: 0 0 2px gray;
-    
+    --box-shadow-sidebar-open-mobile: 0px 0 300px #bbb;
+
     --border-main: 1px solid #ccc;
     --border-none: none;
     --border-radius-main: 20px;
@@ -48,5 +49,7 @@ body {
     --box-shadow-second: 0 0 2px #111;
     --box-shadow-third: 0 0 0 #111;
     --box-shadow-sidebar-open: 0 0 0 #111;
+    --box-shadow-sidebar-open-mobile: 0px 0 300px #111;
+
     --border-main: 1px solid #454545;
 }

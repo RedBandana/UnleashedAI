@@ -15,7 +15,7 @@ function Navbar(props) {
   }, [conversationTitle])
 
   return (
-    <nav className="navbar" data-sidebar-is-open={sidebarIsOpen}>
+    <nav className="navbar" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={process.env.REACT_APP_CLIENT_TYPE === 'mobile'}>
       <div className='navbar-container'>
         <div className="navbar-left">
           <button className="navbar-toggle" onClick={props.onToggleSidebar}>

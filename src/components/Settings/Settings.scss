@@ -1,6 +1,6 @@
 @import '../../variables.scss';
 
-.chatbot[data-sidebar-is-open="true"] .settings-dialog {
+.chatbot[data-sidebar-is-open="true"][data-is-mobile="false"] .settings-dialog {
   right: calc(20px + 300px);
 }
 

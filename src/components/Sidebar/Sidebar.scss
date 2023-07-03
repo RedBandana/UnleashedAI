@@ -14,9 +14,10 @@
   border-right: var(--border-none);
 }
 
-.sidebar[data-is-open="true"] {
+.sidebar[data-sidebar-is-open="true"] {
   left: 0;
 }
+
 
 .sidebar-body {
   flex: 1;
@@ -26,7 +27,12 @@
   transition: box-shadow 0.25s ease-in-out;
 }
 
-.sidebar[data-is-open="true"] .sidebar-body {
+.sidebar[data-sidebar-is-open="true"][data-is-mobile="true"] .sidebar-body {
+  box-shadow: var(--box-shadow-sidebar-open-mobile);
+  left: 0;
+}
+
+.sidebar[data-sidebar-is-open="true"][data-is-mobile="false"] .sidebar-body {
   box-shadow: var(--box-shadow-sidebar-open);
   left: 0;
 }
