@@ -10,6 +10,10 @@ function Sidebar(props) {
 
   useEffect(() => {
     function handleClickOutside(event) {
+      const isMobile = process.env.REACT_APP_CLIENT_TYPE === 'mobile';
+      if (!isMobile)
+        return;
+
       const isOutsideSideBar = sidebarRef.current && !sidebarRef.current.contains(event.target);
       const canMoveSidebar = event.target.className.includes("sidebar-no-move") === false &&
         (event.target.parentElement == null || event.target.parentElement.className.includes("sidebar-no-move-parent") === false);
@@ -39,7 +43,7 @@ function Sidebar(props) {
     <div className="sidebar" data-is-open={isOpen} ref={sidebarRef}>
       <div className="sidebar-body">
         <div className='sidebar-filestream-container sidebar-no-move-parent'>
-          <div className="sidebar-add-button" onClick={onAddItem}>Add Conversation</div>
+          <div className="sidebar-add-button" onClick={onAddItem}>+ New chat</div>
           <div className='sidebar-filestream-options sidebar-filestream-save hide'>
             <button onClick={onSave}>
               <div className="fas fa-save"></div>
@@ -62,7 +66,7 @@ function Sidebar(props) {
           ))}
         </div>
         <div className="sidebar-footer sidebar-no-move-parent">
-          <div className="sidebar-clear-button" onClick={onClearItems}>Clear Conversations</div>
+          <div className="sidebar-clear-button" onClick={onClearItems}>Clear conversations</div>
           <div className='sidebar-help-button sidebar-no-move-parent' onClick={onToggleTheme}>
             <div className="fas fa-moon"></div>
           </div>

@@ -14,7 +14,7 @@ body {
     font-weight: bold;
     position: fixed;
     left: 0;
-    transition: left 0.5s ease-in-out;
+    transition: left 0.25s ease-in-out;
     color: var(--color-text-main);
 }
 
@@ -22,9 +22,15 @@ body {
     left: $sidebar-width;
 }
 
+.no-conversation-container[data-is-open="true"] .no-conversation-options {
+    width: calc(100vw - 300px);
+}
+
 .no-conversation-options {
     margin-top: 20px;
     color: var(--color-accent-main);
+    width: 100%;
+    transition: width 0.25s ease-in-out;
 }
 
 .no-conversation-options-child {

@@ -36,8 +36,9 @@
   margin-left: 5px;
 }
 
-.text-input button.chatbot-send-button {
-  display: none;
+.chatbot-send-icon {
+  position: relative;
+  left: -1px;
 }
 
 .text-input button i {

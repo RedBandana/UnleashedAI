@@ -6,11 +6,17 @@
   position: relative;
 }
 
+.chatbot[data-sidebar-is-open="true"] .chat-message-bubble {
+  max-width: calc(95vw - 300px);
+}
+
 .chat-message-bubble {
   white-space: break-spaces;
   border-radius: var(--border-radius-main);
   padding: 2px;
   margin-left: 24px;
+  max-width: 95vw;
+  transition: max-width 0.25s ease-in-out;
 }
 
 .chat-message-user .chat-message-bubble {

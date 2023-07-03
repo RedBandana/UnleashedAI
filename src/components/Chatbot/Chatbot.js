@@ -16,37 +16,35 @@ function Chatbot(props) {
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [receivedNewMessage, setReceivedNewMessage] = useState(false);
     const [messageUpdate, setMessageUpdate] = useState(false);
-    const TOKEN_SAFE_DELTA = 1500;
+    const TOKEN_SAFE_DELTA = 2000;
 
     useEffect(() => {
         scrollToBottom("auto");
     }, [conversationUpdate]);
 
+    useEffect(() => {
+        resizeTextAreaHeight();
+    }, [inputValue])
+
     const handleInputChange = (event) => {
         setInputValue(event.target.value);
-        resizeTextAreaHeight();
     };
 
     function canSubmitForm(event) {
-        if (event.key === 'Enter' && !event.shiftKey) {
-            if (!isWaiting) {
-                return true;
-            }
-            else {
-                event.preventDefault();
-            }
+        if (!isWaiting) {
+            return true;
         }
         return false;
     }
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
-
-        if (inputValue === '') {
+        const inputText = inputValue.trim();
+        if (inputText === '') {
             return;
         }
 
-        const newMessage = { texts: [inputValue], isUser: true, timestamp: new Date().getTime() };
+        const newMessage = { texts: [inputText], isUser: true, timestamp: new Date().getTime() };
         conversation.messages.push(newMessage);
 
         emptyTextArea();
@@ -113,20 +111,23 @@ function Chatbot(props) {
     }
 
     function resizeTextAreaHeight() {
-        const element = document.getElementById("textarea-user-input");
-        element.style.height = "auto";
-        element.style.height = `${element.scrollHeight}px`;
+        const textarea = document.getElementById("textarea-user-input");
+        textarea.style.height = "auto";
+        textarea.style.height = `${textarea.scrollHeight}px`;
+
+        if (textarea.selectionStart === textarea.value.length) {
+            textarea.scrollTop = textarea.scrollHeight;
+        }
     }
 
     function emptyTextArea() {
         setInputValue('');
-        const element = document.getElementById("textarea-user-input");
-        element.style.height = "auto";
-        element.style.height = `${31}px`;
+        const textarea = document.getElementById("textarea-user-input");
+        textarea.style.height = "auto";
+        textarea.style.height = `${31}px`;
     }
 
     useEffect(() => {
-        resizeTextAreaHeight();
         scrollToBottom("smooth");
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
@@ -143,34 +144,36 @@ function Chatbot(props) {
 
     return (
         <div className="chatbot" data-sidebar-is-open={sidebarIsOpen}>
-            <div className="chatbot-body" ref={chatbotBodyRef}>
-                {(messageUpdate || !messageUpdate) && (
-                    <ChatHistory messages={conversation.messages} onDelete={handleDelete} />
-                )}
+            <div className='chatbot-container'>
+                <div className="chatbot-body" ref={chatbotBodyRef}>
+                    {(messageUpdate || !messageUpdate) && (
+                        <ChatHistory messages={conversation.messages} onDelete={handleDelete} />
+                    )}
 
-                {isWaiting && (
-                    <div className='chatbot-dots'>
-                        <TypingDots />
+                    {isWaiting && (
+                        <div className='chatbot-dots'>
+                            <TypingDots />
+                        </div>
+                    )}
+                </div>
+                {settingsOpen && (
+                    <div className="chatbot-settings-container" ref={settingsRef}>
+                        <Settings
+                            settings={conversation.settings}
+                            onSave={handleSettingsSave}
+                            onClose={handleSettingsClose}
+                        />
                     </div>
                 )}
-            </div>
-            {settingsOpen && (
-                <div className="chatbot-settings-container" ref={settingsRef}>
-                    <Settings
-                        settings={conversation.settings}
-                        onSave={handleSettingsSave}
-                        onClose={handleSettingsClose}
+                <div className="chatbot-footer">
+                    <TextInput
+                        inputValue={inputValue}
+                        onInputChange={handleInputChange}
+                        onSubmit={handleFormSubmit}
+                        canSubmit={canSubmitForm}
+                        onSettings={handleSettingsButtonClick}
                     />
                 </div>
-            )}
-            <div className="chatbot-footer">
-                <TextInput
-                    inputValue={inputValue}
-                    onInputChange={handleInputChange}
-                    onSubmit={handleFormSubmit}
-                    canSubmit={canSubmitForm}
-                    onSettings={handleSettingsButtonClick}
-                />
             </div>
         </div>
     );

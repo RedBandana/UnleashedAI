@@ -1,4 +1,5 @@
 $sidebar-width: 300px;
+$sidebar-width-adjust: 300px;
 
 body {
     --font-family-main: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -6,9 +7,9 @@ body {
 
     --color-background: #fff;
     --color-options-main: #bbb;
-    --color-hover-main: #f5f5f5;
+    --color-hover-main: #eee;
     --color-text-main: #050505;
-    --color-main: #fff;
+    --color-main: #fbfbfb;
     --color-second: #eee;
     --color-third: #999;
     --color-none: transparent;
@@ -19,10 +20,10 @@ body {
     --color-main-default: #fff;
     --color-second-default: #eee;
 
-    --box-shadow-main: 0 1px 10px darkgray;
-    --box-shadow-second: 0 0 5px darkgray;
-    --box-shadow-third: 0 0 5px black;
-    --box-shadow-sidebar-open: 0px 0 300px #bbb;
+    --box-shadow-main: 0 0 0 darkgray;
+    --box-shadow-second: 0 0 2px darkgray;
+    --box-shadow-third: 0 0 0 black;
+    --box-shadow-sidebar-open: 0 0 2px gray;
     
     --border-main: 1px solid #ccc;
     --border-none: none;
@@ -43,9 +44,9 @@ body {
     --color-accent-second: #ccc;
     --color-shadow-main: #454545;
 
-    --box-shadow-main: 0 1px 10px #111;
-    --box-shadow-second: 0 0 5px #111;
-    --box-shadow-third: 0 0 5px #111;
-    --box-shadow-sidebar-open: 0px 0 300px #111;
+    --box-shadow-main: 0 0 0 #111;
+    --box-shadow-second: 0 0 2px #111;
+    --box-shadow-third: 0 0 0 #111;
+    --box-shadow-sidebar-open: 0 0 0 #111;
     --border-main: 1px solid #454545;
 }

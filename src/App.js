@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Chatbot from './components/Chatbot/Chatbot';
 import Sidebar from './components/Sidebar/Sidebar';
 import Navbar from './components/Navbar/Navbar';
@@ -75,7 +75,7 @@ function App() {
   const handleAdd = () => {
     setConversations([
       ...conversations, {
-        title: 'New Conversation',
+        title: `Chat ${conversations.length}`,
         messages: [],
         settings: {
           model: 'gpt-3.5-turbo',
@@ -109,13 +109,58 @@ function App() {
     setConversations([]);
   };
 
+  const touchStartX = useRef(0);
+  const touchIsDragging = useRef(false);
+
+  const [sidebarChanged, setSidebarChanged] = useState(false);
+
+  useEffect(() => {
+    function handleStart(event) {
+      touchIsDragging.current = true;
+      touchStartX.current = event.touches[0].pageX;
+      setSidebarChanged(false);
+    }
+
+    function handleMove(event) {
+      if (touchIsDragging.current) {
+        const distance = event.touches[0].pageX - touchStartX.current;
+        if (distance > 50) { // Open sidebar when dragging over 50 pixels to the right
+          setIsSidebarOpen(true);
+          touchIsDragging.current = false;
+          setSidebarChanged(true);
+        }
+        else if (distance < -50) {
+          setIsSidebarOpen(false);
+          touchIsDragging.current = false;
+          setSidebarChanged(true);
+        }
+      }
+    }
+
+    function handleEnd() {
+      touchIsDragging.current = false;
+    }
+
+    document.addEventListener('touchstart', handleStart);
+    document.addEventListener('touchmove', handleMove);
+    document.addEventListener('touchend', handleEnd);
+
+    return () => {
+      document.removeEventListener('touchstart', handleStart);
+      document.removeEventListener('touchmove', handleMove);
+      document.removeEventListener('touchend', handleEnd);
+    };
+  }, [sidebarChanged]);
+
   function handleToggleSidebar(event) {
     event.stopPropagation();
     setIsSidebarOpen(!isSidebarOpen);
   }
 
   function handleCloseSidebar() {
-    setIsSidebarOpen(false);
+    if (sidebarChanged === false) {
+      setIsSidebarOpen(false);
+    }
   }
 
   function getSidebarItem() {
@@ -158,10 +203,10 @@ function App() {
                 <div className='no-conversation-options-child no-conversation-open'>
                   <label>
                     <input className='hide' type="file" onChange={handleOnRead} />
-                    Open a conversation <div className="fas fa-folder-open"></div>
+                    Open conversations <div className="fas fa-folder-open"></div>
                   </label>
                 </div>
-                <div onClick={handleAdd} className='no-conversation-options-child no-conversation-new'>New conversation</div>
+                <div onClick={handleAdd} className='no-conversation-options-child no-conversation-new'>New chat +</div>
               </div>
             </div>
           )}

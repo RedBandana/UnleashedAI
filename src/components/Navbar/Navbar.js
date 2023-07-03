@@ -16,16 +16,18 @@ function Navbar(props) {
 
   return (
     <nav className="navbar" data-sidebar-is-open={sidebarIsOpen}>
-      <div className="navbar-left">
-        <button className="navbar-toggle" onClick={props.onToggleSidebar}>
-          <i className="fa fa-bars"></i>
-        </button>
-      </div>
-      <div className='navbar-center'>
-        <div className='navbar-item'>{navbarTitle}</div>
-      </div>
-      <div className="navbar-right">
-        <div className="navbar-brand">GPTU</div>
+      <div className='navbar-container'>
+        <div className="navbar-left">
+          <button className="navbar-toggle" onClick={props.onToggleSidebar}>
+            <i className="fa fa-bars"></i>
+          </button>
+        </div>
+        <div className='navbar-center'>
+          <div className='navbar-item'>{navbarTitle}</div>
+        </div>
+        <div className="navbar-right">
+          <div className="navbar-brand hide">GPTU</div>
+        </div>
       </div>
     </nav>
   );

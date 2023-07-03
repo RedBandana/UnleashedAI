@@ -1,5 +1,9 @@
 @import '../../variables.scss';
 
+.chatbot[data-sidebar-is-open="true"] .settings-dialog {
+  right: calc(20px + 300px);
+}
+
 .settings-dialog {
   background: var(--color-main);
   padding: 10px;
@@ -75,7 +79,7 @@
 
 .input-container select,
 .input-container textarea {
-  background-color: var(--color-main);
+  background-color: #fff;
   width: 100%;
   resize: vertical;
   padding: 5px;
