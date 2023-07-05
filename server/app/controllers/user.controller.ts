@@ -16,7 +16,7 @@ export class UserController {
 
         this.router.get('/', async (req: Request, res: Response) => {
             try {
-                res.json({ response: 'Server working' });
+                res.status(StatusCodes.OK).send('Server working');
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }

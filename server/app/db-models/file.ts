@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import mongoose, { Document } from "mongoose";
 import { DBModelName } from "@app/enums/db-model-name";
 
-export interface File extends Document {
+export interface IFile extends Document {
     _id: ObjectId,
     creationTime: Date,
     filename: string;
@@ -11,7 +11,7 @@ export interface File extends Document {
     mimeType: string;
 }
 
-const FileSchema = new mongoose.Schema<File>({
+const FileSchema = new mongoose.Schema<IFile>({
     filename: { type: String, required: true },
     path: { type: String, required: true },
     originalName: { type: String, required: true },
