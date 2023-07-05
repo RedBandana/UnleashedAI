@@ -2,6 +2,7 @@
 node_modules/
 false/
 out/
+uploads/
 
 *.js.map
 *.js

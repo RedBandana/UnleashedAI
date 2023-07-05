@@ -1,35 +1,15 @@
-import { Service } from 'typedi';
-import { DatabaseService } from './database.service';
-import { DBCollectionService } from './db-collection.service';
-import { File, FileModel } from '@app/db-models/file';
-import { DBModelName } from "@app/enums/db-model-name";
+// import File, { IFile } from '../models/file.model';
 
-const COLLECTION_NAME = DBModelName.FILE;
+// export default class FileService {
+//   static async getAllFiles(): Promise<IFile[]> {
+//     return File.find();
+//   }
 
-@Service()
-export class FileService extends DBCollectionService {
-    constructor(databaseService: DatabaseService) {
-        super(databaseService, COLLECTION_NAME);
-        this.model = FileModel;
-    }
+//   static async getFileById(id: string): Promise<IFile | null> {
+//     return File.findById(id);
+//   }
 
-    async uploadFile(file: Express.Multer.File): Promise<File> {
-        const { filename, path, originalname, mimetype } = file;
-        const newFile = new FileModel({
-            filename,
-            path,
-            originalName: originalname,
-            mimeType: mimetype,
-        });
-        await newFile.save();
-        return newFile;
-    }
-
-    async deleteFile(id: string): Promise<void> {
-        await this.model.findByIdAndDelete(id);
-    }
-
-    protected setDefaultQueryPipeline() { }
-
-    protected setSingleDocumentQuery() { }
-}
+//   static async deleteFile(id: string): Promise<void> {
+//     await File.findByIdAndDelete(id);
+//   }
+// }

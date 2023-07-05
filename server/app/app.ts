@@ -8,7 +8,7 @@ import * as logger from 'morgan';
 import * as swaggerJSDoc from 'swagger-jsdoc';
 import * as swaggerUi from 'swagger-ui-express';
 import { Service } from 'typedi';
-import { FileController } from './controllers/file.controller';
+import { FileController } from './routes/file.routes';
 import { UserController } from './controllers/user.controller';
 
 import mongoose from 'mongoose';
