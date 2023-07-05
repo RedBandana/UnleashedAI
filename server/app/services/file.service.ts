@@ -1,9 +1,10 @@
 import { Service } from 'typedi';
 import { DatabaseService } from './database.service';
 import { DBCollectionService } from './db-collection.service';
-import { FileModel } from '@app/db-models/file';
+import { File, FileModel } from '@app/db-models/file';
+import { DBModelName } from "@app/enums/db-model-name";
 
-const COLLECTION_NAME = 'File';
+const COLLECTION_NAME = DBModelName.FILE;
 
 @Service()
 export class FileService extends DBCollectionService {
@@ -12,7 +13,23 @@ export class FileService extends DBCollectionService {
         this.model = FileModel;
     }
 
-    protected setDefaultQueryPipeline() {}
+    async uploadFile(file: Express.Multer.File): Promise<File> {
+        const { filename, path, originalname, mimetype } = file;
+        const newFile = new FileModel({
+            filename,
+            path,
+            originalName: originalname,
+            mimeType: mimetype,
+        });
+        await newFile.save();
+        return newFile;
+    }
 
-    protected setSingleDocumentQuery() {}
+    async deleteFile(id: string): Promise<void> {
+        await this.model.findByIdAndDelete(id);
+    }
+
+    protected setDefaultQueryPipeline() { }
+
+    protected setSingleDocumentQuery() { }
 }
