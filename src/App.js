@@ -12,7 +12,8 @@ function App() {
   const [conversations, setConversations] = useState([]);
   const [isLightMode, setIsLightMode] = useState(true);
   const [conversationUpdate, setConversationUpdate] = useState(false);
-
+  const [isInitialized, setIsInitialized] = useState(false);
+  
   useEffect(() => {
     const savedTheme = localStorage.getItem("isLightMode");
     if (savedTheme != null) {
@@ -29,6 +30,13 @@ function App() {
       document.body.classList.remove("theme-dark");
     }
   }, [isLightMode])
+
+  useEffect(() => {
+    if (process.env.REACT_APP_CLIENT_TYPE !== 'mobile') {
+      setIsSidebarOpen(true);
+      setIsInitialized(true);
+    }
+  }, [isInitialized])
 
   function toggleTheme() {
     const updatedIsLightMode = !isLightMode;
