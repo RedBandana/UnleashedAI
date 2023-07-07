@@ -125,6 +125,10 @@
   border-radius: 8px;
 }
 
+.chat-message-text .markdown-list {
+  white-space: normal;
+}
+
 .chat-message-text code, .chat-message-text pre {
   font-size: var(--font-size-code);
 }

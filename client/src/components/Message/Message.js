@@ -77,36 +77,29 @@ const Message = ({ message, onDelete, index }) => {
     // Call Prism.highlightAll() after rendering the Markdown content
     Prism.highlightAll();
 
-    const preElements = document.getElementById(`chat-message-${index}`).querySelectorAll('pre');
+    const chatMessage = document.getElementById(`chat-message-${index}`);
+    const preElements = chatMessage.querySelectorAll('pre');
     if (preElements) {
       preElements.forEach((preElement) => {
         if (preElement.querySelector('code')) {
           if (!preElement.className.includes('language')) {
             preElement.classList.add('language-none');
           }
-          
+
           //Todo Add Copy and Language
         }
       });
     }
 
-    const olElements = document.getElementById(`chat-message-${index}`).querySelectorAll('ol');
-    if (olElements) {
-      olElements.forEach((olElement) => {
-        olElement.innerHTML = olElement.innerHTML.replace(/(\r\n|\n|\r)/gm, "");
+    const lists = chatMessage.querySelectorAll('ol, ul');
+    if (lists) {
+      lists.forEach((list) => {
+        list.classList.add('markdown-list');
       });
     }
-
-    const ulElements = document.getElementById(`chat-message-${index}`).querySelectorAll('ul');
-    if (ulElements) {
-      ulElements.forEach((ulElement) => {
-        ulElement.innerHTML = ulElement.innerHTML.replace(/(\r\n|\n|\r)/gm, "");
-      });
-    }
-  }, [index])
+  }, [index, message])
 
   useEffect(() => {
-
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {

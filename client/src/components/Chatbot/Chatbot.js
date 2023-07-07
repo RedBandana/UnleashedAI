@@ -147,10 +147,7 @@ function Chatbot(props) {
         <div className="chatbot" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={Capacitor.isNativePlatform()}>
             <div className='chatbot-container'>
                 <div className="chatbot-body" ref={chatbotBodyRef}>
-                    {(messageUpdate || !messageUpdate) && (
-                        <ChatHistory messages={conversation.messages} onDelete={handleDelete} />
-                    )}
-
+                    <ChatHistory messages={conversation.messages} onDelete={handleDelete} />
                     {isWaiting && (
                         <div className='chatbot-dots'>
                             <TypingDots />
