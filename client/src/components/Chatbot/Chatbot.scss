@@ -102,8 +102,20 @@
   padding: 10px;
   border-radius: var(--border-radius-main);
   font-size: 16px;
-  line-height: 1.5;
   word-wrap: break-word;
+}
+
+.chat-message-text > * {
+  margin: 0;
+}
+
+.chat-message-text p {
+  margin: 0;
+}
+
+.chat-message-text p code {
+  font-weight: bold;
+
 }
 
 .chatbot-footer textarea {

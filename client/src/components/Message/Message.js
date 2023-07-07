@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
+import ReactMarkdown from 'react-markdown';
 import PropTypes from "prop-types";
 import moment from "moment";
 import "./Message.scss";
 import { Clipboard } from '@capacitor/clipboard';
+import remarkGfm from "remark-gfm";
 
 const Message = ({ message, onDelete, index }) => {
   const [showOptions, setShowOptions] = useState(false);
@@ -29,8 +31,8 @@ const Message = ({ message, onDelete, index }) => {
   }
 
   const handleClickOutside = (event) => {
-    if (optionsRef.current && !optionsRef.current.contains(event.target) 
-        && event.target.className !== "chat-message-options-container") {
+    if (optionsRef.current && !optionsRef.current.contains(event.target)
+      && event.target.className !== "chat-message-options-container") {
       setShowOptions(false);
     }
   };
@@ -56,7 +58,7 @@ const Message = ({ message, onDelete, index }) => {
       <div className="chat-message-container">
         <div className={`chat-message-bubble ${textClass}`}>
           <div className="chat-message-text">
-            {message.texts[currentTextIndex]}
+            <ReactMarkdown children={message.texts[currentTextIndex]} remarkPlugins={[remarkGfm]} />
           </div>
           {message.texts.length > 1 && (
             <div className={`chat-message-controls-container ${textClass}`}>

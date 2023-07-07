@@ -11,7 +11,7 @@ function Sidebar(props) {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (Capacitor.isNativePlatform())
+      if (!Capacitor.isNativePlatform())
         return;
 
       const isOutsideSideBar = sidebarRef.current && !sidebarRef.current.contains(event.target);
