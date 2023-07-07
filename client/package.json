@@ -85,6 +85,7 @@
     "os": false
   },
   "devDependencies": {
+    "@capacitor/assets": "^2.0.4",
     "@capacitor/cli": "^5.0.5",
     "electron": "^24.3.1",
     "electron-builder": "^23.6.0",
