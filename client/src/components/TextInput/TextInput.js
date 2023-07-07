@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './TextInput.scss';
+import { Capacitor } from '@capacitor/core';
 
 function TextInput({ inputValue, onInputChange, onSubmit, canSubmit, onSettings }) {
 
@@ -10,8 +11,8 @@ function TextInput({ inputValue, onInputChange, onSubmit, canSubmit, onSettings 
 
     function handleKeyDown(event) {
         if (event.key === "Enter") {
-            const isMobile = process.env.REACT_APP_CLIENT_TYPE === 'mobile';
-            const doLineBreak = (isMobile && !event.shiftKey) || (!isMobile && event.shiftKey);
+            const isNative = Capacitor.isNativePlatform();
+            const doLineBreak = (isNative && !event.shiftKey) || (!isNative && event.shiftKey);
 
             if (doLineBreak) {
                 event.preventDefault(); // prevent form submission

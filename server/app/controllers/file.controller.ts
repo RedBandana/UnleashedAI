@@ -73,7 +73,7 @@ export class FileController {
                     return;
                 }
                 const uploadedFile = await this.fileService.uploadFile(file);
-                res.status(StatusCodes.CREATED).json(uploadedFile);
+                res.status(StatusCodes.CREATED).json(uploadedFile._id);
             } catch (error) {
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
             }

@@ -5,6 +5,7 @@ import Navbar from './components/Navbar/Navbar';
 import { saveJSONToFile, readJSONFromUserInput } from './utils/FileStream'
 import '@fortawesome/fontawesome-free/css/all.css';
 import './index.scss'
+import { Capacitor } from '@capacitor/core';
 
 function App() {
   const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
@@ -32,7 +33,7 @@ function App() {
   }, [isLightMode])
 
   useEffect(() => {
-    if (process.env.REACT_APP_CLIENT_TYPE !== 'mobile') {
+    if (!Capacitor.isNativePlatform()) {
       setIsSidebarOpen(true);
       setIsInitialized(true);
     }
@@ -206,7 +207,7 @@ function App() {
             )
           ) :
           (
-            <div data-sidebar-is-open={isSidebarOpen} data-is-mobile={process.env.REACT_APP_CLIENT_TYPE === 'mobile'} className='no-conversation-container'>
+            <div data-sidebar-is-open={isSidebarOpen} data-is-mobile={Capacitor.isNativePlatform()} className='no-conversation-container'>
               <div className='no-conversation-options'>
                 <div className='no-conversation-options-child no-conversation-open'>
                   <label>

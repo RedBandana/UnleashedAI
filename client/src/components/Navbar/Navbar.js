@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Navbar.scss';
+import { Capacitor } from '@capacitor/core';
 
 function Navbar(props) {
   const { sidebarIsOpen, conversationTitle } = props;
@@ -15,7 +16,7 @@ function Navbar(props) {
   }, [conversationTitle])
 
   return (
-    <nav className="navbar" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={process.env.REACT_APP_CLIENT_TYPE === 'mobile'}>
+    <nav className="navbar" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={Capacitor.isNativePlatform()}>
       <div className='navbar-container'>
         <div className="navbar-left">
           <button className="navbar-toggle" onClick={props.onToggleSidebar}>

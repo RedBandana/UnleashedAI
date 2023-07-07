@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import './Sidebar.scss';
 import SidebarItem from '../SidebarItem/SidebarItem';
+import { Capacitor } from '@capacitor/core';
 
 function Sidebar(props) {
   const { sidebarItems, isOpen, onClose, onClickItem, onEditItem, onDeleteItem,
@@ -10,8 +11,7 @@ function Sidebar(props) {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      const isMobile = process.env.REACT_APP_CLIENT_TYPE === 'mobile';
-      if (!isMobile)
+      if (Capacitor.isNativePlatform())
         return;
 
       const isOutsideSideBar = sidebarRef.current && !sidebarRef.current.contains(event.target);
@@ -40,7 +40,7 @@ function Sidebar(props) {
   }
 
   return (
-    <div className="sidebar" data-sidebar-is-open={isOpen} data-is-mobile={process.env.REACT_APP_CLIENT_TYPE === 'mobile'} ref={sidebarRef}>
+    <div className="sidebar" data-sidebar-is-open={isOpen} data-is-mobile={Capacitor.isNativePlatform()} ref={sidebarRef}>
       <div className="sidebar-body">
         <div className='sidebar-filestream-container sidebar-no-move-parent'>
           <div className="sidebar-add-button" onClick={onAddItem}>+ New chat</div>

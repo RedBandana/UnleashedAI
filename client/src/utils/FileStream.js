@@ -1,16 +1,36 @@
+import { uploadFile } from '../api/file.service';
+import { Capacitor } from '@capacitor/core';
+
 const encryptionKey = process.env.REACT_APP_ENCRYPTION_KEY;
 
 const saveJSONToFile = async (jsonObject, filename) => {
     const data = JSON.stringify(jsonObject);
     const blob = await encryptDataToBlob(data);
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);    
+
+    try {
+        const link = document.createElement('a');
+        link.download = filename;
+        
+        if (Capacitor.isNativePlatform()) {
+            const fileId = await uploadFile(blob, filename);
+            link.href = `${process.env.REACT_APP_API_URL}/files/download/${fileId}`;
+            triggerDownload(link);
+        }
+        else {
+            const url = window.URL.createObjectURL(blob);
+            link.href = url;
+            triggerDownload(link);
+            window.URL.revokeObjectURL(url);
+        }
+    } catch (error) {
+        console.error('Error saving file:', error);
+    }
+}
+
+function triggerDownload(link) {
+    document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
 }
 
 const readJSONFromUserInput = (inputFile) => {

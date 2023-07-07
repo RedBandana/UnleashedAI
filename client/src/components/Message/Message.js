@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "./Message.scss";
+import { Clipboard } from '@capacitor/clipboard';
 
 const Message = ({ message, onDelete, index }) => {
   const [showOptions, setShowOptions] = useState(false);
@@ -20,8 +21,10 @@ const Message = ({ message, onDelete, index }) => {
     setShowOptions(false);
   };
 
-  const handleCopyClick = () => {
-    navigator.clipboard.writeText(message.texts[currentTextIndex]);
+  const handleCopyClick = async () => {
+    await Clipboard.write({
+      string: message.texts[currentTextIndex]
+    });
     setShowOptions(false);
   }
 

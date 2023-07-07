@@ -2,10 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import ChatHistory from './ChatHistory';
 import Settings from '../Settings/Settings';
 import './Chatbot.scss';
-import { sendChatCompletion, trySendRequest } from '../../api/openai';
+import { sendChatCompletion, trySendRequest } from '../../api/openai.service';
 import { getModelMaxTokens } from '../../utils/Utils'
 import TextInput from '../TextInput/TextInput';
 import TypingDots from '../TypingDots/TypingDots'
+import { Capacitor } from '@capacitor/core';
 
 function Chatbot(props) {
     const { sidebarIsOpen, conversation, conversationUpdate } = props;
@@ -143,7 +144,7 @@ function Chatbot(props) {
     }
 
     return (
-        <div className="chatbot" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={process.env.REACT_APP_CLIENT_TYPE === 'mobile'}>
+        <div className="chatbot" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={Capacitor.isNativePlatform()}>
             <div className='chatbot-container'>
                 <div className="chatbot-body" ref={chatbotBodyRef}>
                     {(messageUpdate || !messageUpdate) && (
