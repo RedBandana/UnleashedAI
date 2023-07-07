@@ -5,6 +5,33 @@ import moment from "moment";
 import "./Message.scss";
 import { Clipboard } from '@capacitor/clipboard';
 import remarkGfm from "remark-gfm";
+import Prism from 'prismjs';
+import 'prism-themes/themes/prism-vsc-dark-plus.css'; // Import Prism's default styles
+
+// Import language support for desired programming languages
+import 'prismjs/components/prism-basic';
+import 'prismjs/components/prism-batch';
+import 'prismjs/components/prism-csv';
+import 'prismjs/components/prism-css';
+import 'prismjs/components/prism-csharp';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-dart';
+import 'prismjs/components/prism-git';
+import 'prismjs/components/prism-http';
+import 'prismjs/components/prism-java';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-json';
+import 'prismjs/components/prism-jsx';
+import 'prismjs/components/prism-kotlin';
+import 'prismjs/components/prism-mongodb';
+import 'prismjs/components/prism-pascal';
+import 'prismjs/components/prism-powershell';
+import 'prismjs/components/prism-python';
+import 'prismjs/components/prism-regex';
+import 'prismjs/components/prism-sass';
+import 'prismjs/components/prism-scss';
+import 'prismjs/components/prism-uri';
+import 'prismjs/components/prism-yaml';
 
 const Message = ({ message, onDelete, index }) => {
   const [showOptions, setShowOptions] = useState(false);
@@ -46,6 +73,39 @@ const Message = ({ message, onDelete, index }) => {
   };
 
   useEffect(() => {
+    // Call Prism.highlightAll() after rendering the Markdown content
+    Prism.highlightAll();
+
+    const preElements = document.getElementById(`chat-message-${index}`).querySelectorAll('pre');
+    if (preElements) {
+      preElements.forEach((preElement) => {
+        if (preElement.querySelector('code')) {
+          if (!preElement.className.includes('language')) {
+            preElement.classList.add('language-none');
+          }
+          
+          //Todo Add Copy and Language
+        }
+      });
+    }
+
+    const olElements = document.getElementById(`chat-message-${index}`).querySelectorAll('ol');
+    if (olElements) {
+      olElements.forEach((olElement) => {
+        olElement.innerHTML = olElement.innerHTML.replace(/(\r\n|\n|\r)/gm, "");
+      });
+    }
+
+    const ulElements = document.getElementById(`chat-message-${index}`).querySelectorAll('ul');
+    if (ulElements) {
+      ulElements.forEach((ulElement) => {
+        ulElement.innerHTML = ulElement.innerHTML.replace(/(\r\n|\n|\r)/gm, "");
+      });
+    }
+  }, [index])
+
+  useEffect(() => {
+
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
@@ -57,7 +117,7 @@ const Message = ({ message, onDelete, index }) => {
     <div className={`chat-message ${messageClass}`}>
       <div className="chat-message-container">
         <div className={`chat-message-bubble ${textClass}`}>
-          <div className="chat-message-text">
+          <div className="chat-message-text" id={`chat-message-${index}`}>
             <ReactMarkdown children={message.texts[currentTextIndex]} remarkPlugins={[remarkGfm]} />
           </div>
           {message.texts.length > 1 && (

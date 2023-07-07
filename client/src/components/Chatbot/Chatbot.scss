@@ -113,9 +113,20 @@
   margin: 0;
 }
 
+.chat-message-text li {
+  margin-bottom: 15px;
+}
+
 .chat-message-text p code {
   font-weight: bold;
+}
 
+.chat-message-text pre {
+  border-radius: 8px;
+}
+
+.chat-message-text pre code {
+  font-size: 1rem;
 }
 
 .chatbot-footer textarea {
