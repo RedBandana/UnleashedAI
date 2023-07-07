@@ -41,7 +41,7 @@
 }
 
 .navbar-center {
-  font-size: 1rem;
+  font-size: var(--font-size-main);
   font-weight: bold;
   color: var(--color-text-main);
 }
@@ -56,6 +56,6 @@
 
 .navbar-brand {
   font-weight: bold;
-  font-size: 1rem;
+  font-size: var(--font-size-main);
   color: var(--color-text-main);
 }

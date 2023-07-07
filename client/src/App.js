@@ -30,6 +30,13 @@ function App() {
     else {
       document.body.classList.remove("theme-dark");
     }
+
+    if (Capacitor.isNativePlatform()) {
+      document.body.classList.add("native-platform")
+    }
+    else {
+      document.body.classList.remove("native-platform");
+    }
   }, [isLightMode])
 
   useEffect(() => {

@@ -18,7 +18,7 @@
 }
 
 .sidebaritem-title {
-  font-size: 1rem;
+  font-size: var(--font-size-main);
   font-weight: 600;
   color: var(--color-text-main);
   max-width: 190px;
@@ -26,7 +26,7 @@
 
 .sidebaritem-title input {
   font-family: var(--font-family-main);
-  font-size: 1rem;
+  font-size: var(--font-size-main);
   font-weight: 600;
   color: var(--color-text-main);
   max-width: 170px;

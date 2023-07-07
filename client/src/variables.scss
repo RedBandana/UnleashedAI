@@ -3,6 +3,9 @@ $sidebar-width-adjust: 300px;
 
 body {
     --font-family-main: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    --font-size-main: 1rem;
+    --font-size-code: 1rem;
+
     --navbar-heigth: 47px;
 
     --color-background: #fff;
@@ -52,4 +55,8 @@ body {
     --box-shadow-sidebar-open-mobile: 0px 0 300px #111;
 
     --border-main: 1px solid #454545;
+}
+
+.native-platform {
+    --font-size-code: 13px;
 }

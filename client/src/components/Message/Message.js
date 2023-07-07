@@ -30,6 +30,7 @@ import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-regex';
 import 'prismjs/components/prism-sass';
 import 'prismjs/components/prism-scss';
+import 'prismjs/components/prism-swift';
 import 'prismjs/components/prism-uri';
 import 'prismjs/components/prism-yaml';
 

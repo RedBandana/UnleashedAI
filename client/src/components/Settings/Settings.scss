@@ -23,7 +23,7 @@
 
 .settings-dialog input {
   padding: 5px;
-  font-size: 1rem;
+  font-size: var(--font-size-main);
   border-radius: var(--border-radius-second);
   border: var(--border-main);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -83,7 +83,7 @@
   width: 100%;
   resize: vertical;
   padding: 5px;
-  font-size: 1rem;
+  font-size: var(--font-size-main);
   border-radius: var(--border-radius-second);
   border: var(--border-main);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
