@@ -97,7 +97,7 @@ const Message = ({ message, onDelete, index }) => {
         list.classList.add('markdown-list');
       });
     }
-  }, [index, message])
+  }, [index, message, currentTextIndex])
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
