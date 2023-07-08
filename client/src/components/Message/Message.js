@@ -76,29 +76,35 @@ const Message = ({ message, onDelete, index }) => {
   useEffect(() => {
     // Call Prism.highlightAll() after rendering the Markdown content
     Prism.highlightAll();
-
+  
     const chatMessage = document.getElementById(`chat-message-${index}`);
     const preElements = chatMessage.querySelectorAll('pre');
-    if (preElements) {
-      preElements.forEach((preElement) => {
-        if (preElement.querySelector('code')) {
-          if (!preElement.className.includes('language')) {
-            preElement.classList.add('language-none');
-          }
-
-          //Todo Add Copy and Language
+    
+    preElements.forEach((preElement) => {
+      const codeElement = preElement.querySelector('code');
+      
+      if (codeElement) {
+        if (!preElement.className.includes('language')) {
+          preElement.classList.add('language-none');
         }
-      });
-    }
-
+  
+        // Todo: Add Copy and Language
+      }
+    });
+  
+    const paragraphs = chatMessage.querySelectorAll('p > code');
+    paragraphs.forEach((codeElement) => {
+      if (!codeElement.innerHTML.startsWith('`')) {
+        codeElement.innerText = '`' + codeElement.innerText + '`';
+      }
+    });
+  
     const lists = chatMessage.querySelectorAll('ol, ul');
-    if (lists) {
-      lists.forEach((list) => {
-        list.classList.add('markdown-list');
-      });
-    }
-  }, [index, message, currentTextIndex])
-
+    lists.forEach((list) => {
+      list.classList.add('markdown-list');
+    });
+  }, [index, message, currentTextIndex]);
+  
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
 
