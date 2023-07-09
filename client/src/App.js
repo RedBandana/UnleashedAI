@@ -97,6 +97,7 @@ function App() {
           model: 'gpt-3.5-turbo',
           system: 'You are a helpful assistant.',
           temperature: 0.7,
+          memory: 10,
           topP: 1,
           quantity: 1,
           stream: false,

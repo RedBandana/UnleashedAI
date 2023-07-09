@@ -108,6 +108,21 @@ const Settings = ({ settings, onSave, onClose }) => {
                                 />
                             </div>
                         </div>
+                        <div className="setting-item">
+                            <label htmlFor="memory">Memorize</label>
+                            <div className="input-container">
+                                <input
+                                    type="number"
+                                    id="memory"
+                                    name="memory"
+                                    step="1"
+                                    min="1"
+                                    max="100"
+                                    value={formSettings.memory}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                        </div>
                         <div className="setting-item hide">
                             <label htmlFor="user">User</label>
                             <div className="input-container">
@@ -227,6 +242,7 @@ Settings.propTypes = {
         model: PropTypes.string.isRequired,
         system: PropTypes.string.isRequired,
         temperature: PropTypes.number.isRequired,
+        memory: PropTypes.number.isRequired,
         topP: PropTypes.number.isRequired,
         quantity: PropTypes.number.isRequired,
         stream: PropTypes.bool.isRequired,

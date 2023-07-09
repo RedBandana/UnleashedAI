@@ -107,7 +107,7 @@ function Chatbot(props) {
         setIsWaiting(true);
         setReceivedNewMessage(1);
 
-        let requestMessages = getRequestMessages([...conversation.messages]);
+        let requestMessages = getRequestMessages();
         const requestMaxTokens = conversation.settings.maxTokens === 0 ? null : conversation.settings.maxTokens;
         const requestSettings = {
             ...conversation.settings, history: requestMessages, maxTokens: requestMaxTokens
@@ -144,12 +144,14 @@ function Chatbot(props) {
         }
     };
 
-    const getRequestMessages = (messages) => {
-        while (messages.length > 1 &&
-            getMessagesTokens(messages) > getModelMaxTokens(conversation.settings.model) - TOKEN_SAFE_DELTA) {
-            messages.splice(0, 1);
+    const getRequestMessages = () => {
+        const memorizedMessages = [...conversation.messages].slice(-conversation.settings.memory);
+        while (memorizedMessages.length > 1 &&
+            getMessagesTokens(memorizedMessages) > getModelMaxTokens(conversation.settings.model) - TOKEN_SAFE_DELTA) {
+                memorizedMessages.splice(0, 1);
         }
-        return messages;
+        console.log(memorizedMessages);
+        return memorizedMessages;
     }
 
     const getMessagesTokens = (messages) => {
