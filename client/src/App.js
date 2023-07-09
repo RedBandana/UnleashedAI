@@ -6,6 +6,7 @@ import { saveJSONToFile, readJSONFromUserInput } from './utils/FileStream'
 import '@fortawesome/fontawesome-free/css/all.css';
 import './index.scss'
 import { Capacitor } from '@capacitor/core';
+import AlertDialog from './components/AlertDialog/AlertDialog';
 
 function App() {
   const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
@@ -14,7 +15,7 @@ function App() {
   const [isLightMode, setIsLightMode] = useState(true);
   const [conversationUpdate, setConversationUpdate] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
-  
+
   useEffect(() => {
     const savedTheme = localStorage.getItem("isLightMode");
     if (savedTheme != null) {
@@ -193,6 +194,7 @@ function App() {
     <div className={`app ${isLightMode ? 'theme-light' : 'theme-dark'}`}>
       <Navbar onToggleSidebar={handleToggleSidebar} sidebarIsOpen={isSidebarOpen} conversationTitle={conversations[selectedConversationIndex]?.title ?? ''} />
       <div className="main">
+        <AlertDialog text="Hello, Chat Unleashed AI is still in early stages. If you have any feedback, please contact us at contact@email.com" />
         <Sidebar isOpen={isSidebarOpen} onClose={handleCloseSidebar} sidebarItems={getSidebarItem()}
           onClickItem={(index) => handleClick(index)} onEditItem={(index, newTitle) => handleEdit(index, newTitle)}
           onDeleteItem={(index) => handleDelete(index)} onAddItem={handleAdd} onClearItems={handleClear}
