@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import ChatHistory from './ChatHistory';
+import Message from '../Message/Message';
 import Settings from '../Settings/Settings';
 import './Chatbot.scss';
 import { sendChatCompletion, trySendRequest } from '../../api/openai.service';
@@ -147,7 +147,11 @@ function Chatbot(props) {
         <div className="chatbot" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={Capacitor.isNativePlatform()}>
             <div className='chatbot-container'>
                 <div className="chatbot-body" ref={chatbotBodyRef}>
-                    <ChatHistory messages={conversation.messages} onDelete={handleDelete} />
+                    <div className="chatbot-messages">
+                        {conversation.messages.map((message, index) => (
+                            <Message key={index} index={index} message={message} onDelete={handleDelete} />
+                        ))}
+                    </div>
                     {isWaiting && (
                         <div className='chatbot-dots'>
                             <TypingDots />
