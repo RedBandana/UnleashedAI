@@ -16,6 +16,7 @@
 # For more information on GitHub Actions for Azure: https://github.com/Azure/Actions
 # For more information on the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # For more samples to get started with GitHub Action workflows to deploy to Azure: https://github.com/Azure/actions-workflow-samples
+# Help: https://github.com/actions/setup-node#caching-packages-dependencies
 
 on:
   push:
@@ -35,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
        run:
-         working-directory: ./client
+         working-directory: './client'
     steps:
     - uses: actions/checkout@v3
 
@@ -44,6 +45,7 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
+        cache-dependency-path: './client'
 
     - name: npm install, build, and test
       run: |
