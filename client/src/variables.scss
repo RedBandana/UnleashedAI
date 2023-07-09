@@ -8,28 +8,40 @@ body {
 
     --navbar-heigth: 47px;
 
-    --color-background: #fff;
-    --color-options-main: #bbb;
+    --color-chat-user: #fff;
+    --color-chat-bot: #f6f6f6;
+    --color-settings: #fff;
+
+    --color-background: #f6f6f6;
+    --color-navbar: #f6f6f6;
+    --color-options-main: #ccc;
     --color-hover-main: #eee;
-    --color-text-main: #050505;
+    --color-text-main: #374151;
     --color-main: #fbfbfb;
     --color-second: #eee;
     --color-third: #999;
     --color-none: transparent;
     --color-accent-main: #2374E1;
     --color-accent-second: #333;
-    --color-text-main-default: #050505;
+    --color-text-main-default: #374151;
     --color-options-main-default: #bbb;
     --color-main-default: #fff;
     --color-second-default: #eee;
 
+    --color-sidebar: #2b2d31;
+    --color-text-sidebar: #E4E6EB;
+    --color-hover-sidebar: #3f4248;
+    --color-options-sidebar: #666;
+    --color-sidebar-item: rgba(0,0,0,0);
+
     --box-shadow-main: 0 0 0 darkgray;
     --box-shadow-second: 0 0 2px darkgray;
     --box-shadow-third: 0 0 0 black;
-    --box-shadow-sidebar-open: 0 0 2px gray;
-    --box-shadow-sidebar-open-mobile: 0px 0 300px #bbb;
+    --box-shadow-sidebar-open: 0 0 0 gray;
+    --box-shadow-sidebar-open-mobile: 0px 0 300px #333;
 
     --border-main: 1px solid #ccc;
+    --border-chat: 1px solid #dadada;
     --border-none: none;
     --border-radius-main: 20px;
     --border-radius-second: 5px;
@@ -38,7 +50,8 @@ body {
 
 .theme-dark {
     --color-background: #313338;
-    --color-options-main: #666;
+    --color-navbar: #313338;
+    --color-options-main: #777;
     --color-hover-main: #3f4248;
     --color-text-main: #E4E6EB;
     --color-main: #2b2d31;
@@ -47,6 +60,11 @@ body {
     --color-accent-main: #2374E1;
     --color-accent-second: #ccc;
     --color-shadow-main: #454545;
+    --color-sidebar: #2b2d31;
+    --color-settings: #2b2d31;
+
+    --color-chat-user: #484a53;
+    --color-chat-bot: #313338;
 
     --box-shadow-main: 0 0 0 #111;
     --box-shadow-second: 0 0 2px #111;
@@ -55,6 +73,7 @@ body {
     --box-shadow-sidebar-open-mobile: 0px 0 300px #111;
 
     --border-main: 1px solid #454545;
+    --border-chat: none;
 }
 
 .native-platform {

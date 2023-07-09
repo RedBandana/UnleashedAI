@@ -76,35 +76,35 @@ const Message = ({ message, onDelete, index }) => {
   useEffect(() => {
     // Call Prism.highlightAll() after rendering the Markdown content
     Prism.highlightAll();
-  
+
     const chatMessage = document.getElementById(`chat-message-${index}`);
     const preElements = chatMessage.querySelectorAll('pre');
-    
+
     preElements.forEach((preElement) => {
       const codeElement = preElement.querySelector('code');
-      
+
       if (codeElement) {
         if (!preElement.className.includes('language')) {
           preElement.classList.add('language-none');
         }
-  
+
         // Todo: Add Copy and Language
       }
     });
-  
+
     const paragraphs = chatMessage.querySelectorAll('p > code');
     paragraphs.forEach((codeElement) => {
       if (!codeElement.innerHTML.startsWith('`')) {
         codeElement.innerText = '`' + codeElement.innerText + '`';
       }
     });
-  
+
     const lists = chatMessage.querySelectorAll('ol, ul');
     lists.forEach((list) => {
       list.classList.add('markdown-list');
     });
   }, [index, message, currentTextIndex]);
-  
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
 
@@ -115,7 +115,7 @@ const Message = ({ message, onDelete, index }) => {
 
   return (
     <div className={`chat-message ${messageClass}`}>
-      <div className="chat-message-container">
+      <div className={`chat-message-container ${textClass}`}>
         <div className={`chat-message-bubble ${textClass}`}>
           <div className="chat-message-text" id={`chat-message-${index}`}>
             <ReactMarkdown children={message.texts[currentTextIndex]} remarkPlugins={[remarkGfm]} />
@@ -145,20 +145,19 @@ const Message = ({ message, onDelete, index }) => {
         </div>
         <div className="chat-message-icons-container" onClick={handleOptionsClick} ref={optionsRef}>
           <i className="fa fa-ellipsis-v chat-message-options-icon"></i>
+          {showOptions && (
+            <div className="chat-message-options-container" ref={optionsRef}>
+              <button onClick={handleDeleteClick}>
+                <i className="fa fa-trash"></i>
+              </button>
+              <button onClick={handleCopyClick}>
+                <i className="fa fas fa-clipboard"></i>
+              </button>
+              <div className="chat-message-timestamp">{timestamp}</div>
+            </div>
+          )}
         </div>
       </div>
-
-      {showOptions && (
-        <div className="chat-message-options-container" ref={optionsRef}>
-          <button onClick={handleDeleteClick}>
-            <i className="fa fa-trash"></i>
-          </button>
-          <button onClick={handleCopyClick}>
-            <i className="fa fas fa-clipboard"></i>
-          </button>
-          <div className="chat-message-timestamp">{timestamp}</div>
-        </div>
-      )}
     </div>
   );
 };

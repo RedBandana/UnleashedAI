@@ -5,22 +5,21 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  background-color: var(--color-main);
+  background-color: var(----color-sidebar-item);
 }
 
 .sidebaritem:hover {
-    cursor: pointer;
-    background-color: var(--color-hover-main);
+  cursor: pointer;
+  background-color: var(--color-hover-sidebar);
 }
 
 .sidebaritem[data-is-selected="true"] {
-  background-color: var(--color-hover-main);
+  background-color: var(--color-hover-sidebar);
 }
 
 .sidebaritem-title {
   font-size: var(--font-size-main);
-  font-weight: 600;
-  color: var(--color-text-main);
+  color: var(--color-text-sidebar);
   max-width: 190px;
 }
 
@@ -28,7 +27,7 @@
   font-family: var(--font-family-main);
   font-size: var(--font-size-main);
   font-weight: 600;
-  color: var(--color-text-main);
+  color: var(--color-text-sidebar);
   max-width: 170px;
 }
 
@@ -55,11 +54,11 @@
 }
 
 .sidebaritem-button-edit {
-  color: var(--color-options-main);
+  color: var(--color-options-sidebar);
 }
 
 .sidebaritem-button-trash {
-  color: var(--color-options-main);
+  color: var(--color-options-sidebar);
 }
 
 .theme-dark .sidebaritem-title input {
