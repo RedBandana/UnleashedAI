@@ -107,7 +107,6 @@ const Message = ({ message, onDelete, index }) => {
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };

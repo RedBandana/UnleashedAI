@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Message from '../Message/Message';
 import Settings from '../Settings/Settings';
 import './Chatbot.scss';
@@ -9,19 +9,70 @@ import TypingDots from '../TypingDots/TypingDots'
 import { Capacitor } from '@capacitor/core';
 
 function Chatbot(props) {
-    const { sidebarIsOpen, conversation, conversationUpdate } = props;
+    const { sidebarIsOpen, conversation, conversationChangeTrigger } = props;
+    const [isInitialized, setIsInitialized] = useState(false);
     const [isWaiting, setIsWaiting] = useState(false);
     const chatbotBodyRef = useRef(null);
     const settingsRef = useRef(null);
     const [inputValue, setInputValue] = useState('');
     const [settingsOpen, setSettingsOpen] = useState(false);
-    const [receivedNewMessage, setReceivedNewMessage] = useState(false);
+    const [receivedNewMessage, setReceivedNewMessage] = useState(0);
     const [messageUpdate, setMessageUpdate] = useState(false);
+    const [messagesHtml, setMessagesHtml] = useState([]);
     const TOKEN_SAFE_DELTA = 2000;
 
+    const handleDelete = useCallback((messageIndex) => {
+        setMessagesHtml(prevMessages => {
+            const newMessages = [...prevMessages];
+            newMessages.splice(messageIndex, 1);
+            return newMessages;
+        });
+
+        conversation.messages.splice(messageIndex, 1);
+        setMessageUpdate(!messageUpdate);
+    }, [conversation, messageUpdate]);
+
+    const setMessagesHtmlToDisplay = useCallback(() => {
+        const htmlToDisplay = conversation.messages.map((message, index) => (
+            <Message key={index} index={index} message={message} onDelete={handleDelete} />
+        ));
+        setMessagesHtml(htmlToDisplay);
+        setIsInitialized(true);
+    }, [conversation, handleDelete])
+
+    const addMessagesHtmlToDisplay = useCallback(() => {
+        const messageIndex = conversation.messages.length - 1;
+        const message = conversation.messages[messageIndex];
+        const newMessageHtml = <Message key={messageIndex} index={messageIndex} message={message} onDelete={handleDelete} />
+        setMessagesHtml(prevMessages => [...prevMessages, newMessageHtml]);
+    }, [conversation, handleDelete])
+
     useEffect(() => {
-        scrollToBottom("auto");
-    }, [conversationUpdate]);
+        setMessagesHtmlToDisplay();
+    }, [conversationChangeTrigger, setMessagesHtmlToDisplay]);
+
+    useEffect(() => {
+        if (isInitialized) {
+            scrollToBottom("auto");
+            setIsInitialized(false);
+        }
+    }, [isInitialized]);
+
+    useEffect(() => {
+        setReceivedNewMessage(0);
+    }, [conversationChangeTrigger, receivedNewMessage])
+
+    useEffect(() => {
+        if (receivedNewMessage !== 0) {
+            addMessagesHtmlToDisplay();
+        }
+
+        scrollToBottom("smooth");
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [receivedNewMessage, addMessagesHtmlToDisplay]);
 
     useEffect(() => {
         resizeTextAreaHeight();
@@ -45,12 +96,16 @@ function Chatbot(props) {
             return;
         }
 
-        const newMessage = { texts: [inputText], isUser: true, timestamp: new Date().getTime() };
-        conversation.messages.push(newMessage);
+        const userMessage = {
+            texts: [inputText],
+            isUser: true,
+            timestamp: new Date().getTime()
+        };
+        conversation.messages.push(userMessage);
 
         emptyTextArea();
         setIsWaiting(true);
-        setReceivedNewMessage(true);
+        setReceivedNewMessage(1);
 
         let requestMessages = getRequestMessages([...conversation.messages]);
         const requestMaxTokens = conversation.settings.maxTokens === 0 ? null : conversation.settings.maxTokens;
@@ -59,18 +114,15 @@ function Chatbot(props) {
         }
 
         trySendRequest(sendChatCompletion, requestSettings).then((response) => {
-            conversation.messages.push({ texts: response, isUser: false, timestamp: new Date().getTime() });
+            const botMessage = {
+                texts: response,
+                isUser: false,
+                timestamp: new Date().getTime()
+            };
+            conversation.messages.push(botMessage);
             setIsWaiting(false);
-            setReceivedNewMessage(false);
+            setReceivedNewMessage(2);
         });
-    };
-
-    const handleDelete = (messageIndex) => {
-        const newMessages = [...conversation.messages];
-        newMessages.splice(messageIndex, 1);
-        conversation.messages = newMessages;
-
-        setMessageUpdate(!messageUpdate);
     };
 
     const handleSettingsButtonClick = () => {
@@ -128,14 +180,6 @@ function Chatbot(props) {
         textarea.style.height = `${31}px`;
     }
 
-    useEffect(() => {
-        scrollToBottom("smooth");
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [receivedNewMessage]);
-
     function scrollToBottom(behavior) {
         chatbotBodyRef.current.scrollTo({
             top: chatbotBodyRef.current.scrollHeight,
@@ -148,9 +192,7 @@ function Chatbot(props) {
             <div className='chatbot-container'>
                 <div className="chatbot-body" ref={chatbotBodyRef}>
                     <div className="chatbot-messages">
-                        {conversation.messages.map((message, index) => (
-                            <Message key={index} index={index} message={message} onDelete={handleDelete} />
-                        ))}
+                        {messagesHtml}
                     </div>
                     {isWaiting && (
                         <div className='chatbot-dots'>
