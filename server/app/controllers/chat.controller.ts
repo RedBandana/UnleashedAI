@@ -1,14 +1,16 @@
 import { Router, Response, Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { UserService } from '@app/services/user.service';
-import { Chat, ChatDto, Message, User } from '@app/db-models/user';
+import { User } from '@app/db-models/user';
+import { Chat, ChatDto, Message } from '@app/db-models/user.chat';
 import { ObjectId } from 'mongodb';
-import { ChatService } from '@app/services/openai.service';
+import { OpenAIService } from '@app/services/openai.service';
+import { Converter } from '@app/utils/converter';
 
 export class ChatController {
 
     static configureRouter(userService: UserService, userRouter: Router) {
-        const chatService = new ChatService();
+        const openAIService = new OpenAIService();
 
         userRouter.get('/:userId/chat/', async (req: Request, res: Response) => {
             try {
@@ -64,25 +66,26 @@ export class ChatController {
             }
         });
 
-        userRouter.get('/:userId/chat/:chatId/messages/:messageId/replies', async (req: Request, res: Response) => {
+        userRouter.get('/:userId/chat/:chatId/messages/:messageId/texts', async (req: Request, res: Response) => {
             try {
                 const { userId, chatId, messageId } = req.params;
                 const user = await userService.getOneDocumentFullInfo(userId) as User;
-                const replies = user.chats[chatId].messages[messageId].replies;
+                const texts = user.chats[chatId].messages[messageId].texts;
 
-                handleGetResponse(res, replies);
+                handleGetResponse(res, texts);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }
         });
 
-        userRouter.get('/:userId/chat/:chatId/messages/:messageId/replies/:replyId', async (req: Request, res: Response) => {
+        userRouter.get('/:userId/chat/:chatId/messages/:messageId/texts/:textNo', async (req: Request, res: Response) => {
             try {
-                const { userId, chatId, messageId, replyId } = req.params;
+                const { userId, chatId, messageId, textNo } = req.params;
+                const textIndex = Number(textNo);
                 const user = await userService.getOneDocumentFullInfo(userId) as User;
-                const reply = user.chats[chatId].messages[messageId].replies.filter(r => r.replyId == replyId);
+                const text = user.chats[chatId].messages[messageId].texts[textIndex];
 
-                handleGetResponse(res, reply);
+                handleGetResponse(res, text);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }
@@ -120,20 +123,19 @@ export class ChatController {
                     return;
                 }
 
-                chatService.sendChatCompletion(user.chats[chatId].settings as any)
-                    .then((result) => {
-                        console.log(result);
-                        // Code to execute after the async function is completed
-                        console.log("Async function execution completed");
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    });;
-
                 const message = req.body as Message;
                 message.messageId = newId;
 
-                handlePostResponse(res, message);
+                const ChatbotSettings = Converter.ChatToChatbotSettings(user.chats[chatId]);
+                openAIService.sendChatCompletion(ChatbotSettings)
+                    .then((result: string[]) => {
+                        
+                    })
+                    .catch((error: any) => {
+                        
+                    });;
+
+                handlePostResponse(res, message.messageId);
             } catch (error) {
                 res.status(StatusCodes.BAD_REQUEST).send(error.message);
             }
