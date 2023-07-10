@@ -3,6 +3,7 @@ import { User } from '@app/db-models/user';
 import { Router, Response, Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
+import { ChatController } from './chat.controller';
 
 @Service()
 export class UserController {
@@ -13,6 +14,7 @@ export class UserController {
 
     private configureRouter() {
         this.router = Router();
+        ChatController.configureRouter(this.userService, this.router);
 
         this.router.get('/', async (req: Request, res: Response) => {
             try {
@@ -22,8 +24,8 @@ export class UserController {
             }
         });
 
-        this.router.get('/:id', async (req: Request, res: Response) => {
-            const id = decodeURIComponent(req.params.id);
+        this.router.get('/:userId', async (req: Request, res: Response) => {
+            const id = decodeURIComponent(req.params.userId);
             try {
                 const user = await this.userService.getOneDocumentFullInfo(id)
                 if (user) {

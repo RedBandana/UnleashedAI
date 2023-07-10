@@ -1,4 +1,5 @@
 export enum DBCollection {
     USER = 'users',
-    FILE = 'files'
+    FILE = 'files',
+    CHAT = 'chats'
 }
