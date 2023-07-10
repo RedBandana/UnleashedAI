@@ -5,16 +5,16 @@ export interface ChatbotMessage {
   content: string;
 }
 
-export const ChatbotMessageSchema = new Schema<ChatbotMessage>({
-  role: { type: String, required: true },
-  content: { type: String, required: true },
-});
-
 export interface ChatbotResponseChoice {
   index: number;
   message: ChatbotMessage;
   finish_reason: string;
 }
+
+export const ChatbotMessageSchema = new Schema<ChatbotMessage>({
+  role: { type: String, required: true },
+  content: { type: String, required: true },
+});
 
 export const ChatbotResponseChoiceSchema = new Schema<ChatbotResponseChoice>({
   index: { type: Number, required: true },
@@ -34,7 +34,7 @@ export interface ChatbotResponse {
   };
 }
 
-export const ChatResponseSchema = new Schema<ChatbotResponse>({
+export const ChatbotResponseSchema = new Schema<ChatbotResponse>({
   id: { type: String, required: true },
   object: { type: String, required: true },
   created: { type: Number, required: true },

@@ -1,10 +1,12 @@
-import { Chat, Message } from "@app/db-models/user.chat";
+import { Chat } from "@app/db-models/chat";
+import { Message } from "@app/db-models/message";
+import { ObjectId } from "mongodb";
 
 export class Utils {
     static getMessagesTokens = (messages: Message[]) => {
         let totalTokens = 0;
         for (let message of messages) {
-            totalTokens += message.texts.find(t => t.isDisplayed)?.value?.length ?? 0;
+            totalTokens += message.choices.find(t => t.isDisplayed)?.content?.length ?? 0;
         }
         return totalTokens;
     }
@@ -40,6 +42,22 @@ export class Utils {
         }
 
         return memorizedMessages;
+    }
+
+
+    static getUniqueId = (collection: { [id: string]: any }) => {
+        let tryCount = 0;
+        let id = new ObjectId().toString();
+
+        while (collection[id]) {
+            if (tryCount > 100) {
+                throw new Error('Id already used.');
+            }
+            id = new ObjectId().toString();
+            tryCount++;
+        }
+
+        return id;
     }
 
 }
