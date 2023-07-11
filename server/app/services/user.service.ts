@@ -2,9 +2,10 @@ import { Service } from 'typedi';
 import { DatabaseService } from './database.service';
 import { DBCollectionService } from './db-collection.service';
 import { DBModelName } from "@app/enums/db-model-name";
-import { IUser, UserModel, UserPipeline, UserProjection } from '@app/db-models/user';
+import { IUser, UserModel } from '@app/db-models/user';
 import { IChat, IMessage } from '@app/db-models/chat';
 import { ChatUtils } from '@app/utils/chat.utils';
+import { UserPipeline, UserProjection } from '@app/db-models/dto/user.dto';
 
 const COLLECTION_NAME = DBModelName.USER;
 
@@ -37,8 +38,8 @@ export class UserService extends DBCollectionService {
         this.query = this.model.updateOne({ _id: userId }, { $push: { chats: chat } });
         await this.query.lean().exec();
 
-        const user = await this.getOneDocumentByAggregate(UserPipeline.chatLatest(userId)) as IUser;
-        const newChat = user.chats[0];
+        const result = await this.getOneDocumentByAggregate(UserPipeline.chatLatest(userId));
+        const newChat = result.chat as IChat;
 
         return newChat;
     }
@@ -48,7 +49,10 @@ export class UserService extends DBCollectionService {
         this.query = this.model.updateOne({ _id: userId }, { $push: { [`chats.${chatIndex}.messages`]: message } });
         await this.query.lean().exec();
 
-        return message;
+        const result = await this.getOneDocumentByAggregate(UserPipeline.messageLatest(userId, Number(chatIndex)));
+        const newMessage = result.message;
+        
+        return newMessage;
     }
 
     async createBotMessage(userId: string, chatIndex: string, choices: string[]): Promise<IMessage> {
@@ -64,7 +68,7 @@ export class UserService extends DBCollectionService {
     }
 
     async deleteChat(userId: string, chatIndex: string): Promise<void> {
-        const user = await this.getDocumentByIdLean(userId, UserProjection.chats) as IUser;
+        const user = await this.getDocumentByIdLean(userId, UserProjection.chat) as IUser;
         const chatNo = Number(chatIndex);
         const chatId = user.chats[chatNo]._id;
 
@@ -76,7 +80,7 @@ export class UserService extends DBCollectionService {
     }
 
     async deleteMessage(userId: string, chatIndex: string, messageIndex: string): Promise<void> {
-        const user = await this.getDocumentByIdLean(userId, UserProjection.chats) as IUser;
+        const user = await this.getDocumentByIdLean(userId, UserProjection.chat) as IUser;
         const chatNo = Number(chatIndex);
         const messageNo = Number(messageIndex);
         const messageId = user.chats[chatNo].messages[messageNo]._id;

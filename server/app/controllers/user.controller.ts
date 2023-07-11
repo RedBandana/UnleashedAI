@@ -1,11 +1,12 @@
 import { UserService } from '@app/services/user.service';
-import { IUser, UserProjection } from '@app/db-models/user';
+import { IUser } from '@app/db-models/user';
 import { Router, Response, Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
 import { ChatController } from './chat.controller';
 import { Controller } from './base.controller';
 import { Converter } from '@app/utils/converter';
+import { UserProjection } from '@app/db-models/dto/user.dto';
 
 @Service()
 export class UserController {

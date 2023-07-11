@@ -30,11 +30,11 @@ export abstract class DBCollectionService {
         return await this.query.lean().sort({ creationTime: -1 }).select(projection).exec();
     }
 
-    async getOneDocumentByAggregate(stages: PipelineStage[]): Promise<Document> {
+    async getOneDocumentByAggregate(stages: PipelineStage[]): Promise<any> {
         return (await this.model.aggregate(stages))[0];
     }
 
-    async getDocumentByAggregate(stages: PipelineStage[]): Promise<Document[]> {
+    async getDocumentByAggregate(stages: PipelineStage[]): Promise<any[]> {
         return await this.model.aggregate(stages);
     }
 

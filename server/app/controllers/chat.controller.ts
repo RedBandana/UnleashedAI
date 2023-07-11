@@ -1,11 +1,12 @@
 import { Router, Response, Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { UserService } from '@app/services/user.service';
-import { IUser, UserProjection } from '@app/db-models/user';
+import { IUser } from '@app/db-models/user';
 import { OpenAIService } from '@app/services/openai.service';
 import { Converter } from '@app/utils/converter';
 import { Controller } from './base.controller';
 import { ChatUtils } from '@app/utils/chat.utils';
+import { UserPipeline, UserProjection } from '@app/db-models/dto/user.dto';
 
 export class ChatController {
 
@@ -30,8 +31,8 @@ export class ChatController {
             try {
                 const { userId, chatIndex } = req.params;
                 const chatNo = Number(chatIndex);
-                const user = await userService.getDocumentByIdLean(userId, UserProjection.chat) as IUser;
-                const chat = user.chats[chatNo];
+                const user = await userService.getOneDocumentByAggregate(UserPipeline.chatId(userId, chatNo)) as IUser;
+                const chat = user.chats[0];
                 Controller.handleGetResponse(res, chat);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
@@ -110,8 +111,6 @@ export class ChatController {
                 const { userId, chatIndex } = req.params;
                 const chatNo = Number(chatIndex);
                 const userContent: string = req.body;
-                console.log(req.body);
-                console.log(userContent);
                 const userMessage = await userService.createMessage(userId, chatIndex, userContent);
 
                 //user socket emit
