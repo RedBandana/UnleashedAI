@@ -1,5 +1,4 @@
 export enum DBModelName {
-    FILE = 'FileModel',
-    CHAT = 'ChatModel',
-    USER = 'UserModel'
+    FILE = 'File',
+    USER = 'User'
 }

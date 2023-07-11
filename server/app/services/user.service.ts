@@ -2,7 +2,7 @@ import { Service } from 'typedi';
 import { DatabaseService } from './database.service';
 import { DBCollectionService } from './db-collection.service';
 import { DBModelName } from "@app/enums/db-model-name";
-import { IUser, UserModel, UserProjection } from '@app/db-models/user';
+import { IUser, UserModel, UserPipeline, UserProjection } from '@app/db-models/user';
 import { IChat, IMessage } from '@app/db-models/chat';
 import { ChatUtils } from '@app/utils/chat.utils';
 
@@ -33,13 +33,14 @@ export class UserService extends DBCollectionService {
     }
 
     async createChat(userId: string): Promise<IChat> {
-        this.databaseService.database.aggregate()
-
         const chat: IChat = ChatUtils.getDefaultChat();
         this.query = this.model.updateOne({ _id: userId }, { $push: { chats: chat } });
         await this.query.lean().exec();
 
-        return chat;
+        const user = await this.getOneDocumentByAggregate(UserPipeline.chatLatest(userId)) as IUser;
+        const newChat = user.chats[0];
+
+        return newChat;
     }
 
     async createMessage(userId: string, chatIndex: string, content: string): Promise<IMessage> {

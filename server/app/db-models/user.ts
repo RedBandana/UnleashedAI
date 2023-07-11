@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, PipelineStage, Schema } from "mongoose";
 import { DBModelName } from "@app/enums/db-model-name";
 import { IChat, ChatSchema } from "./chat";
 
@@ -43,5 +43,27 @@ export class UserProjection {
     "chats._id": true,
     "chats.title": true,
     "chats.settings": true,
+  }
+}
+
+export class UserPipeline {
+
+  static chatLatest = (userId: string): PipelineStage[] => {
+    const aggregate: PipelineStage[] = [
+      {
+        $match: { _id: new ObjectId(userId) }
+      },
+      {
+        $project: { chats: { $slice: ["$chats", -1] } }
+      },
+      {
+        $project: UserProjection.chat
+      },
+      {
+        $limit: 1
+      }
+    ]
+
+    return aggregate;
   }
 }

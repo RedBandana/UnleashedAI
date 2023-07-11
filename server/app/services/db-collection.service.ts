@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb';
-import { Model, Query, Document } from 'mongoose';
+import { Model, Query, Document, PipelineStage } from 'mongoose';
 import { DatabaseService } from './database.service';
 
 export interface DBRequestOptions {
@@ -28,6 +28,14 @@ export abstract class DBCollectionService {
         this.query = this.model.findById(documentId);
         this.setSingleDocumentQuery();
         return await this.query.lean().sort({ creationTime: -1 }).select(projection).exec();
+    }
+
+    async getOneDocumentByAggregate(stages: PipelineStage[]): Promise<Document> {
+        return (await this.model.aggregate(stages))[0];
+    }
+
+    async getDocumentByAggregate(stages: PipelineStage[]): Promise<Document[]> {
+        return await this.model.aggregate(stages);
     }
 
     async filterBy(filter: any, option?: DBRequestOptions, projection?: { [key: string]: boolean }): Promise<Document[]> {
