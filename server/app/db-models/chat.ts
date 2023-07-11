@@ -1,20 +1,19 @@
 import { Schema } from "mongoose";
-import { Message, MessageSchema } from "./message";
 
-export interface Chat {
-    chatId: string;
-    title: string;
-    settings: Settings;
-    messages: { [messageId: string]: Message };
+export interface Message {
+    choices?: string[];
+    content: string;
+    isUser: boolean;
+    creationTime: Date;
 }
 
-export interface LiteChatDto {
-    chatId: string;
+export interface Chat {
     title: string;
+    settings: Settings;
+    messages: Message[];
 }
 
 export interface ChatDto {
-    chatId: string;
     title: string;
     settings: Settings;
 }
@@ -28,7 +27,7 @@ export interface Settings {
     top_p?: number;
     n?: number;
     stream?: boolean;
-    stop?: string | string[];
+    stop?: string[];
     max_tokens?: number;
     presence_penalty?: number;
     frequency_penalty?: number;
@@ -53,9 +52,15 @@ const SettingsSchema = new Schema<Settings>({
     user: { type: String },
 });
 
+export const MessageSchema = new Schema<Message>({
+    choices: { type: [String] },
+    content: { type: String, required: true },
+    isUser: { type: Boolean, required: true },
+    creationTime: { type: Date, required: true, default: Date.now},
+});
+
 export const ChatSchema = new Schema<Chat>({
-    chatId: { type: String, required: true },
-    title: { type: String, required: true },
-    settings: { type: SettingsSchema },
-    messages: { type: Map, of: MessageSchema },
+    title: { type: String },
+    settings: { type: SettingsSchema, required: true },
+    messages: { type: [MessageSchema], required: true, default: [] },
 });

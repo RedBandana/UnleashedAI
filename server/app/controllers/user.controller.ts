@@ -4,6 +4,7 @@ import { Router, Response, Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
 import { ChatController } from './chat.controller';
+import { Controller } from './base.controller';
 
 @Service()
 export class UserController {
@@ -28,9 +29,7 @@ export class UserController {
             const id = decodeURIComponent(req.params.userId);
             try {
                 const user = await this.userService.getOneDocumentFullInfo(id)
-                if (user) {
-                    res.status(StatusCodes.OK).send(user);
-                }
+                Controller.handleGetResponse(res, user);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }
@@ -40,9 +39,7 @@ export class UserController {
             const email = decodeURIComponent(req.params.email);
             try {
                 const user = await this.userService.getDocumentByEmail(email);
-                if (user) {
-                    res.status(StatusCodes.OK).send(user);
-                }
+                Controller.handleGetResponse(res, user);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }
@@ -52,10 +49,7 @@ export class UserController {
             try {
                 const reqUser = req.body as User;
                 const user = await this.userService.createUser(reqUser.name, reqUser.email);
-        
-                user
-                    ? res.status(StatusCodes.CREATED).send(user)
-                    : res.status(StatusCodes.INTERNAL_SERVER_ERROR).send("Failed to create a new user.");
+                Controller.handlePostResponse(res, user);
             } catch (error) {
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
             }

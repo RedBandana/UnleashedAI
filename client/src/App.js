@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import Chatbot from './components/Chatbot/Chatbot';
 import Sidebar from './components/Sidebar/Sidebar';
 import Navbar from './components/Navbar/Navbar';
-import { saveJSONToFile, readJSONFromUserInput } from './utils/FileStream'
+import { saveJSONToFile, readJSONFromUserInput } from './utils/FileStream';
 import '@fortawesome/fontawesome-free/css/all.css';
-import './index.scss'
+import './index.scss';
 import { Capacitor } from '@capacitor/core';
 import AlertDialog from './components/AlertDialog/AlertDialog';
 
@@ -18,44 +18,29 @@ function App() {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("isLightMode");
-    if (savedTheme != null) {
+    if (savedTheme !== null) {
       const savedThemeIsLightMode = savedTheme === "true";
       if (savedThemeIsLightMode !== isLightMode) {
         setIsLightMode(savedThemeIsLightMode);
       }
     }
 
-    if (isLightMode === false) {
-      document.body.classList.add("theme-dark");
-    }
-    else {
-      document.body.classList.remove("theme-dark");
-    }
-
-    if (Capacitor.isNativePlatform()) {
-      document.body.classList.add("native-platform")
-    }
-    else {
-      document.body.classList.remove("native-platform");
-    }
-  }, [isLightMode])
+    document.body.classList.toggle("theme-dark", !isLightMode);
+    document.body.classList.toggle("native-platform", Capacitor.isNativePlatform());
+  }, [isLightMode]);
 
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) {
       setIsSidebarOpen(true);
       setIsInitialized(true);
     }
-  }, [isInitialized])
+  }, [isInitialized]);
 
-  function toggleTheme() {
+  const toggleTheme = () => {
     const updatedIsLightMode = !isLightMode;
     setIsLightMode(updatedIsLightMode);
     localStorage.setItem("isLightMode", updatedIsLightMode);
-  }
-
-  function handleOnRead(event) {
-    handleRead(event.target.files[0])
-  }
+  };
 
   const handleRead = async (fileInput) => {
     try {
@@ -69,29 +54,22 @@ function App() {
   const handleSave = async () => {
     try {
       await saveJSONToFile(conversations, 'chat.gptu');
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
     }
   };
 
-  const handleSaveAs = async () => {
-    try {
-      await saveJSONToFile(conversations, 'chat.gptu');
-    }
-    catch (error) {
-      console.log(error);
-    }
-  };
+  const handleSaveAs = handleSave;
 
   const handleClick = (conversationIndex) => {
     setSelectedConversationIndex(conversationIndex);
-    setConversationUpdate(!conversationIndex);
+    setConversationUpdate(!conversationUpdate);
   };
 
   const handleAdd = () => {
     setConversations([
-      ...conversations, {
+      ...conversations,
+      {
         title: `Chat ${conversations.length}`,
         messages: [],
         settings: {
@@ -107,11 +85,11 @@ function App() {
           presencePenalty: 0,
           frequencyPenalty: 0,
           user: '',
-          devOptions: false
-        }
+          devOptions: false,
+        },
       },
     ]);
-  }
+  };
 
   const handleEdit = (conversationIndex, newTitle) => {
     const updatedConversations = [...conversations];
@@ -129,7 +107,6 @@ function App() {
 
   const touchStartX = useRef(0);
   const touchIsDragging = useRef(false);
-
   const [sidebarChanged, setSidebarChanged] = useState(false);
 
   useEffect(() => {
@@ -142,12 +119,11 @@ function App() {
     function handleMove(event) {
       if (touchIsDragging.current) {
         const distance = event.touches[0].pageX - touchStartX.current;
-        if (distance > 50) { // Open sidebar when dragging over 50 pixels to the right
+        if (distance > 50) {
           setIsSidebarOpen(true);
           touchIsDragging.current = false;
           setSidebarChanged(true);
-        }
-        else if (distance < -50) {
+        } else if (distance < -50) {
           setIsSidebarOpen(false);
           touchIsDragging.current = false;
           setSidebarChanged(true);
@@ -170,66 +146,81 @@ function App() {
     };
   }, [sidebarChanged]);
 
-  function handleToggleSidebar(event) {
+  const handleToggleSidebar = (event) => {
     event.stopPropagation();
     setIsSidebarOpen(!isSidebarOpen);
-  }
+  };
 
-  function handleCloseSidebar() {
-    if (sidebarChanged === false) {
+  const handleCloseSidebar = () => {
+    if (!sidebarChanged) {
       setIsSidebarOpen(false);
     }
-  }
+  };
 
-  function getSidebarItem() {
-    const sidebarItems = conversations.map((convo, index) => ({
+  const getSidebarItems = () => {
+    return conversations.map((convo, index) => ({
       title: convo.title,
       index: index,
     }));
+  };
 
-    return sidebarItems;
-  }
+  const selectedConversation =
+    selectedConversationIndex < conversations.length
+      ? conversations[selectedConversationIndex]
+      : conversations[conversations.length - 1];
+
+  const noConversations = conversations.length === 0;
+  const isMobile = Capacitor.isNativePlatform();
 
   return (
     <div className={`app ${isLightMode ? 'theme-light' : 'theme-dark'}`}>
-      <Navbar onToggleSidebar={handleToggleSidebar} sidebarIsOpen={isSidebarOpen} conversationTitle={conversations[selectedConversationIndex]?.title ?? ''} />
+      <Navbar
+        onToggleSidebar={handleToggleSidebar}
+        sidebarIsOpen={isSidebarOpen}
+        conversationTitle={selectedConversation?.title ?? ''}
+      />
       <div className="main">
         <AlertDialog text="Hello, Chat Unleashed AI is still in early stages. If you have any feedback, please contact us at contact@email.com" />
-        <Sidebar isOpen={isSidebarOpen} onClose={handleCloseSidebar} sidebarItems={getSidebarItem()}
-          onClickItem={(index) => handleClick(index)} onEditItem={(index, newTitle) => handleEdit(index, newTitle)}
-          onDeleteItem={(index) => handleDelete(index)} onAddItem={handleAdd} onClearItems={handleClear}
-          onSave={handleSave} onSaveAs={handleSaveAs} onRead={handleRead} onToggleTheme={toggleTheme} />
-        {conversations.length > 0 ?
-          (selectedConversationIndex < conversations.length ?
-            (
-              <Chatbot
-                conversation={conversations[selectedConversationIndex]}
-                sidebarIsOpen={isSidebarOpen}
-                onToggleSidebar={handleToggleSidebar}
-                conversationUpdate={conversationUpdate} />
-            ) :
-            (
-              <Chatbot
-                conversation={conversations[conversations.length - 1]}
-                sidebarIsOpen={isSidebarOpen}
-                onToggleSidebar={handleToggleSidebar}
-                conversationUpdate={conversationUpdate} />
-            )
-          ) :
-          (
-            <div data-sidebar-is-open={isSidebarOpen} data-is-mobile={Capacitor.isNativePlatform()} className='no-conversation-container'>
-              <div className='no-conversation-options'>
-                <div className='no-conversation-options-child no-conversation-open'>
-                  <label>
-                    <input className='hide' type="file" onChange={handleOnRead} />
-                    Open conversations <div className="fas fa-folder-open"></div>
-                  </label>
-                </div>
-                <div onClick={handleAdd} className='no-conversation-options-child no-conversation-new'>New chat +</div>
+        <Sidebar
+          isOpen={isSidebarOpen}
+          onClose={handleCloseSidebar}
+          sidebarItems={getSidebarItems()}
+          onClickItem={handleClick}
+          onEditItem={handleEdit}
+          onDeleteItem={handleDelete}
+          onAddItem={handleAdd}
+          onClearItems={handleClear}
+          onSave={handleSave}
+          onSaveAs={handleSaveAs}
+          onRead={handleRead}
+          onToggleTheme={toggleTheme}
+        />
+        {noConversations ? (
+          <div
+            data-sidebar-is-open={isSidebarOpen}
+            data-is-mobile={isMobile}
+            className="no-conversation-container"
+          >
+            <div className="no-conversation-options">
+              <div className="no-conversation-options-child no-conversation-open">
+                <label>
+                  <input className="hide" type="file" onChange={handleRead} />
+                  Open conversations <div className="fas fa-folder-open"></div>
+                </label>
+              </div>
+              <div onClick={handleAdd} className="no-conversation-options-child no-conversation-new">
+                New chat +
               </div>
             </div>
-          )}
-
+          </div>
+        ) : (
+          <Chatbot
+            conversation={selectedConversation}
+            sidebarIsOpen={isSidebarOpen}
+            onToggleSidebar={handleToggleSidebar}
+            conversationUpdate={conversationUpdate}
+          />
+        )}
       </div>
     </div>
   );

@@ -48,13 +48,12 @@ export const ChatbotResponseSchema = new Schema<ChatbotResponse>({
 
 export interface ChatbotSettings {
   model: string;
-  system: string;
   temperature: number;
   messages: ChatbotMessage[];
-  top_p: number;
-  n: number;
-  stream: boolean;
-  stop?: string | string[];
+  top_p?: number;
+  n?: number;
+  stream?: boolean;
+  stop?: string[];
   max_tokens?: number;
   presence_penalty?: number;
   frequency_penalty?: number;
@@ -63,15 +62,14 @@ export interface ChatbotSettings {
 }
 
 export const ChatbotSettingsSchema = new Schema<ChatbotSettings>({
-  model: { type: String, required: true },
-  system: { type: String, required: true },
-  temperature: { type: Number, required: true },
   messages: {
-      type: [ChatbotMessageSchema], required: true
+    type: [ChatbotMessageSchema], required: true
   },
-  top_p: { type: Number, required: true },
-  n: { type: Number, required: true },
-  stream: { type: Boolean, required: true },
+  model: { type: String, required: true, default: 'gpt-3.5-turbo' },
+  temperature: { type: Number, required: true, default: 0.7 },
+  stream: { type: Boolean },
+  top_p: { type: Number },
+  n: { type: Number },
   stop: { type: [String] },
   max_tokens: { type: Number },
   presence_penalty: { type: Number },

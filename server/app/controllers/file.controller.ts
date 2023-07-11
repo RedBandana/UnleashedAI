@@ -41,7 +41,6 @@ export class FileController {
             const id = decodeURIComponent(req.params.id);
 
             try {
-                console.log('test');
                 const file = await this.fileService.getOneDocumentFullInfo(id) as IFile;
                 if (file) {
                     res.status(StatusCodes.OK).send(file);
@@ -55,7 +54,6 @@ export class FileController {
             const id = decodeURIComponent(req.params.id);
 
             try {
-                console.log('test');
                 const file = await this.fileService.getOneDocumentFullInfo(id) as IFile;
                 if (file) {
                     res.download(file.path);

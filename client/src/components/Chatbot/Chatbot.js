@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Message from '../Message/Message';
 import Settings from '../Settings/Settings';
 import './Chatbot.scss';
-import { sendChatCompletion, trySendRequest } from '../../api/openai.service';
 import { getModelMaxTokens } from '../../utils/Utils'
 import TextInput from '../TextInput/TextInput';
 import TypingDots from '../TypingDots/TypingDots'
@@ -113,16 +112,16 @@ function Chatbot(props) {
             ...conversation.settings, history: requestMessages, maxTokens: requestMaxTokens
         }
 
-        trySendRequest(sendChatCompletion, requestSettings).then((response) => {
-            const botMessage = {
-                texts: response,
-                isUser: false,
-                timestamp: new Date().getTime()
-            };
-            conversation.messages.push(botMessage);
-            setIsWaiting(false);
-            setReceivedNewMessage(2);
-        });
+        // trySendRequest(sendChatCompletion, requestSettings).then((response) => {
+        //     const botMessage = {
+        //         texts: response,
+        //         isUser: false,
+        //         timestamp: new Date().getTime()
+        //     };
+        //     conversation.messages.push(botMessage);
+        //     setIsWaiting(false);
+        //     setReceivedNewMessage(2);
+        // });
     };
 
     const handleSettingsButtonClick = () => {
@@ -150,7 +149,6 @@ function Chatbot(props) {
             getMessagesTokens(memorizedMessages) > getModelMaxTokens(conversation.settings.model) - TOKEN_SAFE_DELTA) {
                 memorizedMessages.splice(0, 1);
         }
-        console.log(memorizedMessages);
         return memorizedMessages;
     }
 

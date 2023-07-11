@@ -2,10 +2,9 @@ import { Service } from 'typedi';
 import { DatabaseService } from './database.service';
 import { DBCollectionService } from './db-collection.service';
 import { DBModelName } from "@app/enums/db-model-name";
-import { User, UserModel } from '@app/db-models/user';
+import { UserModel } from '@app/db-models/user';
+import { Chat, Message } from '@app/db-models/chat';
 import { Utils } from '@app/utils/utils';
-import { Converter } from '@app/utils/converter';
-import { Chat } from '@app/db-models/chat';
 
 const COLLECTION_NAME = DBModelName.USER;
 
@@ -14,6 +13,11 @@ export class UserService extends DBCollectionService {
     constructor(databaseService: DatabaseService) {
         super(databaseService, COLLECTION_NAME);
         this.model = UserModel;
+    }
+
+    async getUserById(id: string): Promise<any> {
+        this.query = this.model.findById(id);
+        return await this.query.lean().exec();
     }
 
     async getDocumentByEmail(email: string): Promise<Document | null> {
@@ -27,54 +31,54 @@ export class UserService extends DBCollectionService {
             name,
             email,
             creationTime: Date.now(),
+            chats: Utils.getDefaultChat()
         });
         await user.save();
         return user;
     }
 
     async createChat(userId: string) {
-        const user = await this.getOneDocumentFullInfo(userId) as User;
-        const newId = Utils.getUniqueId(user.chats);
-        const chat: Chat = {
-            chatId: newId,
-            title: `Chat ${user.chats.length}`,
-            messages: {},
-            settings: {
-                system: 'You are a helpful assistant',
-                model: 'gpt-3.5-turbo',
-                temperature: 0.7,
-                memory: 10,
-                devOptions: false
-            }
-        }
-        chat.chatId = newId;
-        user.chats[chat.chatId] = chat;
-        await user.save();
+        const chat: Chat = Utils.getDefaultChat();
+        this.query = this.model.updateOne({ _id: userId }, { $push: { chats: chat } });
+        this.query.lean().exec();
+
         return chat;
     }
 
-    async createMessage(user: User, chat: Chat, choices: string[], isUser: boolean) {
-        const messageId = Utils.getUniqueId(chat.messages);
-        const message = {
-            messageId: messageId, choices: Converter.stringsToChoices(choices),
-            isUser: isUser, creationTime: new Date()
-        }
+    async createMessage(userId: string, chatId: string, content: string) {
+        const message: Message = { content: content, isUser: true, creationTime: new Date() }
+        this.query = this.model.updateOne({ _id: userId }, { $push: { [`chats.${chatId}.messages`]: message } });
+        this.query.lean().exec();
 
-        chat.messages[messageId] = message;
-        await user.save()
         return message;
     }
 
-    async deleteChat(userId: string, chatId: string) {
-        const user = await this.getOneDocumentFullInfo(userId) as User;
-        delete user.chats[chatId];
-        user.save();
+    async createBotMessage(userId: string, chatId: string, choices: string[]) {
+        const message: Message = { content: choices[0], isUser: false, creationTime: new Date() }
+        if (choices.length > 1) {
+            message.choices = choices;
+        }
+
+        this.query = this.model.updateOne({ _id: userId }, { $push: { [`chats.${chatId}.messages`]: message } });
+        this.query.lean().exec();
+
+        return message;
     }
 
-    async deleteMessage(userId: string, chatId: string, messageId: string) {
-        const user = await this.getOneDocumentFullInfo(userId) as User;
-        delete user.chats[chatId].messages[messageId];
-        user.save();
+    async deleteChat(userId: string, chatIndex: string) {
+        this.query = this.model.updateOne(
+            { _id: userId },
+            { $unset: { [`chats.${chatIndex}`]: 1 }, $pull: { chats: null } }
+        );
+        this.query.lean().exec();
+    }
+
+    async deleteMessage(userId: string, chatIndex: string, messageIndex: string) {
+        this.query = this.model.updateOne(
+            { _id: userId },
+            { $unset: { [`chats.${chatIndex}.messages.${messageIndex}`]: 1 }, $pull: { [`chats.${chatIndex}.messages`]: null } }
+        );
+        this.query.lean().exec();
     }
 
     protected setDefaultQueryPipeline() { }

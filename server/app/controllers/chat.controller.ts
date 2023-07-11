@@ -5,112 +5,128 @@ import { User } from '@app/db-models/user';
 import { OpenAIService } from '@app/services/openai.service';
 import { Converter } from '@app/utils/converter';
 import { ChatDto } from '@app/db-models/chat';
+import { Controller } from './base.controller';
+import { Utils } from '@app/utils/utils';
 
 export class ChatController {
 
     static configureRouter(userService: UserService, userRouter: Router) {
         const openAIService = new OpenAIService();
 
-        userRouter.get('/:userId/chat/', async (req: Request, res: Response) => {
+        userRouter.get('/:userId/chats', async (req: Request, res: Response) => {
             try {
                 const userId = req.params.userId;
                 const { page, count } = req.query;
-                const pageNo = Number(page);
-                const countNo = Number(count);
+                const pageNo = Number(page ?? 1);
+                const countNo = Number(count ?? Utils.DEFAULT_COUNT);
                 const user = await userService.getOneDocumentFullInfo(userId) as User;
-                const chats = Converter.chatDictToArray(user.chats, pageNo, countNo);
-                handleGetResponse(res, chats);
+                const chats = Converter.getPageCount(user.chats.map(c => c.title), pageNo, countNo);
+                Controller.handleGetResponse(res, chats);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }
         });
 
-        userRouter.get('/:userId/chat/:chatId', async (req: Request, res: Response) => {
+        userRouter.get('/:userId/chats/:chatId', async (req: Request, res: Response) => {
             try {
                 const { userId, chatId } = req.params;
+                const chatIndex = Number(chatId);
                 const user = await userService.getOneDocumentFullInfo(userId) as User;
-                const chat = user.chats[chatId] as ChatDto;
-                handleGetResponse(res, chat);
+                const chat = user.chats[chatIndex] as ChatDto;
+                Controller.handleGetResponse(res, chat);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }
         });
 
-        userRouter.get('/:userId/chat/:chatId/messages', async (req: Request, res: Response) => {
+        userRouter.get('/:userId/chats/:chatId/messages', async (req: Request, res: Response) => {
             try {
                 const { userId, chatId } = req.params;
                 const { page, count } = req.query;
-                const pageNo = Number(page);
-                const countNo = Number(count);
+                const chatIndex = Number(chatId);
+                const pageNo = Number(page ?? 1);
+                const countNo = Number(count ?? Utils.DEFAULT_COUNT);
                 const user = await userService.getOneDocumentFullInfo(userId) as User;
-                const messages = Converter.messageDictToArray(user.chats[chatId].messages, pageNo, countNo);
-                handleGetResponse(res, messages);
+                const messages = Converter.getPageCount(user.chats[chatIndex].messages, pageNo, countNo);
+                Controller.handleGetResponse(res, messages);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }
         });
 
-        userRouter.get('/:userId/chat/:chatId/messages/:messageId', async (req: Request, res: Response) => {
+        userRouter.get('/:userId/chats/:chatId/messages/:messageId', async (req: Request, res: Response) => {
             try {
                 const { userId, chatId, messageId } = req.params;
+                const chatIndex = Number(chatId);
+                const messageIndex = Number(messageId);
                 const user = await userService.getOneDocumentFullInfo(userId) as User;
-                const message = user.chats[chatId].messages[messageId];
-                handleGetResponse(res, message);
+                const message = user.chats[chatIndex].messages[messageIndex];
+                Controller.handleGetResponse(res, message);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }
         });
 
-        userRouter.get('/:userId/chat/:chatId/messages/:messageId/choices', async (req: Request, res: Response) => {
+        userRouter.get('/:userId/chats/:chatId/messages/:messageId/choices', async (req: Request, res: Response) => {
             try {
                 const { userId, chatId, messageId } = req.params;
+                const chatIndex = Number(chatId);
+                const messageIndex = Number(messageId);
                 const user = await userService.getOneDocumentFullInfo(userId) as User;
-                const choices = user.chats[chatId].messages[messageId].choices;
-                handleGetResponse(res, choices);
+                const message = user.chats[chatIndex].messages[messageIndex];
+                const choices = message.choices ?? [message];
+                Controller.handleGetResponse(res, choices);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }
         });
 
-        userRouter.get('/:userId/chat/:chatId/messages/:messageId/choices/:choiceNo', async (req: Request, res: Response) => {
+        userRouter.get('/:userId/chats/:chatId/messages/:messageId/choices/:choiceId', async (req: Request, res: Response) => {
             try {
-                const { userId, chatId, messageId, choiceNo } = req.params;
-                const choiceIndex = Number(choiceNo);
+                const { userId, chatId, messageId, choiceId } = req.params;
+                const chatIndex = Number(chatId);
+                const messageIndex = Number(messageId);
+                const choiceIndex = Number(choiceId);
                 const user = await userService.getOneDocumentFullInfo(userId) as User;
-                const choice = user.chats[chatId].messages[messageId].choices[choiceIndex];
-                handleGetResponse(res, choice);
+                const message = user.chats[chatIndex].messages[messageIndex];
+                const choice = message.choices ? message.choices[choiceIndex] : message.content;
+                Controller.handleGetResponse(res, choice);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }
         });
 
-        userRouter.post('/:userId/chat/', async (req: Request, res: Response) => {
+        userRouter.put('/:userId/chats', async (req: Request, res: Response) => {
             try {
                 const { userId } = req.params;
                 const chat = await userService.createChat(userId);
-                handlePostResponse(res, chat);
+                Controller.handlePutResponse(res, chat);
             } catch (error) {
                 res.status(StatusCodes.BAD_REQUEST).send(error.message);
             }
         });
 
-        userRouter.post('/:userId/chat/:chatId/message', async (req: Request, res: Response) => {
+        userRouter.put('/:userId/chats/:chatId/messages', async (req: Request, res: Response) => {
             try {
                 const { userId, chatId } = req.params;
-                const user = await userService.getOneDocumentFullInfo(userId) as User;
-                const chat = user.chats[chatId];
-                const userChoices = req.body as string[];
-                await userService.createMessage(user, chat, userChoices, true);
-
+                const chatIndex = Number(chatId);
+                const userContent: string = req.body;
+                console.log(req.body);
+                console.log(userContent);
+                const userMessage = await userService.createMessage(userId, chatId, userContent);
+                
                 //user socket emit
+                
+                const user = await userService.getOneDocumentFullInfo(userId) as User;
+                user.chats[chatIndex].messages.push(userMessage);
 
-                const chatbotSettings = Converter.chatToChatbotSettings(chat);
+                const chatbotSettings = Converter.chatToChatbotSettings(user.chats[chatIndex]);
                 const botChoices = await openAIService.sendChatCompletion(chatbotSettings);
-                await userService.createMessage(user, chat, botChoices, false);
+                const botMessage = await userService.createBotMessage(userId, chatId, botChoices);
 
                 //bot socket emit
 
-                res.status(StatusCodes.OK);
+                res.status(StatusCodes.OK).send([userMessage, botMessage]);
 
             } catch (error) {
                 res.status(StatusCodes.BAD_REQUEST).send(error.message);
@@ -118,46 +134,24 @@ export class ChatController {
         });
 
 
-        userRouter.delete('/:userId/chat/:chatId', async (req: Request, res: Response) => {
+        userRouter.delete('/:userId/chats/:chatId', async (req: Request, res: Response) => {
             try {
                 const { userId, chatId } = req.params;
                 await userService.deleteChat(userId, chatId);
-                handleDeleteResponse(res);
+                Controller.handleDeleteResponse(res);
             } catch (error) {
                 res.status(StatusCodes.BAD_REQUEST).send(error.message);
             }
         });
 
-        userRouter.delete('/:userId/chat/:chatId/message/:messageId', async (req: Request, res: Response) => {
+        userRouter.delete('/:userId/chats/:chatId/messages/:messageId', async (req: Request, res: Response) => {
             try {
                 const { userId, chatId, messageId } = req.params;
                 await userService.deleteMessage(userId, chatId, messageId);
-                handleDeleteResponse(res);
+                Controller.handleDeleteResponse(res);
             } catch (error) {
                 res.status(StatusCodes.BAD_REQUEST).send(error.message);
             }
         });
-
-        function handleGetResponse(res: Response, itemToGet: any) {
-            if (itemToGet) {
-                res.status(StatusCodes.OK).send(itemToGet);
-            }
-            else {
-                res.status(StatusCodes.NOT_FOUND).send("Failed to get.");
-            }
-        }
-
-        function handlePostResponse(res: Response, itemToPost: any) {
-            if (itemToPost) {
-                res.status(StatusCodes.CREATED).send(itemToPost);
-            }
-            else {
-                res.status(StatusCodes.BAD_REQUEST).send("Failed to post.");
-            }
-        }
-
-        function handleDeleteResponse(res: Response) {
-            res.sendStatus(StatusCodes.NO_CONTENT);
-        }
     }
 }

@@ -59,11 +59,10 @@ export class Application {
         // Middlewares configuration
         this.app.use(logger('dev'));
 
-        // for parsing application/json
+        // for parsing
         this.app.use(express.json({ limit: '10mb' }));
-
-        // for parsing application/x-www-form-urlencoded
         this.app.use(express.urlencoded({ limit: '10mb', extended: true }));
+        this.app.use(express.text({ limit: '10mb' }));
         
         this.app.use(cookieParser());
     }

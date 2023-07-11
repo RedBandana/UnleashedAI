@@ -1,51 +1,57 @@
 import { ChatbotMessage, ChatbotSettings } from "@app/db-models/chatbot";
-import { Chat, LiteChatDto } from "@app/db-models/chat";
+import { Chat, Settings, Message } from "@app/db-models/chat";
 import { Utils } from "./utils";
-import { Choice, Message } from "@app/db-models/message";
 
 export class Converter {
-
-    static stringsToChoices = (texts: string[]): Choice[] => {
-        const choices = texts.map((text, index) => ({ content: text, isDisplayed: false, index: index }))
-        return choices;
-    }
 
     static messageToChatbotMessage = (message: Message): ChatbotMessage => {
         const chatbotMessages: ChatbotMessage = {
             role: message.isUser ? "user" : "assistant",
-            content: message.choices.find(t => t.isDisplayed)?.content ?? ""
+            content: message.content
         };
         return chatbotMessages;
     }
 
-    static chatToChatbotSettings = (chat: Chat): any => {
-        const partialChatbotSettings = chat.settings as Partial<ChatbotSettings>;
-        const messages = Utils.getRequestMessages(chat);
+    static settingsToChatbotSettings(settings: Settings): ChatbotSettings {
+        const chatbotSettings: ChatbotSettings = {
+            model: settings.model,
+            temperature: settings.temperature,
+            top_p: settings.top_p,
+            n: settings.n,
+            stream: settings.stream,
+            stop: settings.stop?.length === 0 ? undefined : settings.stop,
+            max_tokens: settings.max_tokens,
+            presence_penalty: settings.presence_penalty,
+            frequency_penalty: settings.presence_penalty,
+            logit_bias: settings.logit_bias,
+            user: settings.user,
+            messages: []
+        }
 
-        const chatbotMessages = [];
-        chatbotMessages.push({ role: "system", content: partialChatbotSettings.system });
-        chatbotMessages.push(messages.map(message => this.messageToChatbotMessage(message)));
-        const ChatbotSettings = { ...partialChatbotSettings, messages: chatbotMessages };
+        const cleanSettings: any = {};
+        const anyChatbotSettings: any = chatbotSettings;
+        for (let key in chatbotSettings) {
+            if (chatbotSettings.hasOwnProperty(key) && anyChatbotSettings[key]) {
+                cleanSettings[key] = anyChatbotSettings[key];
+            }
+        }
 
-        return ChatbotSettings;
+        return cleanSettings;
     }
 
-    static chatDictToArray = function (chats: { [chatId: string]: Chat }, page: number, count: number) {
-        const allChats = Object.values(chats) as LiteChatDto[];
+    static chatToChatbotSettings = (chat: Chat): any => {
+        const chatbotSettings = this.settingsToChatbotSettings(chat.settings);
+        chatbotSettings.messages.push({ role: "system", content: chat.settings.system });
+        const messages = Utils.getRequestMessages(chat);
+        messages.forEach(m => chatbotSettings.messages.push(this.messageToChatbotMessage(m)))
+
+        return chatbotSettings;
+    }
+
+    static getPageCount = function (array: any[], page: number, count: number) {
         const startIndex = (page - 1) * count;
         const endIndex = startIndex + count;
-        const chatsCount = allChats.slice(startIndex, endIndex);
-
+        const chatsCount = array.slice(startIndex, endIndex);
         return chatsCount;
-    };
-
-      
-    static messageDictToArray = function (messages: { [messageId: string]: Message }, page: number, count: number): Message[] {
-        const allMessages = Object.values(messages);
-        const startIndex = (page - 1) * count;
-        const endIndex = startIndex + count;
-        const messagesCount = allMessages.slice(startIndex, endIndex) as Message[];
-
-        return messagesCount;
     };
 }

@@ -1,12 +1,14 @@
-import { Chat } from "@app/db-models/chat";
-import { Message } from "@app/db-models/message";
+import { Chat, Message } from "@app/db-models/chat";
 import { ObjectId } from "mongodb";
 
 export class Utils {
+
+    static DEFAULT_COUNT = 50;
+
     static getMessagesTokens = (messages: Message[]) => {
         let totalTokens = 0;
         for (let message of messages) {
-            totalTokens += message.choices.find(t => t.isDisplayed)?.content?.length ?? 0;
+            totalTokens += message.content.length;
         }
         return totalTokens;
     }
@@ -33,7 +35,7 @@ export class Utils {
     }
 
     static getRequestMessages = (chat: Chat) => {
-        const memorizedMessages = [...Object.values(chat.messages)].slice(-chat.settings.memory);
+        const memorizedMessages = chat.messages.slice(-chat.settings.memory);
         const modelMaxToken = this.getModelMaxTokens(chat.settings.model);
         const tokenSafeDelta = 2000;
 
@@ -49,6 +51,10 @@ export class Utils {
         let tryCount = 0;
         let id = new ObjectId().toString();
 
+        if (!collection) {
+            return id;
+        }
+
         while (collection[id]) {
             if (tryCount > 100) {
                 throw new Error('Id already used.');
@@ -60,4 +66,19 @@ export class Utils {
         return id;
     }
 
+    static getDefaultChat = () => {
+        const chat: Chat =
+        {
+            title: '',
+            messages: [],
+            settings: {
+                system: 'You are a helpful assistant',
+                model: 'gpt-3.5-turbo',
+                temperature: 0.7,
+                memory: 10,
+                devOptions: false
+            }
+        }
+        return chat;
+    }
 }
