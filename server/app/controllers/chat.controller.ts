@@ -1,12 +1,12 @@
 import { Router, Response, Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { UserService } from '@app/services/user.service';
-import { User } from '@app/db-models/user';
+import { IUser, UserProjection } from '@app/db-models/user';
 import { OpenAIService } from '@app/services/openai.service';
 import { Converter } from '@app/utils/converter';
-import { ChatDto } from '@app/db-models/chat';
+import { IChatDto } from '@app/db-models/chat';
 import { Controller } from './base.controller';
-import { Utils } from '@app/utils/utils';
+import { ChatUtils } from '@app/utils/chat.utils';
 
 export class ChatController {
 
@@ -18,62 +18,62 @@ export class ChatController {
                 const userId = req.params.userId;
                 const { page, count } = req.query;
                 const pageNo = Number(page ?? 1);
-                const countNo = Number(count ?? Utils.DEFAULT_COUNT);
-                const user = await userService.getOneDocumentFullInfo(userId) as User;
-                const chats = Converter.getPageCount(user.chats.map(c => c.title), pageNo, countNo);
+                const countNo = Number(count ?? ChatUtils.DEFAULT_COUNT);
+                const user = await userService.getDocumentByIdLean(userId, UserProjection.chatsLean) as IUser;
+                const chats = Converter.getPageCount(user.chats, pageNo, countNo);
                 Controller.handleGetResponse(res, chats);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }
         });
 
-        userRouter.get('/:userId/chats/:chatId', async (req: Request, res: Response) => {
+        userRouter.get('/:userId/chats/:chatIndex', async (req: Request, res: Response) => {
             try {
-                const { userId, chatId } = req.params;
-                const chatIndex = Number(chatId);
-                const user = await userService.getOneDocumentFullInfo(userId) as User;
-                const chat = user.chats[chatIndex] as ChatDto;
+                const { userId, chatIndex } = req.params;
+                const chatNo = Number(chatIndex);
+                const user = await userService.getDocumentByIdLean(userId, UserProjection.chat) as IUser;
+                const chat = user.chats[chatNo] as IChatDto;
                 Controller.handleGetResponse(res, chat);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }
         });
 
-        userRouter.get('/:userId/chats/:chatId/messages', async (req: Request, res: Response) => {
+        userRouter.get('/:userId/chats/:chatIndex/messages', async (req: Request, res: Response) => {
             try {
-                const { userId, chatId } = req.params;
+                const { userId, chatIndex } = req.params;
                 const { page, count } = req.query;
-                const chatIndex = Number(chatId);
+                const chatNo = Number(chatIndex);
                 const pageNo = Number(page ?? 1);
-                const countNo = Number(count ?? Utils.DEFAULT_COUNT);
-                const user = await userService.getOneDocumentFullInfo(userId) as User;
-                const messages = Converter.getPageCount(user.chats[chatIndex].messages, pageNo, countNo);
+                const countNo = Number(count ?? ChatUtils.DEFAULT_COUNT);
+                const user = await userService.getDocumentByIdLean(userId, UserProjection.chats) as IUser;
+                const messages = Converter.getPageCount(user.chats[chatNo].messages, pageNo, countNo);
                 Controller.handleGetResponse(res, messages);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }
         });
 
-        userRouter.get('/:userId/chats/:chatId/messages/:messageId', async (req: Request, res: Response) => {
+        userRouter.get('/:userId/chats/:chatIndex/messages/:messageIndex', async (req: Request, res: Response) => {
             try {
-                const { userId, chatId, messageId } = req.params;
-                const chatIndex = Number(chatId);
-                const messageIndex = Number(messageId);
-                const user = await userService.getOneDocumentFullInfo(userId) as User;
-                const message = user.chats[chatIndex].messages[messageIndex];
+                const { userId, chatIndex, messageIndex } = req.params;
+                const chatNo = Number(chatIndex);
+                const messageNo = Number(messageIndex);
+                const user = await userService.getDocumentByIdLean(userId, UserProjection.chats) as IUser;
+                const message = user.chats[chatNo].messages[messageNo];
                 Controller.handleGetResponse(res, message);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }
         });
 
-        userRouter.get('/:userId/chats/:chatId/messages/:messageId/choices', async (req: Request, res: Response) => {
+        userRouter.get('/:userId/chats/:chatIndex/messages/:messageIndex/choices', async (req: Request, res: Response) => {
             try {
-                const { userId, chatId, messageId } = req.params;
-                const chatIndex = Number(chatId);
-                const messageIndex = Number(messageId);
-                const user = await userService.getOneDocumentFullInfo(userId) as User;
-                const message = user.chats[chatIndex].messages[messageIndex];
+                const { userId, chatIndex, messageIndex } = req.params;
+                const chatNo = Number(chatIndex);
+                const messageNo = Number(messageIndex);
+                const user = await userService.getDocumentByIdLean(userId, UserProjection.chats) as IUser;
+                const message = user.chats[chatNo].messages[messageNo];
                 const choices = message.choices ?? [message];
                 Controller.handleGetResponse(res, choices);
             } catch (error) {
@@ -81,14 +81,14 @@ export class ChatController {
             }
         });
 
-        userRouter.get('/:userId/chats/:chatId/messages/:messageId/choices/:choiceId', async (req: Request, res: Response) => {
+        userRouter.get('/:userId/chats/:chatIndex/messages/:messageIndex/choices/:choiceId', async (req: Request, res: Response) => {
             try {
-                const { userId, chatId, messageId, choiceId } = req.params;
-                const chatIndex = Number(chatId);
-                const messageIndex = Number(messageId);
+                const { userId, chatIndex, messageIndex, choiceId } = req.params;
+                const chatNo = Number(chatIndex);
+                const messageNo = Number(messageIndex);
                 const choiceIndex = Number(choiceId);
-                const user = await userService.getOneDocumentFullInfo(userId) as User;
-                const message = user.chats[chatIndex].messages[messageIndex];
+                const user = await userService.getDocumentByIdLean(userId, UserProjection.chats) as IUser;
+                const message = user.chats[chatNo].messages[messageNo];
                 const choice = message.choices ? message.choices[choiceIndex] : message.content;
                 Controller.handleGetResponse(res, choice);
             } catch (error) {
@@ -106,23 +106,23 @@ export class ChatController {
             }
         });
 
-        userRouter.put('/:userId/chats/:chatId/messages', async (req: Request, res: Response) => {
+        userRouter.put('/:userId/chats/:chatIndex/messages', async (req: Request, res: Response) => {
             try {
-                const { userId, chatId } = req.params;
-                const chatIndex = Number(chatId);
+                const { userId, chatIndex } = req.params;
+                const chatNo = Number(chatIndex);
                 const userContent: string = req.body;
                 console.log(req.body);
                 console.log(userContent);
-                const userMessage = await userService.createMessage(userId, chatId, userContent);
-                
-                //user socket emit
-                
-                const user = await userService.getOneDocumentFullInfo(userId) as User;
-                user.chats[chatIndex].messages.push(userMessage);
+                const userMessage = await userService.createMessage(userId, chatIndex, userContent);
 
-                const chatbotSettings = Converter.chatToChatbotSettings(user.chats[chatIndex]);
+                //user socket emit
+
+                const user = await userService.getDocumentByIdLean(userId, UserProjection.chats) as IUser;
+                user.chats[chatNo].messages.push(userMessage);
+
+                const chatbotSettings = Converter.chatToChatbotSettings(user.chats[chatNo]);
                 const botChoices = await openAIService.sendChatCompletion(chatbotSettings);
-                const botMessage = await userService.createBotMessage(userId, chatId, botChoices);
+                const botMessage = await userService.createBotMessage(userId, chatIndex, botChoices);
 
                 //bot socket emit
 
@@ -136,18 +136,18 @@ export class ChatController {
 
         userRouter.delete('/:userId/chats/:chatId', async (req: Request, res: Response) => {
             try {
-                const { userId, chatId } = req.params;
-                await userService.deleteChat(userId, chatId);
+                const { userId, chatIndex } = req.params;
+                await userService.deleteChat(userId, chatIndex);
                 Controller.handleDeleteResponse(res);
             } catch (error) {
                 res.status(StatusCodes.BAD_REQUEST).send(error.message);
             }
         });
 
-        userRouter.delete('/:userId/chats/:chatId/messages/:messageId', async (req: Request, res: Response) => {
+        userRouter.delete('/:userId/chats/:chatIndex/messages/:messageIndex', async (req: Request, res: Response) => {
             try {
-                const { userId, chatId, messageId } = req.params;
-                await userService.deleteMessage(userId, chatId, messageId);
+                const { userId, chatIndex, messageIndex } = req.params;
+                await userService.deleteMessage(userId, chatIndex, messageIndex);
                 Controller.handleDeleteResponse(res);
             } catch (error) {
                 res.status(StatusCodes.BAD_REQUEST).send(error.message);

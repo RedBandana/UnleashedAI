@@ -1,10 +1,21 @@
 import { ChatbotMessage, ChatbotSettings } from "@app/db-models/chatbot";
-import { Chat, Settings, Message } from "@app/db-models/chat";
-import { Utils } from "./utils";
+import { IChat, ISettings, IMessage } from "@app/db-models/chat";
+import { ChatUtils } from "./chat.utils";
 
 export class Converter {
 
-    static messageToChatbotMessage = (message: Message): ChatbotMessage => {
+    static objectToProjected(baseObject: any, projection: { [key: string]: number }) {
+        const projectedObject: any = {};
+        for (const key in projection) {
+            if (projection.hasOwnProperty(key) && projection[key] === 1 && baseObject[key]) {
+                projectedObject[key] = baseObject[key];
+            }
+        }
+
+        return projectedObject;
+    }
+
+    static messageToChatbotMessage = (message: IMessage): ChatbotMessage => {
         const chatbotMessages: ChatbotMessage = {
             role: message.isUser ? "user" : "assistant",
             content: message.content
@@ -12,7 +23,7 @@ export class Converter {
         return chatbotMessages;
     }
 
-    static settingsToChatbotSettings(settings: Settings): ChatbotSettings {
+    static settingsToChatbotSettings(settings: ISettings): ChatbotSettings {
         const chatbotSettings: ChatbotSettings = {
             model: settings.model,
             temperature: settings.temperature,
@@ -30,7 +41,7 @@ export class Converter {
 
         const cleanSettings: any = {};
         const anyChatbotSettings: any = chatbotSettings;
-        for (let key in chatbotSettings) {
+        for (const key in chatbotSettings) {
             if (chatbotSettings.hasOwnProperty(key) && anyChatbotSettings[key]) {
                 cleanSettings[key] = anyChatbotSettings[key];
             }
@@ -39,10 +50,10 @@ export class Converter {
         return cleanSettings;
     }
 
-    static chatToChatbotSettings = (chat: Chat): any => {
+    static chatToChatbotSettings = (chat: IChat): any => {
         const chatbotSettings = this.settingsToChatbotSettings(chat.settings);
         chatbotSettings.messages.push({ role: "system", content: chat.settings.system });
-        const messages = Utils.getRequestMessages(chat);
+        const messages = ChatUtils.getRequestMessages(chat);
         messages.forEach(m => chatbotSettings.messages.push(this.messageToChatbotMessage(m)))
 
         return chatbotSettings;

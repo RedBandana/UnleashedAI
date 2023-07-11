@@ -24,7 +24,7 @@ export abstract class DBCollectionService {
         return await this.model.findById(documentId).sort({ creationTime: -1 }).select(projection).lean();
     }
 
-    async getOneDocumentFullInfo(documentId: string, projection?: { [key: string]: number }): Promise<Document> {
+    async getDocumentByIdLean(documentId: string, projection?: { [key: string]: number }): Promise<Document> {
         this.query = this.model.findById(documentId);
         this.setSingleDocumentQuery();
         return await this.query.lean().sort({ creationTime: -1 }).select(projection).exec();

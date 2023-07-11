@@ -11,45 +11,45 @@ const getAllChats = async (userId) => {
   }
 };
 
-const getChatById = async (userId, chatId) => {
+const getChatById = async (userId, chatIndex) => {
   try {
-    const response = await axios.get(`${API_URL}/${userId}/chats/${chatId}`);
+    const response = await axios.get(`${API_URL}/${userId}/chats/${chatIndex}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
   }
 };
 
-const getChatMessages = async (userId, chatId) => {
+const getChatMessages = async (userId, chatIndex) => {
   try {
-    const response = await axios.get(`${API_URL}/${userId}/chats/${chatId}/messages`);
+    const response = await axios.get(`${API_URL}/${userId}/chats/${chatIndex}/messages`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
   }
 };
 
-const getMessageById = async (userId, chatId, messageId) => {
+const getMessageById = async (userId, chatIndex, messageIndex) => {
   try {
-    const response = await axios.get(`${API_URL}/${userId}/chats/${chatId}/messages/${messageId}`);
+    const response = await axios.get(`${API_URL}/${userId}/chats/${chatIndex}/messages/${messageIndex}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
   }
 };
 
-const getMessageChoices = async (userId, chatId, messageId) => {
+const getMessageChoices = async (userId, chatIndex, messageIndex) => {
   try {
-    const response = await axios.get(`${API_URL}/${userId}/chats/${chatId}/messages/${messageId}/choices`);
+    const response = await axios.get(`${API_URL}/${userId}/chats/${chatIndex}/messages/${messageIndex}/choices`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
   }
 };
 
-const getChoiceById = async (userId, chatId, messageId, choiceId) => {
+const getChoiceById = async (userId, chatIndex, messageIndex, choiceId) => {
   try {
-    const response = await axios.get(`${API_URL}/${userId}/chats/${chatId}/messages/${messageId}/choices/${choiceId}`);
+    const response = await axios.get(`${API_URL}/${userId}/chats/${chatIndex}/messages/${messageIndex}/choices/${choiceId}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
@@ -65,26 +65,26 @@ const createChat = async (userId) => {
   }
 };
 
-const createMessage = async (userId, chatId, userChoices) => {
+const createMessage = async (userId, chatIndex, userChoices) => {
   try {
-    const response = await axios.post(`${API_URL}/${userId}/chats/${chatId}/message`, userChoices);
+    const response = await axios.post(`${API_URL}/${userId}/chats/${chatIndex}/message`, userChoices);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
   }
 };
 
-const deleteChat = async (userId, chatId) => {
+const deleteChat = async (userId, chatIndex) => {
   try {
-    await axios.delete(`${API_URL}/${userId}/chats/${chatId}`);
+    await axios.delete(`${API_URL}/${userId}/chats/${chatIndex}`);
   } catch (error) {
     throw new Error(error.response.data);
   }
 };
 
-const deleteMessage = async (userId, chatId, messageId) => {
+const deleteMessage = async (userId, chatIndex, messageIndex) => {
   try {
-    await axios.delete(`${API_URL}/${userId}/chats/${chatId}/message/${messageId}`);
+    await axios.delete(`${API_URL}/${userId}/chats/${chatIndex}/message/${messageIndex}`);
   } catch (error) {
     throw new Error(error.response.data);
   }

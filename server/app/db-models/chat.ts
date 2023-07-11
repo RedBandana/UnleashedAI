@@ -1,24 +1,30 @@
+import { ObjectId } from "mongodb";
 import { Schema } from "mongoose";
 
-export interface Message {
+export interface IMessage {
+    _id?: ObjectId;
     choices?: string[];
     content: string;
     isUser: boolean;
     creationTime: Date;
 }
 
-export interface Chat {
+export interface IChat {
+    _id?: ObjectId;
     title: string;
-    settings: Settings;
-    messages: Message[];
+    settings: ISettings;
+    messages: IMessage[];
+    creationTime: Date;
 }
 
-export interface ChatDto {
+export interface IChatDto {
+    _id?: ObjectId;
     title: string;
-    settings: Settings;
+    settings: ISettings;
 }
 
-export interface Settings {
+export interface ISettings {
+    _id?: ObjectId;
     model: string;
     system: string;
     temperature: number;
@@ -35,7 +41,7 @@ export interface Settings {
     user?: string;
 }
 
-const SettingsSchema = new Schema<Settings>({
+const SettingsSchema = new Schema<ISettings>({
     model: { type: String, required: true, default: 'gpt-3.5-turbo' },
     system: { type: String, required: true, default: 'You are a helpful assistant' },
     temperature: { type: Number, required: true, default: 0.7 },
@@ -52,15 +58,16 @@ const SettingsSchema = new Schema<Settings>({
     user: { type: String },
 });
 
-export const MessageSchema = new Schema<Message>({
+export const MessageSchema = new Schema<IMessage>({
     choices: { type: [String] },
     content: { type: String, required: true },
     isUser: { type: Boolean, required: true },
-    creationTime: { type: Date, required: true, default: Date.now},
+    creationTime: { type: Date, required: true, default: Date.now },
 });
 
-export const ChatSchema = new Schema<Chat>({
+export const ChatSchema = new Schema<IChat>({
     title: { type: String },
     settings: { type: SettingsSchema, required: true },
     messages: { type: [MessageSchema], required: true, default: [] },
+    creationTime: { type: Date, required: true, default: Date.now },
 });

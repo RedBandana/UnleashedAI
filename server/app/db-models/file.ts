@@ -20,3 +20,11 @@ const FileSchema = new mongoose.Schema<IFile>({
 });
 
 export const FileModel = mongoose.model(DBModelName.FILE, FileSchema)
+
+export class FileProjection {
+    static file: { [key: string]: number } = {
+        "_id": 1,
+        "filename": 1,
+        "path": 1,
+    }
+}

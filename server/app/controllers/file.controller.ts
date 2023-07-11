@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
 import { v4 as uuidv4 } from 'uuid';
 import multer = require('multer');
-import { IFile } from '@app/db-models/file';
+import { FileProjection, IFile } from '@app/db-models/file';
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -41,7 +41,7 @@ export class FileController {
             const id = decodeURIComponent(req.params.id);
 
             try {
-                const file = await this.fileService.getOneDocumentFullInfo(id) as IFile;
+                const file = await this.fileService.getDocumentByIdLean(id, FileProjection.file) as IFile;
                 if (file) {
                     res.status(StatusCodes.OK).send(file);
                 }
@@ -54,7 +54,7 @@ export class FileController {
             const id = decodeURIComponent(req.params.id);
 
             try {
-                const file = await this.fileService.getOneDocumentFullInfo(id) as IFile;
+                const file = await this.fileService.getDocumentByIdLean(id, FileProjection.file) as IFile;
                 if (file) {
                     res.download(file.path);
                 }
