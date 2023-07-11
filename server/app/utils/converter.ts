@@ -4,10 +4,10 @@ import { ChatUtils } from "./chat.utils";
 
 export class Converter {
 
-    static objectToProjected(baseObject: any, projection: { [key: string]: number }) {
+    static objectToProjected(baseObject: any, projection: { [key: string]: boolean }) {
         const projectedObject: any = {};
         for (const key in projection) {
-            if (projection.hasOwnProperty(key) && projection[key] === 1 && baseObject[key]) {
+            if (projection.hasOwnProperty(key) && projection[key] && baseObject[key]) {
                 projectedObject[key] = baseObject[key];
             }
         }

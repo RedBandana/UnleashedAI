@@ -17,12 +17,6 @@ export interface IChat {
     creationTime: Date;
 }
 
-export interface IChatDto {
-    _id?: ObjectId;
-    title: string;
-    settings: ISettings;
-}
-
 export interface ISettings {
     _id?: ObjectId;
     model: string;
@@ -71,3 +65,12 @@ export const ChatSchema = new Schema<IChat>({
     messages: { type: [MessageSchema], required: true, default: [] },
     creationTime: { type: Date, required: true, default: Date.now },
 });
+
+export class ChatProjection {
+    static chatbot: { [key: string]: number } = {
+        "_id": 0,
+        "system": 0,
+        "memory": 0,
+        "devOptions": 0,
+    }
+}

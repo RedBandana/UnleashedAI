@@ -20,24 +20,24 @@ export abstract class DBCollectionService {
         return this.databaseService.database.collection(this.COLLECTION_NAME);
     }
 
-    async getDocumentById(documentId: string, projection?: { [key: string]: number }): Promise<Document | null> {
+    async getDocumentById(documentId: string, projection?: { [key: string]: boolean }): Promise<Document | null> {
         return await this.model.findById(documentId).sort({ creationTime: -1 }).select(projection).lean();
     }
 
-    async getDocumentByIdLean(documentId: string, projection?: { [key: string]: number }): Promise<Document> {
+    async getDocumentByIdLean(documentId: string, projection?: { [key: string]: boolean }): Promise<Document> {
         this.query = this.model.findById(documentId);
         this.setSingleDocumentQuery();
         return await this.query.lean().sort({ creationTime: -1 }).select(projection).exec();
     }
 
-    async filterBy(filter: any, option?: DBRequestOptions, projection?: { [key: string]: number }): Promise<Document[]> {
+    async filterBy(filter: any, option?: DBRequestOptions, projection?: { [key: string]: boolean }): Promise<Document[]> {
         this.query = this.model.find(filter);
         this.setQueryPipeline(option);
         return await this.query.lean().sort({ creationTime: -1 }).select(projection).exec();
     }
 
     // TODO: make sure that the pipeline: [{ $limit: 1 }] really improve performance
-    async getAll(option?: DBRequestOptions, projection?: { [key: string]: number }): Promise<Document[]> {
+    async getAll(option?: DBRequestOptions, projection?: { [key: string]: boolean }): Promise<Document[]> {
         return await this.filterBy({}, option, projection);
     }
 

@@ -15,7 +15,7 @@ export class UserService extends DBCollectionService {
         this.model = UserModel;
     }
 
-    async getDocumentByEmail(email: string, projection?: { [key: string]: number }): Promise<Document | null> {
+    async getDocumentByEmail(email: string, projection?: { [key: string]: boolean }): Promise<Document | null> {
         this.query = this.model.findOne({ email: email });
         this.setSingleDocumentQuery();
         return await this.query.lean().select(projection).exec();
@@ -32,35 +32,37 @@ export class UserService extends DBCollectionService {
         return user;
     }
 
-    async createChat(userId: string) {
+    async createChat(userId: string): Promise<IChat> {
+        this.databaseService.database.aggregate()
+
         const chat: IChat = ChatUtils.getDefaultChat();
         this.query = this.model.updateOne({ _id: userId }, { $push: { chats: chat } });
-        this.query.lean().exec();
+        await this.query.lean().exec();
 
         return chat;
     }
 
-    async createMessage(userId: string, chatIndex: string, content: string) {
+    async createMessage(userId: string, chatIndex: string, content: string): Promise<IMessage> {
         const message: IMessage = { content: content, isUser: true, creationTime: new Date() }
         this.query = this.model.updateOne({ _id: userId }, { $push: { [`chats.${chatIndex}.messages`]: message } });
-        this.query.lean().exec();
+        await this.query.lean().exec();
 
         return message;
     }
 
-    async createBotMessage(userId: string, chatIndex: string, choices: string[]) {
+    async createBotMessage(userId: string, chatIndex: string, choices: string[]): Promise<IMessage> {
         const message: IMessage = { content: choices[0], isUser: false, creationTime: new Date() }
         if (choices.length > 1) {
             message.choices = choices;
         }
 
         this.query = this.model.updateOne({ _id: userId }, { $push: { [`chats.${chatIndex}.messages`]: message } });
-        this.query.lean().exec();
+        await this.query.lean().exec();
 
         return message;
     }
 
-    async deleteChat(userId: string, chatIndex: string) {
+    async deleteChat(userId: string, chatIndex: string): Promise<void> {
         const user = await this.getDocumentByIdLean(userId, UserProjection.chats) as IUser;
         const chatNo = Number(chatIndex);
         const chatId = user.chats[chatNo]._id;
@@ -69,10 +71,10 @@ export class UserService extends DBCollectionService {
             { _id: userId },
             { $pull: { chats: { _id: chatId } } }
         );
-        this.query.lean().exec();
+        await this.query.lean().exec();
     }
 
-    async deleteMessage(userId: string, chatIndex: string, messageIndex: string) {
+    async deleteMessage(userId: string, chatIndex: string, messageIndex: string): Promise<void> {
         const user = await this.getDocumentByIdLean(userId, UserProjection.chats) as IUser;
         const chatNo = Number(chatIndex);
         const messageNo = Number(messageIndex);
@@ -82,7 +84,7 @@ export class UserService extends DBCollectionService {
             { _id: userId },
             { $pull: { [`chats.${chatIndex}.messages`]: { _id: messageId } } }
         );
-        this.query.lean().exec();
+        await this.query.lean().exec();
     }
 
     protected setDefaultQueryPipeline() { }

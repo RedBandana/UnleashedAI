@@ -4,7 +4,6 @@ import { UserService } from '@app/services/user.service';
 import { IUser, UserProjection } from '@app/db-models/user';
 import { OpenAIService } from '@app/services/openai.service';
 import { Converter } from '@app/utils/converter';
-import { IChatDto } from '@app/db-models/chat';
 import { Controller } from './base.controller';
 import { ChatUtils } from '@app/utils/chat.utils';
 
@@ -32,7 +31,7 @@ export class ChatController {
                 const { userId, chatIndex } = req.params;
                 const chatNo = Number(chatIndex);
                 const user = await userService.getDocumentByIdLean(userId, UserProjection.chat) as IUser;
-                const chat = user.chats[chatNo] as IChatDto;
+                const chat = user.chats[chatNo];
                 Controller.handleGetResponse(res, chat);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
