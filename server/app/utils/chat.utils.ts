@@ -1,4 +1,4 @@
-import { IChat, IMessage } from "@app/db-models/chat";
+import { IChat, IMessageLean, ISettings } from "@app/db-models/chat";
 
 export class ChatUtils {
     static DEFAULT_COUNT = 50;
@@ -6,7 +6,6 @@ export class ChatUtils {
     static getDefaultChat = () => {
         const chat: IChat =
         {
-            title: '',
             messages: [],
             settings: {
                 system: 'You are a helpful assistant',
@@ -20,7 +19,7 @@ export class ChatUtils {
         return chat;
     }
 
-    static getMessagesTokens = (messages: IMessage[]) => {
+    static getMessagesTokens = (messages: IMessageLean[]) => {
         let totalTokens = 0;
         for (let message of messages) {
             totalTokens += message.content.length;
@@ -49,9 +48,9 @@ export class ChatUtils {
         }
     }
 
-    static getRequestMessages = (chat: IChat) => {
-        const memorizedMessages = chat.messages.slice(-chat.settings.memory);
-        const modelMaxToken = this.getModelMaxTokens(chat.settings.model);
+    static getRequestMessages = (messages: IMessageLean[], settings: ISettings) => {
+        const memorizedMessages = messages.slice(-settings.memory);
+        const modelMaxToken = this.getModelMaxTokens(settings.model);
         const tokenSafeDelta = 2000;
 
         while (memorizedMessages.length > 1 && this.getMessagesTokens(memorizedMessages) > modelMaxToken - tokenSafeDelta) {

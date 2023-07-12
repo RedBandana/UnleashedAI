@@ -1,6 +1,5 @@
 import { ChatbotMessage, ChatbotSettings } from "@app/db-models/chatbot";
-import { IChat, ISettings, IMessage } from "@app/db-models/chat";
-import { ChatUtils } from "./chat.utils";
+import { ISettings, IMessageLean } from "@app/db-models/chat";
 
 export class Converter {
 
@@ -15,12 +14,40 @@ export class Converter {
         return projectedObject;
     }
 
-    static messageToChatbotMessage = (message: IMessage): ChatbotMessage => {
+    static messageToChatbotMessage = (message: IMessageLean): ChatbotMessage => {
         const chatbotMessages: ChatbotMessage = {
             role: message.isUser ? "user" : "assistant",
             content: message.content
         };
         return chatbotMessages;
+    }
+
+    static messageToDtoNoReturn(message: any): void {
+        if (message.isUser) {
+            delete message.choices;
+            delete message.choiceIndex;
+        }
+        else {
+            delete message.content;
+        }
+    }
+
+    static messageToLeanDtoNoReturn(message: any): void {
+        if (message.isUser) {
+            delete message.choiceIndex;
+        }
+        else {
+            message.content = message.choices[message.choiceIndex];
+            if (message.choiceCount === 1) {
+                delete message.choiceCount;
+                delete message.choiceIndex;
+            }
+            else {
+                message.choiceCount = message.choices.length;
+            }
+        }
+
+        delete message.choices;
     }
 
     static settingsToChatbotSettings(settings: ISettings): ChatbotSettings {
@@ -50,11 +77,9 @@ export class Converter {
         return cleanSettings;
     }
 
-    static chatToChatbotSettings = (chat: IChat): any => {
-        const chatbotSettings = this.settingsToChatbotSettings(chat.settings);
-        chatbotSettings.messages.push({ role: "system", content: chat.settings.system });
-        const messages = ChatUtils.getRequestMessages(chat);
-        messages.forEach(m => chatbotSettings.messages.push(this.messageToChatbotMessage(m)))
+    static chatToChatbotSettings = (settings: ISettings): any => {
+        const chatbotSettings = this.settingsToChatbotSettings(settings);
+        chatbotSettings.messages.push({ role: "system", content: settings.system });
 
         return chatbotSettings;
     }

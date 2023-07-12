@@ -4,6 +4,30 @@ import { Schema } from "mongoose";
 export interface IMessage {
     _id?: ObjectId;
     choices?: string[];
+    choiceIndex?: number;
+    content?: string;
+    isUser: boolean;
+    creationTime: Date;
+}
+
+export interface IMessageUser {
+    _id?: ObjectId;
+    content: string;
+    isUser: boolean;
+    creationTime: Date;
+}
+
+export interface IMessageBot {
+    _id?: ObjectId;
+    choices: string[];
+    choiceIndex: number;
+    isUser: boolean;
+    creationTime: Date;
+}
+
+export interface IMessageLean {
+    _id?: ObjectId;
+    choiceCount?: number;
     content: string;
     isUser: boolean;
     creationTime: Date;
@@ -11,10 +35,22 @@ export interface IMessage {
 
 export interface IChat {
     _id?: ObjectId;
-    title: string;
+    title?: string;
     settings: ISettings;
     messages: IMessage[];
     creationTime: Date;
+}
+
+export interface IChatDetail {
+    _id?: ObjectId;
+    title?: string;
+    settings: ISettings;
+    messageCount?: number;
+}
+
+export interface IChatLean {
+    title: string;
+    settings: ISettings;
 }
 
 export interface ISettings {
@@ -54,7 +90,8 @@ const SettingsSchema = new Schema<ISettings>({
 
 export const MessageSchema = new Schema<IMessage>({
     choices: { type: [String] },
-    content: { type: String, required: true },
+    choiceIndex: { type: Number },
+    content: { type: String },
     isUser: { type: Boolean, required: true },
     creationTime: { type: Date, required: true, default: Date.now },
 });

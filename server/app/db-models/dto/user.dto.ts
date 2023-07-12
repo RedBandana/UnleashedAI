@@ -19,10 +19,11 @@ export abstract class UserProjection {
     "chats.title": true,
   }
 
-  static chat: { [key: string]: boolean } = {
+  static chat: { [key: string]: any } = {
     "chat._id": true,
     "chat.title": true,
     "chat.settings": true,
+    "chat.messageCount": { $size: "$chat.messages" },
   }
 
   static message: { [key: string]: any } = {
@@ -30,11 +31,42 @@ export abstract class UserProjection {
     "message.content": true,
     "message.isUser": true,
     "message.creationTime": true,
-    "message.choices": { $size: "$message.choices" },
+    "message.choices": true,
+    "message.choiceIndex": true,
+  }
+
+  static messages: { [key: string]: any } = {
+    "messages._id": true,
+    "messages.content": true,
+    "messages.isUser": true,
+    "messages.creationTime": true,
+    "messages.choices": true,
+    "messages.choiceIndex": true
   }
 }
 
 export abstract class UserPipeline {
+
+  static chats(userId: string, page: number, count: number): PipelineStage[] {
+    const startIndex = (page - 1) * count;
+    const endIndex = startIndex + count;
+    const aggregate: PipelineStage[] = [
+      {
+        $match: { _id: new ObjectId(userId) }
+      },
+      {
+        $project: { chats: { $slice: ["$chats", startIndex, endIndex] } }
+      },
+      {
+        $project: UserProjection.chatsLean
+      },
+      {
+        $limit: 1
+      }
+    ]
+
+    return aggregate;
+  }
 
   static chatLatest(userId: string): PipelineStage[] {
     const aggregate: PipelineStage[] = [
@@ -55,7 +87,7 @@ export abstract class UserPipeline {
     return aggregate;
   }
 
-  static chatId(userId: string, chatIndex: number): PipelineStage[] {
+  static chatIndex(userId: string, chatIndex: number): PipelineStage[] {
     const aggregate: PipelineStage[] = [
       {
         $match: { _id: new ObjectId(userId) }
@@ -64,12 +96,62 @@ export abstract class UserPipeline {
         $project: { chat: { $arrayElemAt: ["$chats", chatIndex] } }
       },
       {
+        $project: UserProjection.chat
+      },
+      {
         $limit: 1
       }
     ]
 
     return aggregate;
   }
+
+  static messages(userId: string, chatIndex: number, page: number, count: number): PipelineStage[] {
+    const startIndex = (page - 1) * count;
+    const endIndex = startIndex + count;
+    const aggregate: PipelineStage[] = [
+      {
+        $match: { _id: new ObjectId(userId) }
+      },
+      {
+        $project: { chat: { $arrayElemAt: ["$chats", chatIndex] } }
+      },
+      {
+        $project: { messages: { $slice: ["$chat.messages", startIndex, endIndex] } }
+      },
+      {
+        $project: UserProjection.messages
+      },
+      {
+        $limit: 1
+      }
+    ]
+
+    return aggregate;
+  }
+
+  static messageIndex(userId: string, chatIndex: number, messageIndex: number): PipelineStage[] {
+    const aggregate: PipelineStage[] = [
+      {
+        $match: { _id: new ObjectId(userId) }
+      },
+      {
+        $project: { chat: { $arrayElemAt: ["$chats", chatIndex] } }
+      },
+      {
+        $project: { message: { $arrayElemAt: ["$chat.messages", messageIndex] } }
+      },
+      {
+        $project: UserProjection.message
+      },
+      {
+        $limit: 1
+      }
+    ]
+
+    return aggregate;
+  }
+
 
   static messageLatest(userId: string, chatIndex: number): PipelineStage[] {
     const aggregate: PipelineStage[] = [
@@ -92,4 +174,5 @@ export abstract class UserPipeline {
 
     return aggregate;
   }
+
 }
