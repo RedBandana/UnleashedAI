@@ -27,8 +27,29 @@ function* fetchUsersSaga() {
 
 function* fetchUserSaga(action) {
   try {
-    const user = yield call(getUserById, action.payload);
-    yield put(fetchUserSuccess(user));
+    const userId = action.payload;
+
+    // Check if the data is already present in the cache
+    const user = yield select(getUser);
+    if (user && user.id === userId) {
+      // Data is already in the cache, skip the request and use the cached data
+      yield put(fetchUserSuccess(user));
+      return;
+    }
+
+    // Check if a request is already in progress
+    const loading = yield select(getUserLoading);
+    if (loading) {
+      // A request is already in progress, wait for it to complete
+      return;
+    }
+
+    // Make the server request
+    const response = yield call(getUserById, userId);
+    const userData = response.data;
+
+    // Store the data in the cache and update the Redux state
+    yield put(fetchUserSuccess(userData));
   } catch (error) {
     yield put(fetchUserFailure(error.message));
   }
