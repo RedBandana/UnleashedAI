@@ -1,11 +1,11 @@
 import { handleActions } from 'redux-actions';
 import {
-  getUsersRequest,
-  getUsersSuccess,
-  getUsersFailure,
-  getUserRequest,
-  getUserSuccess,
-  getUserFailure,
+  fetchUsersRequest,
+  fetchUsersSuccess,
+  fetchUsersFailure,
+  fetchUserRequest,
+  fetchUserSuccess,
+  fetchUserFailure,
   createUserRequest,
   createUserSuccess,
   createUserFailure,
@@ -24,34 +24,34 @@ const initialState = {
 
 const userReducer = handleActions(
   {
-    [getUsersRequest]: (state) => ({
+    [fetchUsersRequest]: (state) => ({
       ...state,
       loading: true,
       error: null,
     }),
-    [getUsersSuccess]: (state, { payload }) => ({
+    [fetchUsersSuccess]: (state, { payload }) => ({
       ...state,
       users: payload,
       loading: false,
       error: null,
     }),
-    [getUsersFailure]: (state, { payload }) => ({
+    [fetchUsersFailure]: (state, { payload }) => ({
       ...state,
       loading: false,
       error: payload,
     }),
-    [getUserRequest]: (state) => ({
+    [fetchUserRequest]: (state) => ({
       ...state,
       userLoading: true,
       userError: null,
     }),
-    [getUserSuccess]: (state, { payload }) => ({
+    [fetchUserSuccess]: (state, { payload }) => ({
       ...state,
       user: payload,
       userLoading: false,
       userError: null,
     }),
-    [getUserFailure]: (state, { payload }) => ({
+    [fetchUserFailure]: (state, { payload }) => ({
       ...state,
       userLoading: false,
       userError: payload,

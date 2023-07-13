@@ -1,35 +1,35 @@
 import { createAction } from 'redux-actions';
 import * as userService from '../../services/userService';
 
-export const getUsersRequest = createAction('GET_USERS_REQUEST');
-export const getUsersSuccess = createAction('GET_USERS_SUCCESS');
-export const getUsersFailure = createAction('GET_USERS_FAILURE');
+export const fetchUsersRequest = createAction('FETCH_USERS_REQUEST');
+export const fetchUsersSuccess = createAction('FETCH_USERS_SUCCESS');
+export const fetchUsersFailure = createAction('FETCH_USERS_FAILURE');
 
-export const getUserRequest = createAction('GET_USER_REQUEST');
-export const getUserSuccess = createAction('GET_USER_SUCCESS');
-export const getUserFailure = createAction('GET_USER_FAILURE');
+export const fetchUserRequest = createAction('FETCH_USER_REQUEST');
+export const fetchUserSuccess = createAction('FETCH_USER_SUCCESS');
+export const fetchUserFailure = createAction('FETCH_USER_FAILURE');
 
 export const createUserRequest = createAction('CREATE_USER_REQUEST');
 export const createUserSuccess = createAction('CREATE_USER_SUCCESS');
 export const createUserFailure = createAction('CREATE_USER_FAILURE');
 
-export const getUsers = () => async (dispatch) => {
-  dispatch(getUsersRequest());
+export const fetchUsers = () => async (dispatch) => {
+  dispatch(fetchUsersRequest());
   try {
-    const users = await userService.getUsers();
-    dispatch(getUsersSuccess(users));
+    const users = await userService.fetchUsers();
+    dispatch(fetchUsersSuccess(users));
   } catch (error) {
-    dispatch(getUsersFailure(error.message));
+    dispatch(fetchUsersFailure(error.message));
   }
 };
 
-export const getUser = (id) => async (dispatch) => {
-  dispatch(getUserRequest());
+export const fetchUser = (id) => async (dispatch) => {
+  dispatch(fetchUserRequest());
   try {
-    const user = await userService.getUser(id);
-    dispatch(getUserSuccess(user));
+    const user = await userService.fetchUser(id);
+    dispatch(fetchUserSuccess(user));
   } catch (error) {
-    dispatch(getUserFailure(error.message));
+    dispatch(fetchUserFailure(error.message));
   }
 };
 
