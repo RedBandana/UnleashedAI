@@ -8,7 +8,7 @@ import '../../index.scss';
 import { Capacitor } from '@capacitor/core';
 import AlertDialog from '../../components/AlertDialog/AlertDialog';
 
-function ChatPage() {
+function Chat() {
   const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [conversations, setConversations] = useState([]);
@@ -173,7 +173,7 @@ function ChatPage() {
   const isMobile = Capacitor.isNativePlatform();
 
   return (
-    <div className={`chatpage ${isLightMode ? 'theme-light' : 'theme-dark'}`}>
+    <div className={`Chat ${isLightMode ? 'theme-light' : 'theme-dark'}`}>
       <Navbar
         onToggleSidebar={handleToggleSidebar}
         sidebarIsOpen={isSidebarOpen}
@@ -226,4 +226,4 @@ function ChatPage() {
   );
 }
 
-export default ChatPage;
+export default Chat;

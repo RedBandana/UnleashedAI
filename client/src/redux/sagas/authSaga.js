@@ -1,7 +1,6 @@
 import { takeLatest, select, call, put } from 'redux-saga/effects';
 import {
   loginRequest,
-  loginRequestSent,
   loginSuccess,
   loginFailure
 } from '../actions/authActions';
@@ -18,13 +17,7 @@ function* loginSaga() {
       return;
     }
 
-    const loading = yield select(selector.authUserLoading);
-    if (loading) {
-      return;
-    }
-
     // Make the server request
-    yield put(loginRequestSent()); // Set loading state to true
     const response = yield call(authService.login);
     const userData = response;
 

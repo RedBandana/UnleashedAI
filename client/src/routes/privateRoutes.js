@@ -1,10 +1,8 @@
 import { Navigate, useLocation } from 'react-router-dom'
-import { useSelector } from 'react-redux';
-import { authUser } from '../redux/selectors/authSelectors';
 
 
 export function RequireUser({ children }) {
-    const user = useSelector(authUser);
+    const user = true;
     const location = useLocation();
 
     return user ? (
