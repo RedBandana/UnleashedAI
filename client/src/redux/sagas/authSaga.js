@@ -1,8 +1,9 @@
 import { takeLatest, select, call, put } from 'redux-saga/effects';
 import {
-    loginRequest,
-    loginSuccess,
-    loginFailure
+  loginRequest,
+  loginRequestSent,
+  loginSuccess,
+  loginFailure
 } from '../actions/authActions';
 import * as authService from '../../services/authService';
 import * as selector from '../selectors/authSelectors';
@@ -17,16 +18,15 @@ function* loginSaga() {
       return;
     }
 
-    // Check if a request is already in progress
     const loading = yield select(selector.authUserLoading);
     if (loading) {
-      // A request is already in progress, wait for it to complete
       return;
     }
 
     // Make the server request
+    yield put(loginRequestSent()); // Set loading state to true
     const response = yield call(authService.login);
-    const userData = response.data;
+    const userData = response;
 
     // Store the data in the cache and update the Redux state
     yield put(loginSuccess(userData));
@@ -36,7 +36,7 @@ function* loginSaga() {
 }
 
 function* authSaga() {
-  yield takeLatest(loginRequest.type, loginSaga);
+  yield takeLatest(loginRequest().type, loginSaga);
   // Add other sagas for different actions if needed
 }
 

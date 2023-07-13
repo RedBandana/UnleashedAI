@@ -1,15 +1,16 @@
 import { handleActions } from 'redux-actions';
-import { loginRequest, loginFailure, loginSuccess } from '../actions/authActions';
+import { loginRequest, loginFailure, loginSuccess, loginRequestSent } from '../actions/authActions';
 
 const initialState = {
-    user: null,
-    loading: false,
-    error: null,
-  };
+  user: null,
+  loading: false,
+  error: null,
+};
 
 const authReducer = handleActions(
   {
-    [loginRequest]: (state) => ({
+    [loginRequest]: () => (initialState),
+    [loginRequestSent]: (state) => ({
       ...state,
       loading: true,
       error: null,
@@ -17,11 +18,13 @@ const authReducer = handleActions(
     [loginSuccess]: (state, { payload }) => ({
       ...state,
       user: payload,
+      requestSent: false,
       loading: false,
       error: null,
     }),
     [loginFailure]: (state, { payload }) => ({
       ...state,
+      requestSent: false,
       loading: false,
       error: payload,
     }),

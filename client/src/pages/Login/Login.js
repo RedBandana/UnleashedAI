@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { login } from '../../redux/actions/authActions';
+import { loginRequest } from '../../redux/actions/authActions';
 import { getUser } from '../../redux/actions/userActions';
 import { authUser, authUserLoading, authUserError } from '../../redux/selectors/authSelectors';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -15,7 +15,7 @@ function LoginPage() {
 
   const handleLogin = () => {
     // Dispatch the login request action
-    dispatch(login());
+    dispatch(loginRequest());
   };
 
   useEffect(() => {
