@@ -1,4 +1,4 @@
-import { uploadFile } from '../api/file.service';
+import { uploadFile } from '../services/fileService';
 import { Capacitor } from '@capacitor/core';
 
 const encryptionKey = process.env.REACT_APP_ENCRYPTION_KEY;
