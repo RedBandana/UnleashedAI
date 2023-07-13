@@ -6,5 +6,5 @@ export const getUser = (state) => state.users.user;
 export const getUserLoading = (state) => state.users.userLoading;
 export const getUserError = (state) => state.users.userError;
 
-export const getCreateUserLoading = (state) => state.users.createUserLoading;
-export const getCreateUserError = (state) => state.users.createUserError;
+export const createUserLoading = (state) => state.users.createUserLoading;
+export const createUserError = (state) => state.users.createUserError;
