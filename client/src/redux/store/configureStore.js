@@ -3,11 +3,14 @@ import createSagaMiddleware from 'redux-saga';
 import { configureStore } from '@reduxjs/toolkit'
 import { all } from 'redux-saga/effects';
 import userReducer from '../reducers/userReducer';
+import authReducer from '../reducers/authReducer';
 import userSaga from '../sagas/userSaga';
+import authSaga from '../sagas/authSaga';
 
 // Combine all reducers into a root reducer
 const rootReducer = combineReducers({
   user: userReducer,
+  auth: authReducer,
   // Add other reducers here if needed
 });
 
@@ -19,6 +22,7 @@ const middleware = [sagaMiddleware];
 function* rootSaga() {
   yield all([
     userSaga(),
+    authSaga(),
     // Add other sagas here if needed
   ]);
 }
