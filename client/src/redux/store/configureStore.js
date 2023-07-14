@@ -6,12 +6,17 @@ import userReducer from '../reducers/userReducer';
 import authReducer from '../reducers/authReducer';
 import userSaga from '../sagas/userSaga';
 import authSaga from '../sagas/authSaga';
+import chatReducer from '../reducers/chatReducer';
+import messageReducer from '../reducers/messageReducer';
+import chatSaga from '../sagas/chatSaga';
+import messageSaga from '../sagas/messageSaga';
 
 // Combine all reducers into a root reducer
 const rootReducer = combineReducers({
-  user: userReducer,
   auth: authReducer,
-  // Add other reducers here if needed
+  user: userReducer,
+  chat: chatReducer,
+  message: messageReducer,
 });
 
 // Create the saga middleware
@@ -21,9 +26,10 @@ const middleware = [sagaMiddleware];
 // Create the root saga
 function* rootSaga() {
   yield all([
-    userSaga(),
     authSaga(),
-    // Add other sagas here if needed
+    userSaga(),
+    chatSaga(),
+    messageSaga(),
   ]);
 }
 

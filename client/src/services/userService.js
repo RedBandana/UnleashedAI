@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_URL = `${process.env.REACT_APP_API_URL}/users`;
 
-const fetchUsers = async () => {
+export const fetchUsers = async () => {
   try {
     const response = await axios.get(API_URL);
     return response.data;
@@ -11,7 +11,7 @@ const fetchUsers = async () => {
   }
 };
 
-const fetchUser = async (id) => {
+export const fetchUser = async (id) => {
   try {
     const response = await axios.get(`${API_URL}/${id}`);
     return response.data;
@@ -20,7 +20,7 @@ const fetchUser = async (id) => {
   }
 };
 
-const createUser = async (userData) => {
+export const createUser = async (userData) => {
   try {
     const response = await axios.post(API_URL, userData);
     return response.data;
@@ -28,5 +28,3 @@ const createUser = async (userData) => {
     throw new Error(error.response.data);
   }
 };
-
-export { fetchUsers, fetchUser, createUser }

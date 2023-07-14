@@ -1,25 +1,45 @@
 import React, { useEffect, useState } from 'react';
-import './Navbar.scss';
+import { useDispatch, useSelector } from 'react-redux';
 import { Capacitor } from '@capacitor/core';
 
-function Navbar(props) {
-  const { sidebarIsOpen, conversationTitle } = props;
-  const [navbarTitle, setNavbarTitle] = useState(false);
+import './Navbar.scss';
+import { getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
+import { fetchChat } from '../../redux/selectors/chatSelectors';
+import { toggleSidebar } from '../../redux/actions/uiActions';
+import { CHAT_TITLE_CROP_LENGTH } from '../../utils/constants';
 
+
+
+function Navbar() {
+  const dispatch = useDispatch();
+
+  const sidebarIsOpen = useSelector(getSidebarIsOpen);
+  const chat = useSelector(fetchChat);
+
+  const [navbarTitle, setNavbarTitle] = useState(false);
+  
   useEffect(() => {
-    if (conversationTitle.length > 16) {
-      setNavbarTitle(conversationTitle.substr(0, 16) + '...');
+    if (!chat) {
+      return;
+    }
+
+    if (chat.title.length > CHAT_TITLE_CROP_LENGTH) {
+      setNavbarTitle(chat.title.substr(0, CHAT_TITLE_CROP_LENGTH) + '...');
     }
     else {
-      setNavbarTitle(conversationTitle);
+      setNavbarTitle(chat.title);
     }
-  }, [conversationTitle])
+  }, [chat.title])
+
+  const handleToggleSidebar = () => {
+    dispatch(toggleSidebar());
+  }
 
   return (
     <nav className="navbar" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={Capacitor.isNativePlatform()}>
       <div className='navbar-container'>
         <div className="navbar-left">
-          <button className="navbar-toggle" onClick={props.onToggleSidebar}>
+          <button className="navbar-toggle" onClick={handleToggleSidebar}>
             <i className="fa fa-bars"></i>
           </button>
         </div>
@@ -27,7 +47,7 @@ function Navbar(props) {
           <div className='navbar-item'>{navbarTitle}</div>
         </div>
         <div className="navbar-right">
-          <div className="navbar-brand hide">GPTU</div>
+          <div className="navbar-brand hide">Unleashed AI</div>
         </div>
       </div>
     </nav>

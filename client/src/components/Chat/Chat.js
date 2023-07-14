@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Message from '../Message/Message';
 import Settings from '../Settings/Settings';
-import './Chatbot.scss';
-import { getModelMaxTokens } from '../../utils/Utils'
+import './Chat.scss';
 import TextInput from '../TextInput/TextInput';
 import TypingDots from '../TypingDots/TypingDots'
 import { Capacitor } from '@capacitor/core';
@@ -18,7 +17,6 @@ function Chatbot(props) {
     const [receivedNewMessage, setReceivedNewMessage] = useState(0);
     const [messageUpdate, setMessageUpdate] = useState(false);
     const [messagesHtml, setMessagesHtml] = useState([]);
-    const TOKEN_SAFE_DELTA = 2000;
 
     const handleDelete = useCallback((messageIndex) => {
         setMessagesHtml(prevMessages => {
@@ -106,11 +104,11 @@ function Chatbot(props) {
         setIsWaiting(true);
         setReceivedNewMessage(1);
 
-        let requestMessages = getRequestMessages();
-        const requestMaxTokens = conversation.settings.maxTokens === 0 ? null : conversation.settings.maxTokens;
-        const requestSettings = {
-            ...conversation.settings, history: requestMessages, maxTokens: requestMaxTokens
-        }
+        // let requestMessages = '';
+        // const requestMaxTokens = conversation.settings.maxTokens === 0 ? null : conversation.settings.maxTokens;
+        // const requestSettings = {
+        //     ...conversation.settings, history: requestMessages, maxTokens: requestMaxTokens
+        // }
 
         // trySendRequest(sendChatCompletion, requestSettings).then((response) => {
         //     const botMessage = {
@@ -142,26 +140,6 @@ function Chatbot(props) {
             setSettingsOpen(false);
         }
     };
-
-    const getRequestMessages = () => {
-        const memorizedMessages = [...conversation.messages].slice(-conversation.settings.memory);
-        while (memorizedMessages.length > 1 &&
-            getMessagesTokens(memorizedMessages) > getModelMaxTokens(conversation.settings.model) - TOKEN_SAFE_DELTA) {
-                memorizedMessages.splice(0, 1);
-        }
-        return memorizedMessages;
-    }
-
-    const getMessagesTokens = (messages) => {
-        let totalTokens = 0;
-        for (let message of messages) {
-            for (let text of message.texts) {
-                totalTokens += text.split(' ').length;
-            }
-        }
-
-        return totalTokens;
-    }
 
     function resizeTextAreaHeight() {
         const textarea = document.getElementById("textarea-user-input");

@@ -1,17 +1,18 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { loginRequest } from '../../redux/actions/authActions';
-import { fetchUser } from '../../redux/actions/userActions';
 import { authUser, authUserLoading, authUserError } from '../../redux/selectors/authSelectors';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { fetchUser } from '../../services/userService';
 
 function LoginPage() {
-  const user = useSelector(authUser);
-  const loading = useSelector(authUserLoading);
-  const error = useSelector(authUserError);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { state } = useLocation();
+  
+  const user = useSelector(authUser);
+  const loading = useSelector(authUserLoading);
+  const error = useSelector(authUserError);
 
   const handleLogin = () => {
     // Dispatch the login request action

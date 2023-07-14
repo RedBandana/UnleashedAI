@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Login from './pages/Login/Login';
-import Chat from './pages/Chat/Chat';
 import { RequireUser } from './routes/privateRoutes';
+import Main from './pages/Main/Main';
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
       <Routes>
         <Route path='/' element={
           <RequireUser>
-            <Chat />
+            <Main />
           </RequireUser>
         }
         />

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./Settings.scss";
-import { parseToRightType } from '../../utils/Utils'
+import { parseToRightType } from "../../utils/functions";
 
 const Settings = ({ settings, onSave, onClose }) => {
     const [formSettings, setFormSettings] = useState(settings);

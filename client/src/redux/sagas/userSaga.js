@@ -1,71 +1,49 @@
 import { takeLatest, select, call, put } from 'redux-saga/effects';
-import {
-  fetchUsersRequest,
-  fetchUsersSuccess,
-  fetchUsersFailure,
-  fetchUserRequest,
-  fetchUserSuccess,
-  fetchUserFailure,
-  createUserRequest,
-  createUserSuccess,
-  createUserFailure
-} from '../actions/userActions';
+import * as userActions from '../actions/userActions';
 import * as userService from '../../services/userService';
-import * as selector from '../selectors/userSelectors';
+import * as selectors from '../selectors/userSelectors';
 
-function* fetchUsersSaga() {
+function* fetchUsersSaga(action) {
   try {
     const users = yield call(userService.fetchUsers);
-    yield put(fetchUsersSuccess(users));
+    yield put(userActions.fetchUsersSuccess(users));
   } catch (error) {
-    yield put(fetchUsersFailure(error.message));
+    yield put(userActions.fetchUsersFailure(error.message));
   }
 }
 
 function* fetchUserSaga(action) {
   try {
     const userId = action.payload;
+    const user = yield select(selectors.fetchUser);
 
-    // Check if the data is already present in the cache
-    const user = yield select(selector.fetchUser);
     if (user && user.id === userId) {
-      // Data is already in the cache, skip the request and use the cached data
-      yield put(fetchUserSuccess(user));
+      yield put(userActions.fetchUserSuccess(user));
       return;
     }
 
-    // Check if a request is already in progress
-    const loading = yield select(selector.fetchUserLoading);
-    if (loading) {
-      // A request is already in progress, wait for it to complete
-      return;
-    }
-
-    // Make the server request
     const response = yield call(userService.fetchUser, userId);
     const userData = response.data;
 
-    // Store the data in the cache and update the Redux state
-    yield put(fetchUserSuccess(userData));
+    yield put(userActions.fetchUserSuccess(userData));
   } catch (error) {
-    yield put(fetchUserFailure(error.message));
+    yield put(userActions.fetchUserFailure(error.message));
   }
 }
 
 function* createUserSaga(action) {
   try {
     const newUser = yield call(userService.createUser, action.payload);
-    yield put(createUserSuccess(newUser));
+    yield put(userActions.createUserSuccess(newUser));
   } catch (error) {
-    yield put(createUserFailure(error.message));
+    yield put(userActions.createUserFailure(error.message));
   }
 }
 
 function* userSaga() {
-  yield takeLatest(fetchUsersRequest.type, fetchUsersSaga);
-  yield takeLatest(fetchUserRequest.type, fetchUserSaga);
-  yield takeLatest(createUserRequest.type, createUserSaga);
-  // Add other sagas for different actions if needed
+  yield takeLatest(userActions.fetchUsersRequest().type, fetchUsersSaga);
+  yield takeLatest(userActions.fetchUserRequest().type, fetchUserSaga);
+  yield takeLatest(userActions.createUserRequest().type, createUserSaga);
 }
 
 export default userSaga;

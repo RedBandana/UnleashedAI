@@ -3,7 +3,7 @@ import { Capacitor } from '@capacitor/core';
 
 const encryptionKey = process.env.REACT_APP_ENCRYPTION_KEY;
 
-const saveJSONToFile = async (jsonObject, filename) => {
+export const saveJSONToFile = async (jsonObject, filename) => {
     const data = JSON.stringify(jsonObject);
     const blob = await encryptDataToBlob(data);
 
@@ -27,13 +27,7 @@ const saveJSONToFile = async (jsonObject, filename) => {
     }
 }
 
-function triggerDownload(link) {
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-
-const readJSONFromUserInput = (inputFile) => {
+export const readJSONFromUserInput = (inputFile) => {
     return new Promise((resolve, reject) => {
         const fileReader = new FileReader();
         fileReader.readAsArrayBuffer(inputFile);
@@ -55,6 +49,12 @@ const readJSONFromUserInput = (inputFile) => {
     });
 }
 
+function triggerDownload(link) {
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
 async function encryptDataToBlob(data) {
     const salt = crypto.getRandomValues(new Uint8Array(16));
     const iv = crypto.getRandomValues(new Uint8Array(12));
@@ -74,5 +74,3 @@ async function decryptData(result) {
     const decryptedData = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv, additionalData: salt }, key, encryptedData);
     return decryptedData;
 }
-
-export { saveJSONToFile, readJSONFromUserInput }

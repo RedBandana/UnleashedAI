@@ -4,10 +4,30 @@ import SidebarItem from '../SidebarItem/SidebarItem';
 import { Capacitor } from '@capacitor/core';
 
 function Sidebar(props) {
-  const { sidebarItems, isOpen, onClose, onClickItem, onEditItem, onDeleteItem,
-    onAddItem, onClearItems, onSave, onSaveAs, onRead, onToggleTheme } = props;
+  const { sidebarItems, isOpen, onClose, onClickItem, 
+    onAddItem, onSave, onSaveAs, onRead, onToggleTheme } = props;
   const sidebarRef = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  
+  const handleEdit = (conversationIndex, newTitle) => {
+    const updatedConversations = [...conversations];
+    updatedConversations[conversationIndex].title = newTitle;
+    setConversations(updatedConversations);
+  };
+
+  const handleDelete = (conversationIndex) => {
+    setConversations(conversations.filter((_, index) => index !== conversationIndex));
+  };
+
+  const handleClear = () => {
+    setConversations([]);
+  };
+  
+  const toggleTheme = () => {
+    const updatedIsLightMode = !isLightMode;
+    setIsLightMode(updatedIsLightMode);
+    localStorage.setItem("themeIsLight", updatedIsLightMode);
+  };
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -62,11 +82,11 @@ function Sidebar(props) {
         <div className="sidebar-list">
           {sidebarItems.map((item, index) => (
             <SidebarItem key={index} index={index} title={item.title}
-              onClick={handleOnClickItem} onDelete={onDeleteItem} onEdit={onEditItem} isSelected={index === selectedIndex} />
+              onClick={handleOnClickItem} onDelete={handleDelete} onEdit={handleEdit} isSelected={index === selectedIndex} />
           ))}
         </div>
         <div className="sidebar-footer sidebar-no-move-parent">
-          <div className="sidebar-clear-button" onClick={onClearItems}>Clear conversations</div>
+          <div className="sidebar-clear-button" onClick={handleClear}>Clear conversations</div>
           <div className='sidebar-help-button sidebar-no-move-parent' onClick={onToggleTheme}>
             <div className="fas fa-moon"></div>
           </div>

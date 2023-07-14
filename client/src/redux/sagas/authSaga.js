@@ -1,36 +1,27 @@
 import { takeLatest, select, call, put } from 'redux-saga/effects';
-import {
-  loginRequest,
-  loginSuccess,
-  loginFailure
-} from '../actions/authActions';
+import * as authActions from '../actions/authActions';
 import * as authService from '../../services/authService';
-import * as selector from '../selectors/authSelectors';
+import * as selectors from '../selectors/authSelectors';
 
 function* loginSaga() {
   try {
-    // Check if the data is already present in the cache
-    const user = yield select(selector.authUser);
+    const user = yield select(selectors.authUser);
     if (user) {
-      // Data is already in the cache, skip the request and use the cached data
-      yield put(loginSuccess(user));
+      yield put(authActions.loginSuccess(user));
       return;
     }
 
-    // Make the server request
     const response = yield call(authService.login);
     const userData = response;
 
-    // Store the data in the cache and update the Redux state
-    yield put(loginSuccess(userData));
+    yield put(authActions.loginSuccess(userData));
   } catch (error) {
-    yield put(loginFailure(error.message));
+    yield put(authActions.loginFailure(error.message));
   }
 }
 
 function* authSaga() {
-  yield takeLatest(loginRequest().type, loginSaga);
-  // Add other sagas for different actions if needed
+  yield takeLatest(authActions.loginRequest().type, loginSaga);
 }
 
 export default authSaga;
