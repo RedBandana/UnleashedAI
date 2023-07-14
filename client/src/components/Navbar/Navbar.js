@@ -17,8 +17,6 @@ function Navbar() {
   const [navbarTitle, setNavbarTitle] = useState(false);
   
   useEffect(() => {
-    console.log(`setNavbarTitle`);
-
     if (!chat) {
       return;
     }

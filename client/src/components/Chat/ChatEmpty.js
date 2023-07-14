@@ -1,16 +1,15 @@
 import React from "react";
 import { Capacitor } from '@capacitor/core';
-import { useDispatch, useSelector } from 'react-redux';
-import { createChatRequest } from "../../redux/actions/chatActions";
 import { getSidebarIsOpen } from "../../redux/selectors/uiSelectors";
-import { USER_ID } from "../../utils/constants";
+import { useSelector } from "react-redux";
 
-function ChatEmpty() {
-    const dispatch = useDispatch();
-    const sidebarIsOpen = useSelector(getSidebarIsOpen)
+function ChatEmpty(props) {
+    const { onAdd } = props;
 
-    const handleAdd = () => {
-        dispatch(createChatRequest(USER_ID));
+    const sidebarIsOpen = useSelector(getSidebarIsOpen);
+
+    function handleAdd() {
+        onAdd();
     }
 
     return (

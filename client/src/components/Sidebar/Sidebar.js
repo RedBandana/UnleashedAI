@@ -4,6 +4,7 @@ import { Capacitor } from '@capacitor/core';
 import PropTypes from 'prop-types';
 
 import { getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
+import { setSidebarIsOpen } from '../../redux/actions/uiActions';
 
 import SidebarItem from './SidebarItem';
 import './Sidebar.scss';
@@ -18,7 +19,6 @@ function Sidebar(props) {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
-    console.log(`setSidebarIsOpen s`);
 
     function handleClickOutside(event) {
       if (!Capacitor.isNativePlatform()) {
@@ -30,7 +30,8 @@ function Sidebar(props) {
         (event.target.parentElement == null || event.target.parentElement.className.includes("sidebar-no-move-parent") === false);
 
       if (isOutsideSideBar || canMoveSidebar) {
-        // dispatch(setSidebarIsOpen(false));
+        console.log(`Sidebar setSidebarIsOpen`);
+        dispatch(setSidebarIsOpen(false));
       }
     }
 

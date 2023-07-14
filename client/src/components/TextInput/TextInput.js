@@ -1,13 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import './TextInput.scss';
 import { Capacitor } from '@capacitor/core';
+import { useDispatch } from 'react-redux';
+import { toggleSettings } from '../../redux/actions/uiActions';
 
-function TextInput({ inputValue, onInputChange, onSubmit, canSubmit, onSettings }) {
+function TextInput(props) {
+    const { onSubmit, canSubmit } = props;
 
-    useEffect(() => {
-        updateButtonDisplay();
-    }, [inputValue])
+    const dispatch = useDispatch();
+
+    const textareaRef = useRef(null);
+    
+    const [inputValue, setInputValue] = useState(null);
+
 
     function handleKeyDown(event) {
         if (event.key === "Enter") {
@@ -16,16 +22,14 @@ function TextInput({ inputValue, onInputChange, onSubmit, canSubmit, onSettings 
 
             if (doLineBreak) {
                 event.preventDefault(); // prevent form submission
-                const selectionStart = event.target.selectionStart;
-                const selectionEnd = event.target.selectionEnd;
-                const text = event.target.value;
-    
-                event.target.value = text.slice(0, selectionStart) + "\n" + text.slice(selectionStart);
-    
-                event.target.selectionStart = selectionStart + 1;
-                event.target.selectionEnd = selectionEnd + 1;
-    
-                onInputChange(event); // insert line break
+                const selectionStart = textareaRef.current.selectionStart;
+                const selectionEnd = textareaRef.current.selectionEnd;
+                const text = textareaRef.current.value;
+
+                setInputValue(text.slice(0, selectionStart) + "\n" + text.slice(selectionStart));
+
+                textareaRef.current.selectionStart = selectionStart + 1;
+                textareaRef.current.selectionEnd = selectionEnd + 1;
             }
             else {
                 handleSubmit(event);
@@ -36,7 +40,7 @@ function TextInput({ inputValue, onInputChange, onSubmit, canSubmit, onSettings 
     function updateButtonDisplay() {
         const submitButton = document.getElementById("button-submit");
         const settingsButton = document.getElementById("button-settings");
-        const text = document.getElementById("textarea-user-input").value;
+        const text = textareaRef.current.value;
 
         if (text.length > 0) {
             submitButton.classList.remove("hide");
@@ -49,19 +53,48 @@ function TextInput({ inputValue, onInputChange, onSubmit, canSubmit, onSettings 
     }
 
     function handleSubmit(event) {
-        if (canSubmit(event)) {
-            onSubmit(event);
+        event.preventDefault();
+
+        if (canSubmit()) {
+            onSubmit(inputValue);
+            emptyTextArea();
         }
     }
+
+    function handleOnInputChange(event) {
+        updateButtonDisplay();
+        resizeTextAreaHeight();
+    }
+
+    function resizeTextAreaHeight() {
+        const textarea = textareaRef.current;
+        textarea.style.height = "auto";
+        textarea.style.height = `${textarea.scrollHeight}px`;
+
+        if (textarea.selectionStart === textarea.value.length) {
+            textarea.scrollTop = textarea.scrollHeight;
+        }
+    }
+
+    function emptyTextArea() {
+        setInputValue('');
+        const textarea = textareaRef.current;
+        textarea.style.height = "auto";
+        textarea.style.height = `${31}px`;
+    }
+
+    function handleToggleSettings() {
+        dispatch(toggleSettings());
+    };
 
     return (
         <form onSubmit={handleSubmit}>
             <textarea
-                id="textarea-user-input"
+                ref={textareaRef}
                 rows="1"
                 placeholder="Send a message"
                 value={inputValue}
-                onChange={onInputChange}
+                onChange={handleOnInputChange}
                 onKeyDown={handleKeyDown}
             />
             <button type="submit" className='chatbot-send-button' id='button-submit'>
@@ -69,7 +102,7 @@ function TextInput({ inputValue, onInputChange, onSubmit, canSubmit, onSettings 
             </button>
             <button className="chatbot-settings-button" id='button-settings' onClick={(event) => {
                 event.preventDefault();
-                onSettings();
+                handleToggleSettings();
             }}>
                 <i className="fas fa-cog"></i>
             </button>
@@ -78,11 +111,8 @@ function TextInput({ inputValue, onInputChange, onSubmit, canSubmit, onSettings 
 }
 
 TextInput.propTypes = {
-    inputValue: PropTypes.string.isRequired,
-    onInputChange: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
     canSubmit: PropTypes.func.isRequired,
-    onSettings: PropTypes.func.isRequired,
 };
 
 export default TextInput;

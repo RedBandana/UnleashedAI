@@ -5,7 +5,7 @@ import * as selectors from '../selectors/chatSelectors';
 
 function* fetchChatsSaga(action) {
   try {
-    const userId = action.payload;
+    const { userId } = action.payload;
     const chats = yield call(chatService.fetchChats, userId);
     yield put(chatActions.fetchChatsSuccess(chats));
   } catch (error) {

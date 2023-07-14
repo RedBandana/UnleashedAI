@@ -27,40 +27,30 @@ function Main() {
   const touchIsDragging = useRef(false);
   const [sidebarChanged, setSidebarChanged] = useState(false);
 
-  const sidebarCrudEvents = {
-    read: handleOnClickItem,
-    create: handleOnAddItem,
-    update: handleOnEditItem,
-    delete: handleOnDeleteItem,
-    clear: handleOnClearItems,
-  };
-
-  const sidebarUiEvents = {
-    toggleTheme: handleOnToggleTheme
-  };
-
   useEffect(() => {
-    console.log(`fetchChatsRequest`);
-    dispatch(fetchChatsRequest(USER_ID));
+    console.log(`Main fetchChatsRequest`);
+    dispatch(fetchChatsRequest({ userId: USER_ID }));
 
     if (!Capacitor.isNativePlatform()) {
+      console.log(`Main setSidebarIsOpen`);
       dispatch(setSidebarIsOpen(true));
       document.body.classList.toggle("native-platform", false);
     }
   }, [dispatch]);
 
   useEffect(() => {
-    console.log(`fetchMessagesRequest`);
     if (chats && chats.length > 0) {
+      console.log(`Main fetchMessagesRequest`);
+      console.log(`Main fetchChatRequest`);
       dispatch(fetchMessagesRequest({ userId: USER_ID, chatIndex: 0 }));
       dispatch(fetchChatRequest({ userId: USER_ID, chatIndex: 0 }));
     }
   }, [dispatch, chats]);
 
   useEffect(() => {
-    console.log(`setThemeIsLight`);
     const savedThemeIsLight = localStorage.getItem("themeIsLight");
     if (savedThemeIsLight === "true" && !themeIsLight) {
+      console.log(`Main setThemeIsLight`);
       dispatch(setThemeIsLight(false));
     }
 
@@ -68,8 +58,6 @@ function Main() {
   }, [dispatch, themeIsLight]);
 
   useEffect(() => {
-    console.log(`setSidebarChanged`);
-
     function handleStart(event) {
       touchIsDragging.current = true;
       touchStartX.current = event.touches[0].pageX;
@@ -81,11 +69,13 @@ function Main() {
         const distance = event.touches[0].pageX - touchStartX.current;
 
         if (distance > 50) {
+          console.log(`Main setSidebarIsOpen`);
           dispatch(setSidebarIsOpen(true));
           touchIsDragging.current = false;
           setSidebarChanged(true);
         }
         else if (distance < -50) {
+          console.log(`Main setSidebarIsOpen`);
           dispatch(setSidebarIsOpen(false));
           touchIsDragging.current = false;
           setSidebarChanged(true);
@@ -139,6 +129,18 @@ function Main() {
     dispatch(deleteChatRequest({ userId: USER_ID }))
   }
 
+  const sidebarCrudEvents = {
+    read: handleOnClickItem,
+    create: handleOnAddItem,
+    update: handleOnEditItem,
+    delete: handleOnDeleteItem,
+    clear: handleOnClearItems,
+  };
+
+  const sidebarUiEvents = {
+    toggleTheme: handleOnToggleTheme
+  };
+
   return (
     <div className={`chat ${themeIsLight ? 'theme-light' : 'theme-dark'}`}>
       <Navbar />
@@ -154,7 +156,7 @@ function Main() {
         {chats && chats.length > 0 ? (
           <Chat />
         ) : (
-          <ChatEmpty />
+          <ChatEmpty onAdd={handleOnAddItem} />
         )}
       </div>
     </div>

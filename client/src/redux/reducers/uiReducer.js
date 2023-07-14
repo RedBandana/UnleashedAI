@@ -4,6 +4,7 @@ import * as actions from '../actions/uiActions';
 const initialState = {
   sidebarIsOpen: false,
   themeIsLight: true,
+  settingsIsOpen: true,
 };
 
 const uiReducer = handleActions(
@@ -23,6 +24,14 @@ const uiReducer = handleActions(
     [actions.setThemeIsLight]: (state, { payload }) => ({
       ...state,
       themeIsLight: payload,
+    }),
+    [actions.toggleSettings]: (state) => ({
+      ...state,
+      settingsIsOpen: !state.themeIsLight,
+    }),
+    [actions.setSettingsIsOpen]: (state, { payload }) => ({
+      ...state,
+      settingsIsOpen: payload,
     }),
   },
   initialState

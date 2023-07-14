@@ -1,21 +1,34 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setSettingsIsOpen } from "../../redux/actions/uiActions";
+import { fetchChat } from "../../redux/selectors/chatSelectors";
 import PropTypes from "prop-types";
-import "./Settings.scss";
+
 import { parseToRightType } from "../../utils/functions";
+import "./Settings.scss";
 
-const Settings = ({ settings, onSave, onClose }) => {
-    const [formSettings, setFormSettings] = useState(settings);
+const Settings = (props) => {
+    const { onSave } = props;
 
-    const handleFormSubmit = (event) => {
-        event.preventDefault();
-        onSave(formSettings);
-    };
+    const [formSettings, setFormSettings] = useState(null);
+
+    const dispatch = useDispatch();
+    const chat = useSelector(fetchChat);
 
     useEffect(() => {
-        onSave(formSettings);
-    }, [formSettings, onSave])
+        if (!chat) {
+            return;
+        }
 
-    const handleInputChange = (event) => {
+        setFormSettings(chat.settings);
+    }, [chat])
+
+    function handleFormSubmit(event) {
+        event.preventDefault();
+        handleSettingsSave(formSettings);
+    };
+
+    function handleInputChange(event) {
         const { name, value } = event.target;
         const finalValue = parseToRightType(formSettings, name, value);
 
@@ -25,13 +38,22 @@ const Settings = ({ settings, onSave, onClose }) => {
         }));
     };
 
-    const handleCheckboxChange = (event) => {
+    function handleCheckboxChange(event) {
         const { name, checked } = event.target;
         setFormSettings((prevState) => ({
             ...prevState,
             [name]: checked,
         }));
     }
+    
+    function handleSettingsClose() {
+        handleSettingsSave(formSettings);
+        dispatch(setSettingsIsOpen(false));
+    };
+    
+    function handleSettingsSave(newSettings) {
+        onSave(newSettings);
+    };
 
     return (
         <div className="settings-dialog">
@@ -224,7 +246,7 @@ const Settings = ({ settings, onSave, onClose }) => {
                     </div>
 
                     <div className="settings-buttons">
-                        <button className="settings-cancel-button" onClick={onClose}>
+                        <button className="settings-cancel-button" onClick={handleSettingsClose}>
                             <i className="fa fa-times"></i>
                         </button>
                         <button className="settings-save-button hide" type="submit">

@@ -5,7 +5,8 @@ import * as selectors from '../selectors/userSelectors';
 
 function* fetchUsersSaga(action) {
   try {
-    const users = yield call(userService.fetchUsers);
+    const { page, count } = action.payload;
+    const users = yield call(userService.fetchUsers, page, count);
     yield put(userActions.fetchUsersSuccess(users));
   } catch (error) {
     yield put(userActions.fetchUsersFailure(error.message));
