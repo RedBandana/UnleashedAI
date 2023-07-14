@@ -6,44 +6,55 @@ import Chat from '../../components/Chat/Chat';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Navbar from '../../components/Navbar/Navbar';
 import AlertDialog from '../../components/AlertDialog/AlertDialog';
+import ChatEmpty from '../../components/Chat/ChatEmpty';
+
+import { createChatRequest, deleteChatRequest, editChatRequest, fetchChatsRequest } from '../../redux/actions/chatActions';
+import { fetchMessagesRequest } from '../../redux/actions/messageActions';
+import { fetchChatRequest } from '../../redux/actions/chatActions';
+import { fetchChats } from '../../redux/selectors/chatSelectors';
+import { setSidebarIsOpen, setThemeIsLight, toggleTheme } from '../../redux/actions/uiActions';
+import { getThemeIsLight } from '../../redux/selectors/uiSelectors';
 
 import { USER_ID } from '../../utils/constants'
 import '@fortawesome/fontawesome-free/css/all.css';
 import '../../index.scss';
-
-import { fetchChatsRequest } from '../../redux/actions/chatActions';
-import { fetchMessagesRequest } from '../../redux/actions/messageActions';
-import { fetchChatRequest } from '../../redux/actions/chatActions';
-import { fetchChats } from '../../redux/selectors/chatSelectors';
-import ChatEmpty from '../../components/Chat/ChatEmpty';
-import { setSidebarIsOpen, setThemeIsLight, toggleSidebar, toggleTheme } from '../../redux/actions/uiActions';
-import { getSidebarIsOpen, getThemeIsLight } from '../../redux/selectors/uiSelectors';
 
 function Main() {
   const dispatch = useDispatch();
   dispatch(fetchChatsRequest(USER_ID));
 
   const chats = useSelector(fetchChats);
-  const sidebarIsOpen = useSelector(getSidebarIsOpen);
   const themeIsLight = useSelector(getThemeIsLight);
 
   const touchStartX = useRef(0);
   const touchIsDragging = useRef(false);
   const [sidebarChanged, setSidebarChanged] = useState(false);
 
+  const sidebarCrudEvents = {
+    onClickItem: handleOnClickItem,
+    onAddItem: handleOnAddItem,
+    onEditItem: handleOnEditItem,
+    onDeleteItem: handleOnDeleteItem,
+    onClearItems: handleOnClearItems,
+  };
+
+  const sidebarUiEvents = {
+    onToggleTheme: handleOnToggleTheme
+  };
+
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) {
       dispatch(setSidebarIsOpen(true));
       document.body.classList.toggle("native-platform", false);
     }
-  }, [sidebarIsOpen]);
+  }, [dispatch]);
 
   useEffect(() => {
     if (chats && chats.length.length > 0) {
       dispatch(fetchMessagesRequest({ userId: USER_ID, chatIndex: 0 }));
       dispatch(fetchChatRequest({ userId: USER_ID, chatIndex: 0 }));
     }
-  }, [chats])
+  }, [dispatch, chats])
 
   useEffect(() => {
     const savedThemeIsLight = localStorage.getItem("themeIsLight");
@@ -52,7 +63,7 @@ function Main() {
     }
 
     document.body.classList.toggle("theme-dark", !themeIsLight);
-  }, [themeIsLight]);
+  }, [dispatch, themeIsLight]);
 
   useEffect(() => {
     function handleStart(event) {
@@ -91,18 +102,55 @@ function Main() {
       document.removeEventListener('touchmove', handleMove);
       document.removeEventListener('touchend', handleEnd);
     };
-  }, [sidebarChanged]);
+  }, [dispatch, sidebarChanged]);
+
+  function handleOnToggleTheme() {
+    dispatch(toggleTheme);
+    localStorage.setItem("themeIsLight", themeIsLight);
+  };
+
+  function handleOnClickItem(index) {
+    dispatch(fetchChatRequest({ userId: USER_ID, chatIndex: index }));
+  }
+
+  function handleOnAddItem() {
+    dispatch(createChatRequest({ userId: USER_ID, chat: {} }));
+  }
+
+  function handleOnEditItem(index, newTitle) {
+    dispatch(editChatRequest({
+      userId: USER_ID,
+      chatIndex: index,
+      chat: {
+        title: newTitle
+      }
+    }));
+  }
+
+  function handleOnDeleteItem(index) {
+    dispatch(deleteChatRequest({ userId: USER_ID, chatIndex: index }));
+  }
+
+  function handleOnClearItems() {
+    dispatch(deleteChatRequest({ userId: USER_ID }))
+  }
 
   return (
     <div className={`chat ${themeIsLight ? 'theme-light' : 'theme-dark'}`}>
       <Navbar />
       <div className="main">
-        <AlertDialog text="Hello, Chat Unleashed AI is still in early stages. If you have any feedback, please contact us at contact@email.com" />
-        <Sidebar />
-        {chats.length == 0 ? (
-          <ChatEmpty />
-        ) : (
+        <AlertDialog
+          text="Hello, Chat Unleashed AI is still in early stages. If you have any feedback, please contact us at contact@email.com"
+        />
+        <Sidebar
+          items={chats}
+          crudEvents={sidebarCrudEvents}
+          uiEvents={sidebarUiEvents}
+        />
+        {chats && chats.length.length > 0 ? (
           <Chat />
+        ) : (
+          <ChatEmpty />
         )}
       </div>
     </div>

@@ -3,21 +3,10 @@ import PropTypes from 'prop-types';
 import './SidebarItem.scss';
 
 function SidebarItem(props) {
-  const { title, onClick, onDelete, onEdit, index, isSelected } = props;
+  const { title, index, isSelected, crudEvents } = props;
+  const { onClick, onEdit, onDelete } = crudEvents;
   const [editing, setEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
-
-  function handleOnClick() {
-    onClick(index);
-  }
-
-  function handleOnDelete() {
-    onDelete(index);
-  }
-
-  function handleOnEdit() {
-    setEditing(true);
-  }
 
   useEffect(() => {
     if (editing) {
@@ -25,6 +14,10 @@ function SidebarItem(props) {
       input.select();
     }
   }, [editing])
+  
+  function enableEdit() {
+    setEditing(true);
+  }
 
   function handleTitleChange(event) {
     setNewTitle(event.target.value);
@@ -33,6 +26,14 @@ function SidebarItem(props) {
   function handleTitleSubmit() {
     onEdit(index, newTitle);
     setEditing(false);
+  }
+
+  function handleOnDelete() {
+    onDelete(index);
+  }
+
+  function handleOnClick() {
+    onClick(index);
   }
 
   return (
@@ -59,7 +60,7 @@ function SidebarItem(props) {
       )}
       <div className="sidebaritem-buttons">
         {onEdit != null && (
-          <button className="sidebaritem-button-edit" onClick={handleOnEdit}>
+          <button className="sidebaritem-button-edit" onClick={enableEdit}>
             <i className="fas fa-edit sidebar-no-move"></i>
           </button>
         )}
@@ -75,9 +76,11 @@ function SidebarItem(props) {
 
 SidebarItem.propTypes = {
   title: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
   onClick: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  isSelected: PropTypes.bool.isRequired,
 };
 
 export default SidebarItem;
