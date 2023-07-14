@@ -8,12 +8,11 @@ import Navbar from '../../components/Navbar/Navbar';
 import AlertDialog from '../../components/AlertDialog/AlertDialog';
 import ChatEmpty from '../../components/Chat/ChatEmpty';
 
-import { createChatRequest, deleteChatRequest, editChatRequest, fetchChatsRequest } from '../../redux/actions/chatActions';
+import { createChatRequest, deleteChatRequest, editChatRequest, fetchChatsRequest, fetchChatRequest } from '../../redux/actions/chatActions';
 import { fetchMessagesRequest } from '../../redux/actions/messageActions';
-import { fetchChatRequest } from '../../redux/actions/chatActions';
-import { fetchChats } from '../../redux/selectors/chatSelectors';
 import { setSidebarIsOpen, setThemeIsLight, toggleTheme } from '../../redux/actions/uiActions';
 import { getThemeIsLight } from '../../redux/selectors/uiSelectors';
+import { fetchChats } from '../../redux/selectors/chatSelectors';
 
 import { USER_ID } from '../../utils/constants'
 import '@fortawesome/fontawesome-free/css/all.css';
@@ -21,8 +20,6 @@ import '../../index.scss';
 
 function Main() {
   const dispatch = useDispatch();
-  dispatch(fetchChatsRequest(USER_ID));
-
   const chats = useSelector(fetchChats);
   const themeIsLight = useSelector(getThemeIsLight);
 
@@ -31,18 +28,21 @@ function Main() {
   const [sidebarChanged, setSidebarChanged] = useState(false);
 
   const sidebarCrudEvents = {
-    onClickItem: handleOnClickItem,
-    onAddItem: handleOnAddItem,
-    onEditItem: handleOnEditItem,
-    onDeleteItem: handleOnDeleteItem,
-    onClearItems: handleOnClearItems,
+    read: handleOnClickItem,
+    create: handleOnAddItem,
+    update: handleOnEditItem,
+    delete: handleOnDeleteItem,
+    clear: handleOnClearItems,
   };
 
   const sidebarUiEvents = {
-    onToggleTheme: handleOnToggleTheme
+    toggleTheme: handleOnToggleTheme
   };
 
   useEffect(() => {
+    console.log(`fetchChatsRequest`);
+    dispatch(fetchChatsRequest(USER_ID));
+
     if (!Capacitor.isNativePlatform()) {
       dispatch(setSidebarIsOpen(true));
       document.body.classList.toggle("native-platform", false);
@@ -50,13 +50,15 @@ function Main() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (chats && chats.length.length > 0) {
+    console.log(`fetchMessagesRequest`);
+    if (chats && chats.length > 0) {
       dispatch(fetchMessagesRequest({ userId: USER_ID, chatIndex: 0 }));
       dispatch(fetchChatRequest({ userId: USER_ID, chatIndex: 0 }));
     }
-  }, [dispatch, chats])
+  }, [dispatch, chats]);
 
   useEffect(() => {
+    console.log(`setThemeIsLight`);
     const savedThemeIsLight = localStorage.getItem("themeIsLight");
     if (savedThemeIsLight === "true" && !themeIsLight) {
       dispatch(setThemeIsLight(false));
@@ -66,6 +68,8 @@ function Main() {
   }, [dispatch, themeIsLight]);
 
   useEffect(() => {
+    console.log(`setSidebarChanged`);
+
     function handleStart(event) {
       touchIsDragging.current = true;
       touchStartX.current = event.touches[0].pageX;
@@ -105,7 +109,7 @@ function Main() {
   }, [dispatch, sidebarChanged]);
 
   function handleOnToggleTheme() {
-    dispatch(toggleTheme);
+    dispatch(toggleTheme());
     localStorage.setItem("themeIsLight", themeIsLight);
   };
 
@@ -147,7 +151,7 @@ function Main() {
           crudEvents={sidebarCrudEvents}
           uiEvents={sidebarUiEvents}
         />
-        {chats && chats.length.length > 0 ? (
+        {chats && chats.length > 0 ? (
           <Chat />
         ) : (
           <ChatEmpty />

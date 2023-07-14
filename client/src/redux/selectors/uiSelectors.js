@@ -1,2 +1,2 @@
-export const getSidebarIsOpen = (state) => state.ui.sidebar;
-export const getThemeIsLight = (state) => state.ui.theme;
+export const getSidebarIsOpen = (state) => state.ui.sidebarIsOpen;
+export const getThemeIsLight = (state) => state.ui.themeIsLight;

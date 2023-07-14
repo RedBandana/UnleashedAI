@@ -4,7 +4,7 @@ const API_URL = `${process.env.REACT_APP_API_URL}/users/`;
 
 export const fetchChats = async (userId) => {
   try {
-    const response = await axios.fetch(`${API_URL}/${userId}/chats`);
+    const response = await axios.get(`${API_URL}/${userId}/chats`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
@@ -13,7 +13,7 @@ export const fetchChats = async (userId) => {
 
 export const fetchChat = async (userId, chatIndex) => {
   try {
-    const response = await axios.fetch(`${API_URL}/${userId}/chats/${chatIndex}`);
+    const response = await axios.get(`${API_URL}/${userId}/chats/${chatIndex}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);

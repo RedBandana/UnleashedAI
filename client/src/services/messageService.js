@@ -4,7 +4,7 @@ const API_URL = `${process.env.REACT_APP_API_URL}/users/`;
 
 export const fetchMessages = async (userId, chatIndex) => {
   try {
-    const response = await axios.fetch(`${API_URL}/${userId}/chats/${chatIndex}/messages`);
+    const response = await axios.get(`${API_URL}/${userId}/chats/${chatIndex}/messages`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
@@ -13,7 +13,7 @@ export const fetchMessages = async (userId, chatIndex) => {
 
 export const fetchMessage = async (userId, chatIndex, messageIndex) => {
   try {
-    const response = await axios.fetch(`${API_URL}/${userId}/chats/${chatIndex}/messages/${messageIndex}`);
+    const response = await axios.get(`${API_URL}/${userId}/chats/${chatIndex}/messages/${messageIndex}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
@@ -22,7 +22,7 @@ export const fetchMessage = async (userId, chatIndex, messageIndex) => {
 
 export const fetchChoices = async (userId, chatIndex, messageIndex) => {
   try {
-    const response = await axios.fetch(`${API_URL}/${userId}/chats/${chatIndex}/messages/${messageIndex}/choices`);
+    const response = await axios.get(`${API_URL}/${userId}/chats/${chatIndex}/messages/${messageIndex}/choices`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
@@ -31,7 +31,7 @@ export const fetchChoices = async (userId, chatIndex, messageIndex) => {
 
 export const fetchChoice = async (userId, chatIndex, messageIndex, choiceIndex) => {
   try {
-    const response = await axios.fetch(`${API_URL}/${userId}/chats/${chatIndex}/messages/${messageIndex}/choices/${choiceIndex}`);
+    const response = await axios.get(`${API_URL}/${userId}/chats/${chatIndex}/messages/${messageIndex}/choices/${choiceIndex}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);

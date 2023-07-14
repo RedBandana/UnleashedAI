@@ -8,8 +8,6 @@ import { fetchChat } from '../../redux/selectors/chatSelectors';
 import { toggleSidebar } from '../../redux/actions/uiActions';
 import { CHAT_TITLE_CROP_LENGTH } from '../../utils/constants';
 
-
-
 function Navbar() {
   const dispatch = useDispatch();
 
@@ -19,6 +17,8 @@ function Navbar() {
   const [navbarTitle, setNavbarTitle] = useState(false);
   
   useEffect(() => {
+    console.log(`setNavbarTitle`);
+
     if (!chat) {
       return;
     }
@@ -29,9 +29,9 @@ function Navbar() {
     else {
       setNavbarTitle(chat.title);
     }
-  }, [chat.title])
+  }, [chat])
 
-  const handleToggleSidebar = () => {
+  function handleToggleSidebar() {
     dispatch(toggleSidebar());
   }
 

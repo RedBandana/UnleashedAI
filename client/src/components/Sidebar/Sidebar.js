@@ -4,16 +4,12 @@ import { Capacitor } from '@capacitor/core';
 import PropTypes from 'prop-types';
 
 import { getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
-import { setSidebarIsOpen } from '../../redux/actions/uiActions';
 
 import SidebarItem from './SidebarItem';
 import './Sidebar.scss';
 
 function Sidebar(props) {
   const { items, crudEvents, fileEvents, uiEvents } = props;
-  const { onClickItem, onAddItem, onEditItem, onDeleteItem, onClearItems } = crudEvents;
-  const { onSave, onSaveAs, onRead } = fileEvents;
-  const { onToggleTheme } = uiEvents;
 
   const dispatch = useDispatch();
   const sidebarIsOpen = useSelector(getSidebarIsOpen);
@@ -22,6 +18,8 @@ function Sidebar(props) {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
+    console.log(`setSidebarIsOpen s`);
+
     function handleClickOutside(event) {
       if (!Capacitor.isNativePlatform()) {
         return;
@@ -32,7 +30,7 @@ function Sidebar(props) {
         (event.target.parentElement == null || event.target.parentElement.className.includes("sidebar-no-move-parent") === false);
 
       if (isOutsideSideBar || canMoveSidebar) {
-        dispatch(setSidebarIsOpen(false));
+        // dispatch(setSidebarIsOpen(false));
       }
     }
 
@@ -44,40 +42,40 @@ function Sidebar(props) {
   }, [dispatch]);
 
   function handleOnAddItem() {
-    onAddItem();
+    crudEvents.create();
   }
 
   function handleOnClickItem(index) {
-    onClickItem(index);
+    crudEvents.read(index);
     setSelectedIndex(index);
   }
 
-  function handleOnDeleteItem(index) {
-    onDeleteItem(index);
-  }
-
   function handleOnEditItem(index, newTitle) {
-    onEditItem(index, newTitle);
+    crudEvents.update(index, newTitle);
   }
 
-  function handleOnRead(event) {
-    onRead(event.target.files[0])
-  }
-
-  function handleOnSave() {
-    onSave();
-  }
-
-  function handleOnSaveAs() {
-    onSaveAs();
+  function handleOnDeleteItem(index) {
+    crudEvents.delete(index);
   }
 
   function handleOnClearItems() {
-    onClearItems();
+    crudEvents.clear();
+  }
+
+  function handleOnOpen(event) {
+    fileEvents?.onRead(event.target.files[0])
+  }
+
+  function handleOnSave() {
+    fileEvents?.onSave();
+  }
+
+  function handleOnSaveAs() {
+    fileEvents?.onSaveAs();
   }
 
   function handleOnToggleTheme() {
-    onToggleTheme();
+    uiEvents?.toggleTheme();
   }
 
   return (
@@ -85,20 +83,32 @@ function Sidebar(props) {
       <div className="sidebar-body">
         <div className='sidebar-filestream-container sidebar-no-move-parent'>
           <div className="sidebar-add-button" onClick={handleOnAddItem}>+ New chat</div>
-          <div className='sidebar-filestream-options sidebar-filestream-save hide'>
-            <button onClick={handleOnSave}>
-              <div className="fas fa-save"></div>
-            </button>
-          </div>
-          <div className='sidebar-filestream-options sidebar-filestream-saveas'>
-            <button onClick={handleOnSaveAs}>
-              <div className="fas fa-file-download"></div>
-            </button>
-          </div>
-          <label className='sidebar-filestream-options sidebar-filestream-open'>
-            <input className='hide' type="file" onChange={handleOnRead} />
-            <div className="fas fa-folder-open"></div>
-          </label>
+          {
+            uiEvents?.save && (
+              <div className='sidebar-filestream-options sidebar-filestream-save hide'>
+                <button onClick={handleOnSave}>
+                  <div className="fas fa-save"></div>
+                </button>
+              </div>
+            )
+          }
+          {
+            uiEvents?.saveAs && (
+              <div className='sidebar-filestream-options sidebar-filestream-saveas'>
+                <button onClick={handleOnSaveAs}>
+                  <div className="fas fa-file-download"></div>
+                </button>
+              </div>
+            )
+          }
+          {
+            uiEvents?.open && (
+              <label className='sidebar-filestream-options sidebar-filestream-open'>
+                <input className='hide' type="file" onChange={handleOnOpen} />
+                <div className="fas fa-folder-open"></div>
+              </label>
+            )
+          }
         </div>
         <div className="sidebar-list">
           {items.map((item, index) => (
@@ -125,15 +135,22 @@ function Sidebar(props) {
 }
 
 Sidebar.propTypes = {
-  onClickItem: PropTypes.func.isRequired,
-  onAddItem: PropTypes.func.isRequired,
-  onEditItem: PropTypes.func.isRequired,
-  onDeleteItem: PropTypes.func.isRequired,
-  onClearItems: PropTypes.func.isRequired,
-  onSave: PropTypes.func.isRequired,
-  onSaveAs: PropTypes.func.isRequired,
-  onRead: PropTypes.func.isRequired,
-  onToggleTheme: PropTypes.func.isRequired,
+  crudEvents: PropTypes.shape({
+    create: PropTypes.func.isRequired,
+    read: PropTypes.func.isRequired,
+    update: PropTypes.func.isRequired,
+    delete: PropTypes.func.isRequired,
+    clear: PropTypes.func.isRequired,
+  }).isRequired,
+  fileEvents: PropTypes.shape({
+    save: PropTypes.func,
+    saveAs: PropTypes.func,
+    open: PropTypes.func,
+  }),
+  uiEvents: PropTypes.shape({
+    toggleTheme: PropTypes.func,
+  }),
+  items: PropTypes.array.isRequired,
 };
 
 export default Sidebar;
