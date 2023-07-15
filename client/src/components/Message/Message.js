@@ -41,35 +41,13 @@ const Message = ({ message, index, onDelete, onSelectChoice }) => {
   const timestamp = moment(message.timestamp).format("h:mm A");
   const optionsRef = useRef(null);
 
-  const handleOptionsClick = () => {
-    setShowOptions(!showOptions);
-  };
-
-  const handleDeleteClick = () => {
-    onDelete(index);
-    setShowOptions(false);
-  };
-
-  const handleCopyClick = async () => {
-    await Clipboard.write({ string: message.content });
-    setShowOptions(false);
-  }
-
-  const handleClickOutside = (event) => {
-    if (optionsRef.current && !optionsRef.current.contains(event.target)
-      && event.target.className !== "chat-message-options-container") {
-      setShowOptions(false);
-    }
-  };
-
-  const handlePrevClick = () => {
-    onSelectChoice(index, Math.max(message.choiceIndex - 1, 0));
-  };
-
-  const handleNextClick = () => {
-    onSelectChoice(index, Math.min(message.choiceIndex + 1, message.choiceCount - 1));
-  };
-
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  
   useEffect(() => {
     // Call Prism.highlightAll() after rendering the Markdown content
     Prism.highlightAll();
@@ -101,13 +79,41 @@ const Message = ({ message, index, onDelete, onSelectChoice }) => {
       list.classList.add('markdown-list');
     });
   }, [index, message]);
+  
+  function handleOptionsClick() {
+    setShowOptions(!showOptions);
+  };
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  function handleDeleteClick() {
+    onDelete(index);
+    setShowOptions(false);
+  };
+
+  async function handleCopyClick() {
+    await Clipboard.write({ string: message.content });
+    setShowOptions(false);
+  }
+
+  function handleClickOutside(event) {
+    if (optionsRef.current && !optionsRef.current.contains(event.target)
+      && event.target.className !== "chat-message-options-container") {
+      setShowOptions(false);
+    }
+  };
+
+  function handlePrevClick() {
+    trySendSelectChoice(message.choiceIndex - 1);
+  };
+
+  function handleNextClick() {
+    trySendSelectChoice(message.choiceIndex + 1);
+  };
+
+  function trySendSelectChoice(choiceIndex) {
+    if (choiceIndex >= 0 && choiceIndex < message.choiceCount) {
+      onSelectChoice(index, choiceIndex);
+    }
+  }
 
   return (
     <div className={`chat-message ${messageClass}`}>
