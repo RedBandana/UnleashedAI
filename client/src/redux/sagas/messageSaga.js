@@ -79,12 +79,12 @@ function* fetchChoiceSaga(action) {
 
 function* createMessageSaga(action) {
   try {
-    const { message, userId, chatIndex } = action.payload;
+    const { userId, chatIndex, message } = action.payload;
     const newMessage = yield call(
       messageService.createMessage,
-      message,
       userId,
-      chatIndex
+      chatIndex,
+      message
     );
     yield put(messageActions.createMessageSuccess(newMessage));
   } catch (error) {

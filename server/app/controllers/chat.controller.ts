@@ -6,7 +6,7 @@ import { Converter } from '@app/utils/converter';
 import { Controller } from './base.controller';
 import { ChatUtils } from '@app/utils/chat.utils';
 import { UserPipeline } from '@app/db-models/dto/user.dto';
-import { IChatLean } from '@app/db-models/chat';
+import { IChatLean, IMessageRequest } from '@app/db-models/chat';
 
 export class ChatController {
 
@@ -82,6 +82,10 @@ export class ChatController {
                 const messageNo = Number(messageIndex);
                 const choiceNo = Number(choiceIndex);
                 const message: any = await userService.getMessageByIndex(userId, chatNo, messageNo);
+                
+                message.choiceIndex = choiceNo;
+                await userService.updateMessageChoice(userId, chatNo, messageNo, choiceNo);
+                
                 const choice = message.choices[choiceNo];
                 Controller.handleGetResponse(res, choice);
             } catch (error) {
@@ -115,9 +119,9 @@ export class ChatController {
             try {
                 const { userId, chatIndex } = req.params;
                 const chatNo = Number(chatIndex);
-                const userContent: string = req.body;
-                const userMessage = await userService.createMessage(userId, chatNo, userContent);
 
+                const userContent: IMessageRequest = req.body;
+                const userMessage = await userService.createMessage(userId, chatNo, userContent.content);
                 //user socket emit
 
                 const chat = await userService.getChatByIndex(userId, chatNo);

@@ -17,12 +17,16 @@ function TextInput(props) {
     const [inputValue, setInputValue] = useState('');
 
     useEffect(() => {
-        handleOnInputChange();
-    }, [])
+        updateButtonDisplay();
+        resizeTextAreaHeight();
+    }, [inputValue])
 
     function handleKeyDown(event) {
-        if (event.key === "Enter") {
-            const isNative = Capacitor.isNativePlatform();
+        if (event.key !== "Enter") {
+            return;
+        }
+
+        const isNative = Capacitor.isNativePlatform();
             const doLineBreak = (isNative && !event.shiftKey) || (!isNative && event.shiftKey);
 
             if (doLineBreak) {
@@ -39,7 +43,6 @@ function TextInput(props) {
             else {
                 handleSubmit(event);
             }
-        }
     }
 
     function updateButtonDisplay() {
@@ -57,15 +60,14 @@ function TextInput(props) {
     function handleSubmit(event) {
         event.preventDefault();
 
-        if (canSubmit()) {
+        if (canSubmit(inputValue)) {
             onSubmit(inputValue);
             emptyTextArea();
         }
     }
 
     function handleOnInputChange() {
-        updateButtonDisplay();
-        resizeTextAreaHeight();
+        setInputValue(textareaRef.current.value);
     }
 
     function handleToggleSettings() {

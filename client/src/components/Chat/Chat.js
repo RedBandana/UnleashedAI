@@ -20,10 +20,10 @@ function Chat(props) {
     const [messagesHtml, setMessagesHtml] = useState([]);
     const [messageReceived, setMessageReceived] = useState(false);
     const [messageDeletedIndex, setMessageDeletedIndex] = useState(-1);
-    
+
     const chatBodyRef = useRef(null);
     const settingsRef = useRef(null);
-    
+
     const sidebarIsOpen = useSelector(getSidebarIsOpen);
     const settingsIsOpen = useSelector(getSettingsIsOpen);
     const formSettings = useSelector(getSettings);
@@ -55,7 +55,7 @@ function Chat(props) {
         if (!messages) {
             return;
         }
-        
+
         if (messageReceived) {
             addMessageHtmlToDisplay();
         }
@@ -75,7 +75,7 @@ function Chat(props) {
 
     function setMessagesHtmlToDisplay() {
         const htmlToDisplay = messages.map((message, index) => (
-            <Message key={index} index={index} message={message} onDelete={handleDelete} />
+            <Message key={index} index={index} message={message} onDelete={crudEvents.onDelete} onSelectChoice={handleOnSelectChoice} />
         ));
         setMessagesHtml(htmlToDisplay);
     }
@@ -83,30 +83,21 @@ function Chat(props) {
     function addMessageHtmlToDisplay() {
         const messageIndex = messages.length - 1;
         const message = messages[messageIndex];
-        const newMessageHtml = <Message key={messageIndex} index={messageIndex} message={message} onDelete={handleDelete} />
+        const newMessageHtml = <Message key={messageIndex} index={messageIndex} message={message} onDelete={crudEvents.onDelete} onSelectChoice={handleOnSelectChoice} />
         setMessagesHtml(prevMessages => [...prevMessages, newMessageHtml]);
     }
 
     function handleCanAdd(inputValue) {
-        if (inputValue.trim() === '') {
+        if (messageLoading || inputValue.trim() === '') {
             return false;
         }
-        return !messageLoading;
+        return true;
     }
 
     function handleAdd(inputValue) {
-        const userMessage = {
-            texts: [inputValue.trim()],
-            isUser: true,
-            timestamp: new Date()
-        };
-
-        crudEvents.onCreate(index, userMessage);
+        const message = { content: inputValue.trim() }
+        crudEvents.onCreate(index, message);
     };
-
-    function handleDelete(messageIndex) {
-        crudEvents.onDelete(index, messageIndex)
-    }
 
     function handleSettingsSave(settings) {
         crudEvents.onSettingsUpdate(index, settings);
@@ -118,6 +109,10 @@ function Chat(props) {
             dispatch(setSettingsIsOpen(false));
         }
     };
+
+    function handleOnSelectChoice(messageIndex, choiceIndex) {
+        crudEvents.onSelectChoice(index, messageIndex, choiceIndex);
+    }
 
     function scrollToBottom(behavior) {
         chatBodyRef.current.scrollTo({

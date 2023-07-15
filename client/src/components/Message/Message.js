@@ -34,9 +34,8 @@ import 'prismjs/components/prism-swift';
 import 'prismjs/components/prism-uri';
 import 'prismjs/components/prism-yaml';
 
-const Message = ({ message, onDelete, index }) => {
+const Message = ({ message, index, onDelete, onSelectChoice }) => {
   const [showOptions, setShowOptions] = useState(false);
-  const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const messageClass = message.isUser ? "chat-message-user" : "chat-message-bot";
   const textClass = message.isUser ? "chat-message-text-user" : "chat-message-text-bot";
   const timestamp = moment(message.timestamp).format("h:mm A");
@@ -52,9 +51,7 @@ const Message = ({ message, onDelete, index }) => {
   };
 
   const handleCopyClick = async () => {
-    await Clipboard.write({
-      string: message.texts[currentTextIndex]
-    });
+    await Clipboard.write({ string: message.content });
     setShowOptions(false);
   }
 
@@ -66,11 +63,11 @@ const Message = ({ message, onDelete, index }) => {
   };
 
   const handlePrevClick = () => {
-    setCurrentTextIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+    onSelectChoice(index, Math.max(message.choiceIndex - 1, 0));
   };
 
   const handleNextClick = () => {
-    setCurrentTextIndex((prevIndex) => Math.min(prevIndex + 1, message.texts.length - 1));
+    onSelectChoice(index, Math.min(message.choiceIndex + 1, message.choiceCount - 1));
   };
 
   useEffect(() => {
@@ -103,7 +100,7 @@ const Message = ({ message, onDelete, index }) => {
     lists.forEach((list) => {
       list.classList.add('markdown-list');
     });
-  }, [index, message, currentTextIndex]);
+  }, [index, message]);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -117,25 +114,33 @@ const Message = ({ message, onDelete, index }) => {
       <div className={`chat-message-container ${textClass}`}>
         <div className={`chat-message-bubble ${textClass}`}>
           <div className="chat-message-text" id={`chat-message-${index}`}>
-            <ReactMarkdown children={message.texts[currentTextIndex]} remarkPlugins={[remarkGfm]} />
+            <ReactMarkdown children={message.content} remarkPlugins={[remarkGfm]} />
           </div>
-          {message.texts.length > 1 && (
+          {message.choiceCount > 1 && (
             <div className={`chat-message-controls-container ${textClass}`}>
-              <button className="chat-message-control" onClick={handlePrevClick} disabled={currentTextIndex === 0}>
+              <button className="chat-message-control" onClick={handlePrevClick} disabled={message.choiceIndex === 0}>
                 <i className="fa fa-chevron-left"></i>
               </button>
               <div className="chat-message-dots-container">
-                {message.texts.map((text, index) => (
-                  <div
-                    key={index}
-                    className={`chat-message-dot ${index === currentTextIndex ? "chat-message-dot-active" : ""}`}
-                  ></div>
-                ))}
+                {
+                  (() => {
+                    const dots = [];
+                    for (let i = 0; i < message.choiceCount; i++) {
+                      dots.push(
+                        <div
+                          key={i}
+                          className={`chat-message-dot ${i === message.choiceIndex ? "chat-message-dot-active" : ""}`}
+                        ></div>
+                      );
+                    }
+                    return dots;
+                  })()
+                }
               </div>
               <button
                 className="chat-message-control"
                 onClick={handleNextClick}
-                disabled={currentTextIndex === message.texts.length - 1}
+                disabled={message.choiceIndex === message.choiceCount - 1}
               >
                 <i className="fa fa-chevron-right"></i>
               </button>
@@ -159,15 +164,6 @@ const Message = ({ message, onDelete, index }) => {
       </div>
     </div>
   );
-};
-
-Message.propTypes = {
-  message: PropTypes.shape({
-    texts: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
-    isUser: PropTypes.bool.isRequired,
-    timestamp: PropTypes.number.isRequired,
-  }).isRequired,
-  onDelete: PropTypes.func.isRequired,
 };
 
 export default Message;

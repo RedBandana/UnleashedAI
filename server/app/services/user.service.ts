@@ -103,6 +103,16 @@ export class UserService extends DBCollectionService {
         return newChat;
     }
 
+    async updateMessageChoice(userId: string, chatIndex: number, messageIndex: number, choiceIndex: number): Promise<void> {
+        const updateOperations: any = {};
+        updateOperations[`chats.${chatIndex}.messages.${messageIndex}.choiceIndex`] = choiceIndex;
+        this.query = this.model.updateOne(
+            { _id: userId },
+            { $set: updateOperations }
+        );
+        await this.query.lean().exec();
+    }
+
     async createMessage(userId: string, chatIndex: number, content: string): Promise<IMessageUser> {
         const message: IMessageUser = { content: content, isUser: true, creationTime: new Date() }
         this.query = this.model.updateOne(

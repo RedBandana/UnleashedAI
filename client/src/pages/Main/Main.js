@@ -9,7 +9,7 @@ import AlertDialog from '../../components/AlertDialog/AlertDialog';
 import ChatEmpty from '../../components/Chat/ChatEmpty';
 
 import { createChatRequest, deleteChatRequest, editChatRequest, fetchChatsRequest, fetchChatRequest, clearChatsRequest } from '../../redux/actions/chatActions';
-import { createMessageRequest, deleteMessageRequest, fetchMessagesRequest } from '../../redux/actions/messageActions';
+import { createMessageRequest, deleteMessageRequest, fetchChoiceRequest, fetchMessagesRequest } from '../../redux/actions/messageActions';
 import { setChatSelectedIndex, setSidebarIsOpen, setThemeIsLight, toggleTheme } from '../../redux/actions/uiActions';
 import { getChatSelectedIndex, getThemeIsLight } from '../../redux/selectors/uiSelectors';
 import { createChatValue, deleteChatValue, fetchChatValue, fetchChatsValue } from '../../redux/selectors/chatSelectors';
@@ -17,6 +17,7 @@ import { createChatValue, deleteChatValue, fetchChatValue, fetchChatsValue } fro
 import { USER_ID } from '../../utils/constants'
 import '@fortawesome/fontawesome-free/css/all.css';
 import '../../index.scss';
+import { fetchMessagesValue } from '../../redux/selectors/messageSelectors';
 
 function Main() {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ function Main() {
   const chat = useSelector(fetchChatValue);
   const chatDeleted = useSelector(deleteChatValue);
   const chatCreated = useSelector(createChatValue);
+  const messages = useSelector(fetchMessagesValue);
 
   const chatSelectedIndex = useSelector(getChatSelectedIndex);
   const themeIsLight = useSelector(getThemeIsLight);
@@ -45,24 +47,21 @@ function Main() {
 
   useEffect(() => {
     if (!isInitialized && chats?.length > 0) {
-      dispatch(fetchMessagesRequest({ userId: USER_ID, chatIndex: 0 }));
-      dispatch(fetchChatRequest({ userId: USER_ID, chatIndex: 0 }));
+      dispatchDisplayInfo(0);
       setIsInitialize(true);
     }
   }, [chats]);
 
   useEffect(() => {
     if (chats.length > 0 && chatDeleted) {
-      dispatch(fetchChatRequest({ userId: USER_ID, chatIndex: 0 }));
-      dispatch(setChatSelectedIndex(0));
+      dispatchDisplayInfo(0);
     }
   }, [chatDeleted])
 
   useEffect(() => {
     if (chats.length > 0 && chatCreated) {
       const chatIndex = chats.length - 1;
-      dispatch(fetchChatRequest({ userId: USER_ID, chatIndex: chatIndex }));
-      dispatch(setChatSelectedIndex(chatIndex));
+      dispatchDisplayInfo(chatIndex);
     }
   }, [chatCreated])
 
@@ -113,6 +112,12 @@ function Main() {
       document.removeEventListener('touchend', handleEnd);
     };
   }, [sidebarChanged]);
+
+  function dispatchDisplayInfo(chatIndex) {
+    dispatch(fetchChatRequest({ userId: USER_ID, chatIndex: chatIndex }));
+    dispatch(fetchMessagesRequest({ userId: USER_ID, chatIndex: chatIndex }));
+    dispatch(setChatSelectedIndex(chatIndex));
+  }
 
   function handleOnToggleTheme() {
     dispatch(toggleTheme());
@@ -171,6 +176,15 @@ function Main() {
     }))
   }
 
+  function handleOnSelectChoice(chatIndex, messageIndex, choiceIndex) {
+    dispatch(fetchChoiceRequest({
+      userId: USER_ID,
+      chatIndex: chatIndex,
+      messageIndex: messageIndex,
+      choiceIndex: choiceIndex
+    }))
+  }
+
   const sidebarCrudEvents = {
     onCreate: handleOnAddItem,
     onRead: handleOnClickItem,
@@ -187,6 +201,7 @@ function Main() {
     onSettingsUpdate: handleOnEditSettings,
     onCreate: handleOnSendMessage,
     onDelete: handleOnDeleteMessage,
+    onSelectChoice: handleOnSelectChoice,
   }
 
   return (
@@ -205,10 +220,10 @@ function Main() {
             />
           )
         }
-        {chat && chats.length > 0 ? (
+        {messages && chats.length > 0 ? (
           <Chat
             index={chatSelectedIndex}
-            messages={chat.messages}
+            messages={messages}
             crudEvents={chatCrudEvents}
           />
         ) : (

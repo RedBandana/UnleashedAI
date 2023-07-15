@@ -38,9 +38,9 @@ export const fetchChoice = async (userId, chatIndex, messageIndex, choiceIndex) 
   }
 };
 
-export const createMessage = async (payload, userId, chatIndex, userChoices) => {
+export const createMessage = async (userId, chatIndex, message) => {
   try {
-    const response = await axios.post(`${API_URL}/${userId}/chats/${chatIndex}/messages`, userChoices);
+    const response = await axios.post(`${API_URL}/${userId}/chats/${chatIndex}/messages`, message);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
