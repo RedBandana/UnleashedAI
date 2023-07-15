@@ -19,3 +19,7 @@ export const createChatFailure = createAction('CREATE_CHAT_FAILURE');
 export const deleteChatRequest = createAction('DELETE_CHAT_REQUEST');
 export const deleteChatSuccess = createAction('DELETE_CHAT_SUCCESS');
 export const deleteChatFailure = createAction('DELETE_CHAT_FAILURE');
+
+export const clearChatsRequest = createAction('CLEAR_CHATS_REQUEST');
+export const clearChatsSuccess = createAction('CLEAR_CHATS_SUCCESS');
+export const clearChatsFailure = createAction('CLEAR_CHATS_FAILURE');

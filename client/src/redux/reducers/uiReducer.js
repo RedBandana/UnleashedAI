@@ -3,8 +3,10 @@ import * as actions from '../actions/uiActions';
 
 const initialState = {
   sidebarIsOpen: false,
+  settingsIsOpen: false,
+  settings: null,
   themeIsLight: true,
-  settingsIsOpen: true,
+  chatSelectedIndex: 0,
 };
 
 const uiReducer = handleActions(
@@ -27,11 +29,19 @@ const uiReducer = handleActions(
     }),
     [actions.toggleSettings]: (state) => ({
       ...state,
-      settingsIsOpen: !state.themeIsLight,
+      settingsIsOpen: !state.settingsIsOpen,
     }),
     [actions.setSettingsIsOpen]: (state, { payload }) => ({
       ...state,
       settingsIsOpen: payload,
+    }),
+    [actions.setSettings]: (state, { payload }) => ({
+      ...state,
+      settings: payload,
+    }),
+    [actions.setChatSelectedIndex]: (state, { payload }) => ({
+      ...state,
+      chatSelectedIndex: payload,
     }),
   },
   initialState

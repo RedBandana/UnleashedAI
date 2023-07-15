@@ -1,64 +1,49 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setSettingsIsOpen } from "../../redux/actions/uiActions";
-import { fetchChat } from "../../redux/selectors/chatSelectors";
-import PropTypes from "prop-types";
+
+import { setSettings } from "../../redux/actions/uiActions";
+import { fetchChatValue } from "../../redux/selectors/chatSelectors";
+import { getSettings } from "../../redux/selectors/uiSelectors";
 
 import { parseToRightType } from "../../utils/functions";
 import "./Settings.scss";
 
 const Settings = (props) => {
-    const { onSave } = props;
-
-    const [formSettings, setFormSettings] = useState(null);
 
     const dispatch = useDispatch();
-    const chat = useSelector(fetchChat);
+    const chat = useSelector(fetchChatValue);
+    const formSettings = useSelector(getSettings);
+
+    const [isInitialized, setIsInitialize] = useState(false);
 
     useEffect(() => {
-        if (!chat) {
-            return;
+        if (!isInitialized && chat) {
+            dispatch(setSettings(chat.settings));
+            setIsInitialize(true);
         }
-
-        setFormSettings(chat.settings);
     }, [chat])
-
-    function handleFormSubmit(event) {
-        event.preventDefault();
-        handleSettingsSave(formSettings);
-    };
 
     function handleInputChange(event) {
         const { name, value } = event.target;
         const finalValue = parseToRightType(formSettings, name, value);
-
-        setFormSettings((prevState) => ({
-            ...prevState,
-            [name]: finalValue,
-        }));
+        const finalSettings = { ...formSettings, [name]: finalValue }
+        dispatch(setSettings(finalSettings));
     };
 
     function handleCheckboxChange(event) {
         const { name, checked } = event.target;
-        setFormSettings((prevState) => ({
-            ...prevState,
-            [name]: checked,
-        }));
+        const finalSettings = { ...formSettings, [name]: checked }
+        dispatch(setSettings(finalSettings));
     }
-    
-    function handleSettingsClose() {
-        handleSettingsSave(formSettings);
-        dispatch(setSettingsIsOpen(false));
-    };
-    
-    function handleSettingsSave(newSettings) {
-        onSave(newSettings);
-    };
+
+    if (!formSettings) {
+        return;
+    }
 
     return (
         <div className="settings-dialog">
             <div className="settings-body">
-                <form onSubmit={handleFormSubmit}>
+                <form>
                     <div className="setting-inputs">
                         <div className="setting-item">
                             <label htmlFor="system">Role</label>
@@ -87,30 +72,30 @@ const Settings = (props) => {
                             </div>
                         </div>
                         <div className="setting-item">
-                            <label htmlFor="maxTokens">Max Words</label>
+                            <label htmlFor="max_tokens">Max Words</label>
                             <div className="input-container">
                                 <input
                                     type="number"
-                                    id="maxTokens"
-                                    name="maxTokens"
+                                    id="max_tokens"
+                                    name="max_tokens"
                                     min="0"
                                     max="4096"
-                                    value={formSettings.maxTokens}
+                                    value={formSettings.max_tokens}
                                     onChange={handleInputChange}
                                 />
                             </div>
                         </div>
                         <div className="setting-item">
-                            <label htmlFor="quantity">Answers</label>
+                            <label htmlFor="n">Answers</label>
                             <div className="input-container">
                                 <input
                                     type="number"
-                                    id="quantity"
-                                    name="quantity"
+                                    id="n"
+                                    name="n"
                                     step="1"
                                     min="1"
                                     max="10"
-                                    value={formSettings.quantity}
+                                    value={formSettings.n}
                                     onChange={handleInputChange}
                                 />
                             </div>
@@ -145,18 +130,6 @@ const Settings = (props) => {
                                 />
                             </div>
                         </div>
-                        <div className="setting-item hide">
-                            <label htmlFor="user">User</label>
-                            <div className="input-container">
-                                <input
-                                    type="text"
-                                    id="user"
-                                    name="user"
-                                    value={formSettings.user}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                        </div>
                         <div className="setting-item dev-options">
                             <label htmlFor="devOptions">Show Developer Options</label>
                             <div className="input-container">
@@ -174,16 +147,16 @@ const Settings = (props) => {
                                 <a href="https://platform.openai.com/docs/api-reference/chat" target="_blank" rel="noopener noreferrer">Documentation</a>
                             </div>
                             <div className="setting-item">
-                                <label htmlFor="topP">Top P</label>
+                                <label htmlFor="top_p">Top P</label>
                                 <div className="input-container">
                                     <input
                                         type="number"
-                                        id="topP"
-                                        name="topP"
+                                        id="top_p"
+                                        name="top_p"
                                         step="0.1"
                                         min="0.1"
                                         max="1.0"
-                                        value={formSettings.topP}
+                                        value={formSettings.top_p}
                                         onChange={handleInputChange}
                                     />
                                 </div>
@@ -213,70 +186,41 @@ const Settings = (props) => {
                                 </div>
                             </div>
                             <div className="setting-item">
-                                <label htmlFor="presencePenalty">Presence Penalty</label>
+                                <label htmlFor="presence_penalty">Presence Penalty</label>
                                 <div className="input-container">
                                     <input
                                         type="number"
-                                        id="presencePenalty"
-                                        name="presencePenalty"
+                                        id="presence_penalty"
+                                        name="presence_penalty"
                                         step="0.1"
                                         min="-2.0"
                                         max="2.0"
-                                        value={formSettings.presencePenalty}
+                                        value={formSettings.presence_penalty}
                                         onChange={handleInputChange}
                                     />
                                 </div>
                             </div>
                             <div className="setting-item">
-                                <label htmlFor="frequencyPenalty">Frequency Penalty</label>
+                                <label htmlFor="frequency_penalty">Frequency Penalty</label>
                                 <div className="input-container">
                                     <input
                                         type="number"
-                                        id="frequencyPenalty"
-                                        name="frequencyPenalty"
+                                        id="frequency_penalty"
+                                        name="frequency_penalty"
                                         step="0.1"
                                         min="-2.0"
                                         max="2.0"
-                                        value={formSettings.frequencyPenalty}
+                                        value={formSettings.frequency_penalty}
                                         onChange={handleInputChange}
                                     />
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div className="settings-buttons">
-                        <button className="settings-cancel-button" onClick={handleSettingsClose}>
-                            <i className="fa fa-times"></i>
-                        </button>
-                        <button className="settings-save-button hide" type="submit">
-                            <i className="fa fa-save"></i>
-                        </button>
-                    </div>
                 </form>
             </div>
         </div>
     );
-};
-
-Settings.propTypes = {
-    settings: PropTypes.shape({
-        model: PropTypes.string.isRequired,
-        system: PropTypes.string.isRequired,
-        temperature: PropTypes.number.isRequired,
-        memory: PropTypes.number.isRequired,
-        topP: PropTypes.number.isRequired,
-        quantity: PropTypes.number.isRequired,
-        stream: PropTypes.bool.isRequired,
-        stop: PropTypes.string.isRequired,
-        maxTokens: PropTypes.number.isRequired,
-        presencePenalty: PropTypes.number.isRequired,
-        frequencyPenalty: PropTypes.number.isRequired,
-        user: PropTypes.string.isRequired,
-        devOptions: PropTypes.bool.isRequired
-    }).isRequired,
-    onSave: PropTypes.func.isRequired,
-    onClose: PropTypes.func.isRequired,
 };
 
 export default Settings;

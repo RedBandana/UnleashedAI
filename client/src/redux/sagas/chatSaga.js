@@ -1,7 +1,7 @@
 import { takeLatest, select, call, put } from 'redux-saga/effects';
+import { fetchChatsValue } from '../selectors/chatSelectors';
 import * as chatActions from '../actions/chatActions';
 import * as chatService from '../../services/chatService';
-import * as selectors from '../selectors/chatSelectors';
 
 function* fetchChatsSaga(action) {
   try {
@@ -16,17 +16,8 @@ function* fetchChatsSaga(action) {
 function* fetchChatSaga(action) {
   try {
     const { userId, chatIndex } = action.payload;
-    const chat = yield select(selectors.fetchChat);
-
-    if (chat && chat.id === chatIndex) {
-      yield put(chatActions.fetchChatSuccess(chat));
-      return;
-    }
-
-    const response = yield call(chatService.fetchChat, userId, chatIndex);
-    const chatData = response.data;
-
-    yield put(chatActions.fetchChatSuccess(chatData));
+    const chat = yield call(chatService.fetchChat, userId, chatIndex);
+    yield put(chatActions.fetchChatSuccess(chat));
   } catch (error) {
     yield put(chatActions.fetchChatFailure(error.message));
   }
@@ -35,8 +26,19 @@ function* fetchChatSaga(action) {
 function* editChatSaga(action) {
   try {
     const { chat, userId, chatIndex } = action.payload;
-    const editedChat = yield call(chatService.editChat, chat, userId, chatIndex);
-    yield put(chatActions.editChatSuccess(editedChat));
+    const editedChat = yield call(chatService.editChat, userId, chatIndex, chat);
+    yield put(chatActions.fetchChatSuccess(editedChat));
+    
+    const chats = yield select(fetchChatsValue);
+    const newChats = [...chats];
+    const updatedChat = {
+      ...newChats[chatIndex],
+      title: editedChat.title
+    };
+    newChats[chatIndex] = updatedChat;
+    yield put(chatActions.fetchChatsSuccess(newChats));
+
+    yield put(chatActions.editChatSuccess());
   } catch (error) {
     yield put(chatActions.editChatFailure(error.message));
   }
@@ -44,8 +46,8 @@ function* editChatSaga(action) {
 
 function* createChatSaga(action) {
   try {
-    const { chat, userId } = action.payload;
-    const newChat = yield call(chatService.createChat, chat, userId);
+    const { userId } = action.payload;
+    const newChat = yield call(chatService.createChat, userId);
     yield put(chatActions.createChatSuccess(newChat));
   } catch (error) {
     yield put(chatActions.createChatFailure(error.message));
@@ -56,9 +58,25 @@ function* deleteChatSaga(action) {
   try {
     const { userId, chatIndex } = action.payload;
     yield call(chatService.deleteChat, userId, chatIndex);
+    
+    const chats = yield select(fetchChatsValue);
+    const newChats = [...chats];
+    newChats.splice(chatIndex, 1);
+    yield put(chatActions.fetchChatsSuccess(newChats));
+
     yield put(chatActions.deleteChatSuccess());
   } catch (error) {
     yield put(chatActions.deleteChatFailure(error.message));
+  }
+}
+
+function* clearChatsSaga(action) {
+  try {
+    const { userId } = action.payload;
+    yield call(chatService.clearChats, userId);
+    yield put(chatActions.clearChatsSuccess());
+  } catch (error) {
+    yield put(chatActions.clearChatsFailure(error.message));
   }
 }
 
@@ -68,6 +86,7 @@ function* chatSaga() {
   yield takeLatest(chatActions.editChatRequest().type, editChatSaga);
   yield takeLatest(chatActions.createChatRequest().type, createChatSaga);
   yield takeLatest(chatActions.deleteChatRequest().type, deleteChatSaga);
+  yield takeLatest(chatActions.clearChatsRequest().type, clearChatsSaga);
 }
 
 export default chatSaga;

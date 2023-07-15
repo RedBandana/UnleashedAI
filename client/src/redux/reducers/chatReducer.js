@@ -10,10 +10,14 @@ const initialState = {
   chatError: null,
   editChatLoading: false,
   editChatError: null,
+  createChat: false,
   createChatLoading: false,
   createChatError: null,
+  deleteChat: false,
   deleteChatLoading: false,
   deleteChatError: null,
+  clearChatsLoading: false,
+  clearChatsError: null,
 };
 
 const chatReducer = handleActions(
@@ -55,9 +59,8 @@ const chatReducer = handleActions(
       editChatLoading: true,
       editChatError: null,
     }),
-    [action.editChatSuccess]: (state, { payload }) => ({
+    [action.editChatSuccess]: (state) => ({
       ...state,
-      chat: payload,
       editChatLoading: false,
       editChatError: null,
     }),
@@ -68,34 +71,57 @@ const chatReducer = handleActions(
     }),
     [action.createChatRequest]: (state) => ({
       ...state,
+      createChat: false,
       createChatLoading: true,
       createChatError: null,
     }),
     [action.createChatSuccess]: (state, { payload }) => ({
       ...state,
       chats: [...state.chats, payload],
+      createChat: true,
       createChatLoading: false,
       createChatError: null,
     }),
     [action.createChatFailure]: (state, { payload }) => ({
       ...state,
+      createChat: false,
       createChatLoading: false,
       createChatError: payload,
     }),
     [action.deleteChatRequest]: (state) => ({
       ...state,
+      deleteChat: false,
       deleteChatLoading: true,
       deleteChatError: null,
     }),
     [action.deleteChatSuccess]: (state) => ({
       ...state,
+      deleteChat: true,
       deleteChatLoading: false,
       deleteChatError: null,
     }),
     [action.deleteChatFailure]: (state, { payload }) => ({
       ...state,
+      deleteChat: false,
       deleteChatLoading: false,
       deleteChatError: payload,
+    }),
+    [action.clearChatsRequest]: (state) => ({
+      ...state,
+      clearChatsLoading: true,
+      clearChatsError: null,
+    }),
+    [action.clearChatsSuccess]: (state) => ({
+      ...state,
+      chats: [],
+      chat: null,
+      clearChatsLoading: false,
+      clearChatsError: null,
+    }),
+    [action.clearChatsFailure]: (state, { payload }) => ({
+      ...state,
+      clearChatsLoading: false,
+      clearChatsError: payload,
     }),
   },
   initialState

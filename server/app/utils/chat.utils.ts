@@ -6,13 +6,22 @@ export class ChatUtils {
     static getDefaultChat = () => {
         const chat: IChat =
         {
+            title: 'New chat',
             messages: [],
             settings: {
-                system: 'You are a helpful assistant',
                 model: 'gpt-3.5-turbo',
-                temperature: 0.7,
+                system: 'You are a helpful assistant',
+                temperature: 1,
                 memory: 10,
-                devOptions: false
+                devOptions: false,
+                stream: false,
+                top_p: 1,
+                n: 1,
+                stop: [],
+                max_tokens: 0,
+                presence_penalty: 0,
+                frequency_penalty: 0,
+                logit_bias: {}
             },
             creationTime: new Date()
         }

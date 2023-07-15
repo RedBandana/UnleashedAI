@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Capacitor } from '@capacitor/core';
 import PropTypes from 'prop-types';
 
-import { getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
-import { setSidebarIsOpen } from '../../redux/actions/uiActions';
+import { getChatSelectedIndex, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
+import { setChatSelectedIndex, setSidebarIsOpen } from '../../redux/actions/uiActions';
 
 import SidebarItem from './SidebarItem';
 import './Sidebar.scss';
@@ -14,9 +14,9 @@ function Sidebar(props) {
 
   const dispatch = useDispatch();
   const sidebarIsOpen = useSelector(getSidebarIsOpen);
+  const chatSelectedIndex = useSelector(getChatSelectedIndex);
 
   const sidebarRef = useRef(null);
-  const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
 
@@ -30,7 +30,6 @@ function Sidebar(props) {
         (event.target.parentElement == null || event.target.parentElement.className.includes("sidebar-no-move-parent") === false);
 
       if (isOutsideSideBar || canMoveSidebar) {
-        console.log(`Sidebar setSidebarIsOpen`);
         dispatch(setSidebarIsOpen(false));
       }
     }
@@ -43,24 +42,24 @@ function Sidebar(props) {
   }, [dispatch]);
 
   function handleOnAddItem() {
-    crudEvents.create();
+    crudEvents.onCreate();
   }
 
   function handleOnClickItem(index) {
-    crudEvents.read(index);
-    setSelectedIndex(index);
+    crudEvents.onRead(index);
+    dispatch(setChatSelectedIndex(index));
   }
 
   function handleOnEditItem(index, newTitle) {
-    crudEvents.update(index, newTitle);
+    crudEvents.onUpdate(index, newTitle);
   }
 
   function handleOnDeleteItem(index) {
-    crudEvents.delete(index);
+    crudEvents.onDelete(index);
   }
 
   function handleOnClearItems() {
-    crudEvents.clear();
+    crudEvents.onClear();
   }
 
   function handleOnOpen(event) {
@@ -76,7 +75,13 @@ function Sidebar(props) {
   }
 
   function handleOnToggleTheme() {
-    uiEvents?.toggleTheme();
+    uiEvents?.onToggleTheme();
+  }
+
+  const sidebarItemsCrudEvents = {
+    onRead: handleOnClickItem,
+    onUpdate: handleOnEditItem,
+    onDelete: handleOnDeleteItem
   }
 
   return (
@@ -117,10 +122,8 @@ function Sidebar(props) {
               key={index}
               index={index}
               title={item.title}
-              isSelected={index === selectedIndex}
-              onClick={handleOnClickItem}
-              onEdit={handleOnEditItem}
-              onDelete={handleOnDeleteItem}
+              isSelected={index === chatSelectedIndex}
+              crudEvents={sidebarItemsCrudEvents}
             />
           ))}
         </div>
@@ -137,19 +140,19 @@ function Sidebar(props) {
 
 Sidebar.propTypes = {
   crudEvents: PropTypes.shape({
-    create: PropTypes.func.isRequired,
-    read: PropTypes.func.isRequired,
-    update: PropTypes.func.isRequired,
-    delete: PropTypes.func.isRequired,
-    clear: PropTypes.func.isRequired,
+    onCreate: PropTypes.func.isRequired,
+    onRead: PropTypes.func.isRequired,
+    onUpdate: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    onClear: PropTypes.func.isRequired,
   }).isRequired,
   fileEvents: PropTypes.shape({
-    save: PropTypes.func,
-    saveAs: PropTypes.func,
-    open: PropTypes.func,
+    onSave: PropTypes.func,
+    onSaveAs: PropTypes.func,
+    onOpen: PropTypes.func,
   }),
   uiEvents: PropTypes.shape({
-    toggleTheme: PropTypes.func,
+    onToggleTheme: PropTypes.func,
   }),
   items: PropTypes.array.isRequired,
 };

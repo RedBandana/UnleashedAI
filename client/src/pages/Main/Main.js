@@ -8,11 +8,11 @@ import Navbar from '../../components/Navbar/Navbar';
 import AlertDialog from '../../components/AlertDialog/AlertDialog';
 import ChatEmpty from '../../components/Chat/ChatEmpty';
 
-import { createChatRequest, deleteChatRequest, editChatRequest, fetchChatsRequest, fetchChatRequest } from '../../redux/actions/chatActions';
-import { fetchMessagesRequest } from '../../redux/actions/messageActions';
-import { setSidebarIsOpen, setThemeIsLight, toggleTheme } from '../../redux/actions/uiActions';
-import { getThemeIsLight } from '../../redux/selectors/uiSelectors';
-import { fetchChats } from '../../redux/selectors/chatSelectors';
+import { createChatRequest, deleteChatRequest, editChatRequest, fetchChatsRequest, fetchChatRequest, clearChatsRequest } from '../../redux/actions/chatActions';
+import { createMessageRequest, deleteMessageRequest, fetchMessagesRequest } from '../../redux/actions/messageActions';
+import { setChatSelectedIndex, setSidebarIsOpen, setThemeIsLight, toggleTheme } from '../../redux/actions/uiActions';
+import { getChatSelectedIndex, getThemeIsLight } from '../../redux/selectors/uiSelectors';
+import { createChatValue, deleteChatValue, fetchChatValue, fetchChatsValue } from '../../redux/selectors/chatSelectors';
 
 import { USER_ID } from '../../utils/constants'
 import '@fortawesome/fontawesome-free/css/all.css';
@@ -20,42 +20,60 @@ import '../../index.scss';
 
 function Main() {
   const dispatch = useDispatch();
-  const chats = useSelector(fetchChats);
+  const chats = useSelector(fetchChatsValue);
+  const chat = useSelector(fetchChatValue);
+  const chatDeleted = useSelector(deleteChatValue);
+  const chatCreated = useSelector(createChatValue);
+
+  const chatSelectedIndex = useSelector(getChatSelectedIndex);
   const themeIsLight = useSelector(getThemeIsLight);
 
   const touchStartX = useRef(0);
   const touchIsDragging = useRef(false);
   const [sidebarChanged, setSidebarChanged] = useState(false);
+  const [isInitialized, setIsInitialize] = useState(false);
 
   useEffect(() => {
-    console.log(`Main fetchChatsRequest`);
     dispatch(fetchChatsRequest({ userId: USER_ID }));
 
     if (!Capacitor.isNativePlatform()) {
-      console.log(`Main setSidebarIsOpen`);
       dispatch(setSidebarIsOpen(true));
       document.body.classList.toggle("native-platform", false);
     }
-  }, [dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    if (chats && chats.length > 0) {
-      console.log(`Main fetchMessagesRequest`);
-      console.log(`Main fetchChatRequest`);
+    if (!isInitialized && chats?.length > 0) {
       dispatch(fetchMessagesRequest({ userId: USER_ID, chatIndex: 0 }));
       dispatch(fetchChatRequest({ userId: USER_ID, chatIndex: 0 }));
+      setIsInitialize(true);
     }
-  }, [dispatch, chats]);
+  }, [chats]);
+
+  useEffect(() => {
+    if (chats.length > 0 && chatDeleted) {
+      dispatch(fetchChatRequest({ userId: USER_ID, chatIndex: 0 }));
+      dispatch(setChatSelectedIndex(0));
+    }
+  }, [chatDeleted])
+
+  useEffect(() => {
+    if (chats.length > 0 && chatCreated) {
+      const chatIndex = chats.length - 1;
+      dispatch(fetchChatRequest({ userId: USER_ID, chatIndex: chatIndex }));
+      dispatch(setChatSelectedIndex(chatIndex));
+    }
+  }, [chatCreated])
 
   useEffect(() => {
     const savedThemeIsLight = localStorage.getItem("themeIsLight");
     if (savedThemeIsLight === "true" && !themeIsLight) {
-      console.log(`Main setThemeIsLight`);
       dispatch(setThemeIsLight(false));
     }
 
     document.body.classList.toggle("theme-dark", !themeIsLight);
-  }, [dispatch, themeIsLight]);
+  }, [themeIsLight]);
 
   useEffect(() => {
     function handleStart(event) {
@@ -69,13 +87,11 @@ function Main() {
         const distance = event.touches[0].pageX - touchStartX.current;
 
         if (distance > 50) {
-          console.log(`Main setSidebarIsOpen`);
           dispatch(setSidebarIsOpen(true));
           touchIsDragging.current = false;
           setSidebarChanged(true);
         }
         else if (distance < -50) {
-          console.log(`Main setSidebarIsOpen`);
           dispatch(setSidebarIsOpen(false));
           touchIsDragging.current = false;
           setSidebarChanged(true);
@@ -96,25 +112,25 @@ function Main() {
       document.removeEventListener('touchmove', handleMove);
       document.removeEventListener('touchend', handleEnd);
     };
-  }, [dispatch, sidebarChanged]);
+  }, [sidebarChanged]);
 
   function handleOnToggleTheme() {
     dispatch(toggleTheme());
     localStorage.setItem("themeIsLight", themeIsLight);
   };
 
-  function handleOnClickItem(index) {
-    dispatch(fetchChatRequest({ userId: USER_ID, chatIndex: index }));
+  function handleOnClickItem(chatIndex) {
+    dispatch(fetchChatRequest({ userId: USER_ID, chatIndex: chatIndex }));
   }
 
   function handleOnAddItem() {
-    dispatch(createChatRequest({ userId: USER_ID, chat: {} }));
+    dispatch(createChatRequest({ userId: USER_ID }));
   }
 
-  function handleOnEditItem(index, newTitle) {
+  function handleOnEditItem(chatIndex, newTitle) {
     dispatch(editChatRequest({
       userId: USER_ID,
-      chatIndex: index,
+      chatIndex: chatIndex,
       chat: {
         title: newTitle
       }
@@ -126,20 +142,52 @@ function Main() {
   }
 
   function handleOnClearItems() {
-    dispatch(deleteChatRequest({ userId: USER_ID }))
+    dispatch(clearChatsRequest({ userId: USER_ID }))
+  }
+
+  function handleOnEditSettings(chatIndex, settings) {
+    dispatch(editChatRequest({
+      userId: USER_ID,
+      chatIndex: chatIndex,
+      chat: {
+        settings: settings
+      }
+    }));
+  }
+
+  function handleOnSendMessage(chatIndex, message) {
+    dispatch(createMessageRequest({
+      userId: USER_ID,
+      chatIndex: chatIndex,
+      message: message
+    }))
+  }
+
+  function handleOnDeleteMessage(chatIndex, messageIndex) {
+    dispatch(deleteMessageRequest({
+      userId: USER_ID,
+      chatIndex: chatIndex,
+      messageIndex: messageIndex
+    }))
   }
 
   const sidebarCrudEvents = {
-    read: handleOnClickItem,
-    create: handleOnAddItem,
-    update: handleOnEditItem,
-    delete: handleOnDeleteItem,
-    clear: handleOnClearItems,
+    onCreate: handleOnAddItem,
+    onRead: handleOnClickItem,
+    onUpdate: handleOnEditItem,
+    onDelete: handleOnDeleteItem,
+    onClear: handleOnClearItems,
   };
 
   const sidebarUiEvents = {
-    toggleTheme: handleOnToggleTheme
+    onToggleTheme: handleOnToggleTheme
   };
+
+  const chatCrudEvents = {
+    onSettingsUpdate: handleOnEditSettings,
+    onCreate: handleOnSendMessage,
+    onDelete: handleOnDeleteMessage,
+  }
 
   return (
     <div className={`chat ${themeIsLight ? 'theme-light' : 'theme-dark'}`}>
@@ -148,13 +196,21 @@ function Main() {
         <AlertDialog
           text="Hello, Chat Unleashed AI is still in early stages. If you have any feedback, please contact us at contact@email.com"
         />
-        <Sidebar
-          items={chats}
-          crudEvents={sidebarCrudEvents}
-          uiEvents={sidebarUiEvents}
-        />
-        {chats && chats.length > 0 ? (
-          <Chat />
+        {
+          chats && (
+            <Sidebar
+              items={chats}
+              crudEvents={sidebarCrudEvents}
+              uiEvents={sidebarUiEvents}
+            />
+          )
+        }
+        {chat && chats.length > 0 ? (
+          <Chat
+            index={chatSelectedIndex}
+            messages={chat.messages}
+            crudEvents={chatCrudEvents}
+          />
         ) : (
           <ChatEmpty onAdd={handleOnAddItem} />
         )}

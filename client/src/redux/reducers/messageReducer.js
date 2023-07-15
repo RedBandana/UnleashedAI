@@ -107,8 +107,9 @@ const messageReducer = handleActions(
       deleteMessageLoading: true,
       deleteMessageError: null,
     }),
-    [action.deleteMessageSuccess]: (state) => ({
+    [action.deleteMessageSuccess]: (state, {payload}) => ({
       ...state,
+      messages: payload,
       deleteMessageLoading: false,
       deleteMessageError: null,
     }),

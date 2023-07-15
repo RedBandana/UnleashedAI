@@ -4,7 +4,7 @@ import { Capacitor } from '@capacitor/core';
 
 import './Navbar.scss';
 import { getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
-import { fetchChat } from '../../redux/selectors/chatSelectors';
+import { fetchChatValue } from '../../redux/selectors/chatSelectors';
 import { toggleSidebar } from '../../redux/actions/uiActions';
 import { CHAT_TITLE_CROP_LENGTH } from '../../utils/constants';
 
@@ -12,12 +12,13 @@ function Navbar() {
   const dispatch = useDispatch();
 
   const sidebarIsOpen = useSelector(getSidebarIsOpen);
-  const chat = useSelector(fetchChat);
+  const chat = useSelector(fetchChatValue);
 
   const [navbarTitle, setNavbarTitle] = useState(false);
   
   useEffect(() => {
     if (!chat) {
+      setNavbarTitle('');
       return;
     }
 

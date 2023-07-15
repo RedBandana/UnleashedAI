@@ -1,11 +1,11 @@
 import { takeLatest, select, call, put } from 'redux-saga/effects';
+import { authUserValue } from '../selectors/authSelectors';
 import * as authActions from '../actions/authActions';
 import * as authService from '../../services/authService';
-import * as selectors from '../selectors/authSelectors';
 
 function* loginSaga() {
   try {
-    const user = yield select(selectors.authUser);
+    const user = yield select(authUserValue);
     if (user) {
       yield put(authActions.loginSuccess(user));
       return;

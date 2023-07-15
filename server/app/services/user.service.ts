@@ -126,6 +126,14 @@ export class UserService extends DBCollectionService {
         return newMessage;
     }
 
+    async deleteChats(userId: string): Promise<void> {
+        this.query = this.model.updateOne(
+            { _id: userId },
+            { $set: { chats: [] } }
+        );
+        await this.query.lean().exec();
+    }
+
     async deleteChat(userId: string, chatIndex: number): Promise<void> {
         const chat = await this.getChatByIndex(userId, chatIndex);
         this.query = this.model.updateOne(

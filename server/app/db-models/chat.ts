@@ -35,7 +35,7 @@ export interface IMessageLean {
 
 export interface IChat {
     _id?: ObjectId;
-    title?: string;
+    title: string;
     settings: ISettings;
     messages: IMessage[];
     creationTime: Date;
@@ -68,13 +68,12 @@ export interface ISettings {
     presence_penalty?: number;
     frequency_penalty?: number;
     logit_bias?: { [key: string]: number };
-    user?: string;
 }
 
 const SettingsSchema = new Schema<ISettings>({
     model: { type: String, required: true, default: 'gpt-3.5-turbo' },
     system: { type: String, required: true, default: 'You are a helpful assistant' },
-    temperature: { type: Number, required: true, default: 0.7 },
+    temperature: { type: Number, required: true, default: 1 },
     memory: { type: Number, required: true, default: 10 },
     devOptions: { type: Boolean, required: true, default: false },
     stream: { type: Boolean },
@@ -85,7 +84,6 @@ const SettingsSchema = new Schema<ISettings>({
     presence_penalty: { type: Number },
     frequency_penalty: { type: Number },
     logit_bias: { type: Map, of: Number },
-    user: { type: String },
 });
 
 export const MessageSchema = new Schema<IMessage>({
@@ -97,7 +95,7 @@ export const MessageSchema = new Schema<IMessage>({
 });
 
 export const ChatSchema = new Schema<IChat>({
-    title: { type: String },
+    title: { type: String, required: true },
     settings: { type: SettingsSchema, required: true },
     messages: { type: [MessageSchema], required: true, default: [] },
     creationTime: { type: Date, required: true, default: Date.now },

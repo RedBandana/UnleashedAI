@@ -8,7 +8,7 @@ import TextInput from '../TextInput/TextInput';
 import TypingDots from '../TypingDots/TypingDots';
 
 import './Chat.scss';
-import { getSettingsIsOpen, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
+import { getSettings, getSettingsIsOpen, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
 import { fetchMessageLoading } from '../../redux/selectors/messageSelectors';
 import { setSettingsIsOpen } from '../../redux/actions/uiActions';
 
@@ -20,12 +20,13 @@ function Chat(props) {
     const [messagesHtml, setMessagesHtml] = useState([]);
     const [messageReceived, setMessageReceived] = useState(false);
     const [messageDeletedIndex, setMessageDeletedIndex] = useState(-1);
-
+    
     const chatBodyRef = useRef(null);
     const settingsRef = useRef(null);
-
+    
     const sidebarIsOpen = useSelector(getSidebarIsOpen);
     const settingsIsOpen = useSelector(getSettingsIsOpen);
+    const formSettings = useSelector(getSettings);
     const messageLoading = useSelector(fetchMessageLoading);
 
     useEffect(() => {
@@ -33,21 +34,33 @@ function Chat(props) {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [handleClickOutside]);
+    }, []);
 
     useEffect(() => {
+        handleSettingsSave(formSettings);
+    }, [settingsIsOpen])
+
+    useEffect(() => {
+        if (!messages) {
+            return;
+        }
+
         if (messagesHtml.length === 0) {
             setMessagesHtmlToDisplay();
         }
         scrollToBottom("smooth");
-    }, [messages, messagesHtml, setMessagesHtmlToDisplay])
+    }, [messages, messagesHtml])
 
     useEffect(() => {
+        if (!messages) {
+            return;
+        }
+        
         if (messageReceived) {
             addMessageHtmlToDisplay();
         }
         setMessageReceived(false);
-    }, [messages, messageReceived, addMessageHtmlToDisplay])
+    }, [messages, messageReceived])
 
     useEffect(() => {
         if (messageDeletedIndex !== -1) {
@@ -88,15 +101,15 @@ function Chat(props) {
             timestamp: new Date()
         };
 
-        crudEvents.create(index, userMessage);
+        crudEvents.onCreate(index, userMessage);
     };
 
     function handleDelete(messageIndex) {
-        crudEvents.delete(index, messageIndex)
+        crudEvents.onDelete(index, messageIndex)
     }
 
-    function handleSettingsSave(newSettings) {
-        crudEvents.settingsUpdate(index, newSettings);
+    function handleSettingsSave(settings) {
+        crudEvents.onSettingsUpdate(index, settings);
     };
 
     function handleClickOutside(event) {
@@ -132,10 +145,7 @@ function Chat(props) {
                     </div>
                 )}
                 <div className="chatbot-footer">
-                    <TextInput
-                        onSubmit={handleAdd}
-                        canSubmit={handleCanAdd}
-                    />
+                    <TextInput onSubmit={handleAdd} canSubmit={handleCanAdd} />
                 </div>
             </div>
         </div>

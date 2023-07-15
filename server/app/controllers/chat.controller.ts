@@ -140,6 +140,16 @@ export class ChatController {
             }
         });
 
+        userRouter.delete('/:userId/chats', async (req: Request, res: Response) => {
+            try {
+                const userId = req.params.userId;
+                await userService.deleteChats(userId);
+                Controller.handleDeleteResponse(res);
+            } catch (error) {
+                res.status(StatusCodes.NOT_FOUND).send(error.message);
+            }
+        });
+
         userRouter.delete('/:userId/chats/:chatIndex', async (req: Request, res: Response) => {
             try {
                 const { userId, chatIndex } = req.params;

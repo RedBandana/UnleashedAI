@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { loginRequest } from '../../redux/actions/authActions';
-import { authUser, authUserLoading, authUserError } from '../../redux/selectors/authSelectors';
+import { authUserValue, authUserLoading, authUserError } from '../../redux/selectors/authSelectors';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { fetchUser } from '../../services/userService';
@@ -10,7 +10,7 @@ function LoginPage() {
   const navigate = useNavigate();
   const { state } = useLocation();
   
-  const user = useSelector(authUser);
+  const user = useSelector(authUserValue);
   const loading = useSelector(authUserLoading);
   const error = useSelector(authUserError);
 

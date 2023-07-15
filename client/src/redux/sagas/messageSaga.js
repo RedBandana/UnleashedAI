@@ -1,7 +1,7 @@
 import { takeLatest, select, call, put } from 'redux-saga/effects';
+import { fetchChoiceValue, fetchMessageValue, fetchMessagesValue } from '../selectors/messageSelectors';
 import * as messageActions from '../actions/messageActions';
 import * as messageService from '../../services/messageService';
-import * as selectors from '../selectors/messageSelectors';
 
 function* fetchMessagesSaga(action) {
   try {
@@ -16,7 +16,7 @@ function* fetchMessagesSaga(action) {
 function* fetchMessageSaga(action) {
   try {
     const { userId, chatIndex, messageIndex } = action.payload;
-    const message = yield select(selectors.fetchMessage);
+    const message = yield select(fetchMessageValue);
 
     if (message && message.id === messageIndex) {
       yield put(messageActions.fetchMessageSuccess(message));
@@ -55,7 +55,7 @@ function* fetchChoicesSaga(action) {
 function* fetchChoiceSaga(action) {
   try {
     const { userId, chatIndex, messageIndex, choiceIndex } = action.payload;
-    const choice = yield select(selectors.fetchChoice);
+    const choice = yield select(fetchChoiceValue);
 
     if (choice && choice.id === choiceIndex) {
       yield put(messageActions.fetchChoiceSuccess(choice));
@@ -96,7 +96,12 @@ function* deleteMessageSaga(action) {
   try {
     const { userId, chatIndex, messageIndex } = action.payload;
     yield call(messageService.deleteMessage, userId, chatIndex, messageIndex);
-    yield put(messageActions.deleteMessageSuccess());
+
+    const messages = yield select(fetchMessagesValue);
+    const newMessages = [...messages];
+    newMessages.splice(chatIndex, 1);
+
+    yield put(messageActions.deleteMessageSuccess(messages));
   } catch (error) {
     yield put(messageActions.deleteMessageFailure(error.message));
   }

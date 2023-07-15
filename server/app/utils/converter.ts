@@ -62,7 +62,6 @@ export class Converter {
             presence_penalty: settings.presence_penalty,
             frequency_penalty: settings.presence_penalty,
             logit_bias: settings.logit_bias,
-            user: settings.user,
             messages: []
         }
 

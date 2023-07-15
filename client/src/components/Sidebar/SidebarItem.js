@@ -4,7 +4,6 @@ import './SidebarItem.scss';
 
 function SidebarItem(props) {
   const { title, index, isSelected, crudEvents } = props;
-  const { onClick, onEdit, onDelete } = crudEvents;
   const [editing, setEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
 
@@ -14,7 +13,7 @@ function SidebarItem(props) {
       input.select();
     }
   }, [editing])
-  
+
   function enableEdit() {
     setEditing(true);
   }
@@ -23,17 +22,17 @@ function SidebarItem(props) {
     setNewTitle(event.target.value);
   }
 
+  function handleOnClick() {
+    crudEvents.onRead(index);
+  }
+
   function handleTitleSubmit() {
-    onEdit(index, newTitle);
+    crudEvents.onUpdate(index, newTitle);
     setEditing(false);
   }
 
   function handleOnDelete() {
-    onDelete(index);
-  }
-
-  function handleOnClick() {
-    onClick(index);
+    crudEvents.onDelete(index);
   }
 
   return (
@@ -59,12 +58,12 @@ function SidebarItem(props) {
         <div className="sidebaritem-title">{title}</div>
       )}
       <div className="sidebaritem-buttons">
-        {onEdit != null && (
+        {crudEvents.onUpdate != null && (
           <button className="sidebaritem-button-edit" onClick={enableEdit}>
             <i className="fas fa-edit sidebar-no-move"></i>
           </button>
         )}
-        {onDelete != null && (
+        {crudEvents.onDelete != null && (
           <button className="sidebaritem-button-trash" onClick={handleOnDelete}>
             <i className="fas fa-trash sidebar-no-move"></i>
           </button>
@@ -75,12 +74,14 @@ function SidebarItem(props) {
 }
 
 SidebarItem.propTypes = {
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   index: PropTypes.number.isRequired,
-  onClick: PropTypes.func.isRequired,
-  onEdit: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,
+  crudEvents: PropTypes.shape({
+    onRead: PropTypes.func.isRequired,
+    onUpdate: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default SidebarItem;

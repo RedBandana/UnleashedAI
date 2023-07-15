@@ -11,9 +11,14 @@ function TextInput(props) {
     const dispatch = useDispatch();
 
     const textareaRef = useRef(null);
-    
-    const [inputValue, setInputValue] = useState(null);
+    const submitButtonRef = useRef(null);
+    const settingsButtonRef = useRef(null);
 
+    const [inputValue, setInputValue] = useState('');
+
+    useEffect(() => {
+        handleOnInputChange();
+    }, [])
 
     function handleKeyDown(event) {
         if (event.key === "Enter") {
@@ -38,17 +43,14 @@ function TextInput(props) {
     }
 
     function updateButtonDisplay() {
-        const submitButton = document.getElementById("button-submit");
-        const settingsButton = document.getElementById("button-settings");
         const text = textareaRef.current.value;
-
         if (text.length > 0) {
-            submitButton.classList.remove("hide");
-            settingsButton.classList.add("hide");
+            submitButtonRef.current.classList.remove("hide");
+            settingsButtonRef.current.classList.add("hide");
         }
         else {
-            submitButton.classList.add("hide");
-            settingsButton.classList.remove("hide");
+            submitButtonRef.current.classList.add("hide");
+            settingsButtonRef.current.classList.remove("hide");
         }
     }
 
@@ -61,11 +63,15 @@ function TextInput(props) {
         }
     }
 
-    function handleOnInputChange(event) {
+    function handleOnInputChange() {
         updateButtonDisplay();
         resizeTextAreaHeight();
     }
 
+    function handleToggleSettings() {
+        dispatch(toggleSettings());
+    };
+    
     function resizeTextAreaHeight() {
         const textarea = textareaRef.current;
         textarea.style.height = "auto";
@@ -83,10 +89,6 @@ function TextInput(props) {
         textarea.style.height = `${31}px`;
     }
 
-    function handleToggleSettings() {
-        dispatch(toggleSettings());
-    };
-
     return (
         <form onSubmit={handleSubmit}>
             <textarea
@@ -97,10 +99,10 @@ function TextInput(props) {
                 onChange={handleOnInputChange}
                 onKeyDown={handleKeyDown}
             />
-            <button type="submit" className='chatbot-send-button' id='button-submit'>
+            <button type="submit" className='chatbot-send-button' ref={submitButtonRef}>
                 <i className="fas fa-paper-plane chatbot-send-icon"></i>
             </button>
-            <button className="chatbot-settings-button" id='button-settings' onClick={(event) => {
+            <button className="chatbot-settings-button" ref={settingsButtonRef} onClick={(event) => {
                 event.preventDefault();
                 handleToggleSettings();
             }}>
