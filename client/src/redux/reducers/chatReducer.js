@@ -96,6 +96,7 @@ const chatReducer = handleActions(
     }),
     [action.deleteChatSuccess]: (state) => ({
       ...state,
+      chat: null,
       deleteChat: true,
       deleteChatLoading: false,
       deleteChatError: null,

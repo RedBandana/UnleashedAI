@@ -15,12 +15,12 @@ import { setSettingsIsOpen } from '../../redux/actions/uiActions';
 function Chat(props) {
     const { index, messages, crudEvents } = props;
     const [messagesHtml, setMessagesHtml] = useState([]);
-
-    const dispatch = useDispatch();
+    const [shouldScroll, setShouldScroll] = useState("none");
 
     const chatBodyRef = useRef(null);
     const settingsRef = useRef(null);
 
+    const dispatch = useDispatch();
     const sidebarIsOpen = useSelector(getSidebarIsOpen);
     const settingsIsOpen = useSelector(getSettingsIsOpen);
     const formSettings = useSelector(getSettings);
@@ -44,29 +44,35 @@ function Chat(props) {
             return;
         }
         setMessagesHtmlToDisplay();
-        scrollToBottom("smooth");
     }, [messagesReceived]);
 
     useEffect(() => {
         if (!messageReceived || messages.length === 0) {
             return;
         }
-
         addMessageHtmlToDisplay(messages[messages.length - 1]);
-        scrollToBottom("smooth");
     }, [messageReceived]);
+
+    useEffect(() => {
+        if (shouldScroll != "none") {
+            scrollToBottom(shouldScroll);
+            setShouldScroll("none");
+        }
+    }, [shouldScroll])
 
     function setMessagesHtmlToDisplay() {
         const htmlToDisplay = messages.map((message, index) => (
             <Message key={index} index={index} message={message} onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} />
         ));
         setMessagesHtml(htmlToDisplay);
+        setShouldScroll("auto");
     }
 
     function addMessageHtmlToDisplay(message) {
         const index = messagesHtml.length;
         const newMessageHtml = <Message key={index} index={index} message={message} onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} />
         setMessagesHtml(prevMessages => [...prevMessages, newMessageHtml]);
+        setShouldScroll("smooth");
     }
 
     function removeMessagesHtmlToDisplay(index) {

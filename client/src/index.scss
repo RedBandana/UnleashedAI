@@ -11,7 +11,6 @@ body {
     width: 100%;
     text-align: center;
     font-size: 1.25rem;
-    font-weight: bold;
     position: fixed;
     left: 0;
     transition: left 0.25s ease-in-out;
@@ -22,15 +21,16 @@ body {
     left: $sidebar-width;
 }
 
-.no-conversation-container[data-sidebar-is-open="true"][data-is-mobile="false"] .no-conversation-options {
+.no-conversation-container[data-sidebar-is-open="true"][data-is-mobile="false"] {
     width: calc(100vw - 300px);
 }
 
 .no-conversation-options {
-    margin-top: 20px;
+    margin: 20px 0;
     color: var(--color-accent-main);
     width: 100%;
     transition: width 0.25s ease-in-out;
+    font-weight: bold;
 }
 
 .no-conversation-options-child {

@@ -44,6 +44,9 @@
   font-size: var(--font-size-main);
   font-weight: bold;
   color: var(--color-text-main);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .navbar-toggle {

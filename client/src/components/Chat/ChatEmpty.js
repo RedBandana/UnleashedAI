@@ -20,8 +20,11 @@ function ChatEmpty(props) {
         >
             <div className="no-conversation-options">
                 <div onClick={handleAdd} className="no-conversation-options-child no-conversation-new">
-                    New chat +
+                    + New chat
                 </div>
+            </div>
+            <div className="no-conversation-messages">
+                Experience the limitless possibilities of Chat GPT and discover the true potential behind personalized queries.
             </div>
         </div>
     )

@@ -31,14 +31,15 @@ function TextInput(props) {
 
             if (doLineBreak) {
                 event.preventDefault(); // prevent form submission
-                const selectionStart = textareaRef.current.selectionStart;
-                const selectionEnd = textareaRef.current.selectionEnd;
-                const text = textareaRef.current.value;
-
-                setInputValue(text.slice(0, selectionStart) + "\n" + text.slice(selectionStart));
-
-                textareaRef.current.selectionStart = selectionStart + 1;
-                textareaRef.current.selectionEnd = selectionEnd + 1;
+                const selectionStart = event.target.selectionStart;
+                const selectionEnd = event.target.selectionEnd;
+                const text = event.target.value;
+    
+                event.target.value = text.slice(0, selectionStart) + "\n" + text.slice(selectionStart);
+    
+                event.target.selectionStart = selectionStart + 1;
+                event.target.selectionEnd = selectionEnd + 1;
+                handleOnInputChange();
             }
             else {
                 handleSubmit(event);

@@ -6,7 +6,6 @@ import './Navbar.scss';
 import { getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
 import { fetchChatValue } from '../../redux/selectors/chatSelectors';
 import { toggleSidebar } from '../../redux/actions/uiActions';
-import { CHAT_TITLE_CROP_LENGTH } from '../../utils/constants';
 
 function Navbar() {
   const dispatch = useDispatch();
@@ -21,13 +20,7 @@ function Navbar() {
       setNavbarTitle('');
       return;
     }
-
-    if (chat.title.length > CHAT_TITLE_CROP_LENGTH) {
-      setNavbarTitle(chat.title.substr(0, CHAT_TITLE_CROP_LENGTH) + '...');
-    }
-    else {
-      setNavbarTitle(chat.title);
-    }
+    setNavbarTitle(chat.title);
   }, [chat]);
 
   function handleToggleSidebar() {

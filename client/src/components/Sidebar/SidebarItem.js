@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './SidebarItem.scss';
+import { SIDEBAR_TITLE_MAX_LENGTH } from '../../utils/constants';
 
 function SidebarItem(props) {
   const { title, index, isSelected, crudEvents } = props;
@@ -16,6 +17,15 @@ function SidebarItem(props) {
 
   function enableEdit() {
     setEditing(true);
+  }
+
+  function getTitle() {
+    if (title.length > SIDEBAR_TITLE_MAX_LENGTH) {
+      return title.substr(0, SIDEBAR_TITLE_MAX_LENGTH) + '...';
+    }
+    else {
+      return title;
+    }
   }
 
   function handleTitleChange(event) {
@@ -55,7 +65,7 @@ function SidebarItem(props) {
           />
         </div>
       ) : (
-        <div className="sidebaritem-title">{title}</div>
+        <div className="sidebaritem-title">{getTitle(title)}</div>
       )}
       <div className="sidebaritem-buttons">
         {crudEvents.onUpdate != null && (
