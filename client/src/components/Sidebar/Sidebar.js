@@ -4,7 +4,7 @@ import { Capacitor } from '@capacitor/core';
 import PropTypes from 'prop-types';
 
 import { getChatSelectedIndex, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
-import { setChatSelectedIndex, setSidebarIsOpen } from '../../redux/actions/uiActions';
+import { setSidebarIsOpen } from '../../redux/actions/uiActions';
 
 import SidebarItem from './SidebarItem';
 import './Sidebar.scss';
@@ -47,7 +47,6 @@ function Sidebar(props) {
 
   function handleOnClickItem(index) {
     crudEvents.onRead(index);
-    dispatch(setChatSelectedIndex(index));
   }
 
   function handleOnEditItem(index, newTitle) {

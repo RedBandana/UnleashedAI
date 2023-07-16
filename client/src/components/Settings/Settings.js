@@ -21,7 +21,7 @@ const Settings = (props) => {
             dispatch(setSettings(chat.settings));
             setIsInitialize(true);
         }
-    }, [chat])
+    }, [chat]);
 
     function handleInputChange(event) {
         const { name, value } = event.target;

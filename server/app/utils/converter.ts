@@ -30,6 +30,8 @@ export class Converter {
         else {
             delete message.content;
         }
+
+        return message;
     }
 
     static messageToLeanDtoNoReturn(message: any): void {
@@ -48,6 +50,8 @@ export class Converter {
         }
 
         delete message.choices;
+
+        return message;
     }
 
     static settingsToChatbotSettings(settings: ISettings): ChatbotSettings {

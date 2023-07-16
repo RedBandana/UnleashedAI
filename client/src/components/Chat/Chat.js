@@ -9,17 +9,14 @@ import TypingDots from '../TypingDots/TypingDots';
 
 import './Chat.scss';
 import { getSettings, getSettingsIsOpen, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
-import { fetchMessageLoading } from '../../redux/selectors/messageSelectors';
+import { createMessageLoading, createMessageReceived, fetchMessagesReceived } from '../../redux/selectors/messageSelectors';
 import { setSettingsIsOpen } from '../../redux/actions/uiActions';
 
 function Chat(props) {
     const { index, messages, crudEvents } = props;
+    const [messagesHtml, setMessagesHtml] = useState([]);
 
     const dispatch = useDispatch();
-
-    const [messagesHtml, setMessagesHtml] = useState([]);
-    const [messageReceived, setMessageReceived] = useState(false);
-    const [messageDeletedIndex, setMessageDeletedIndex] = useState(-1);
 
     const chatBodyRef = useRef(null);
     const settingsRef = useRef(null);
@@ -27,7 +24,9 @@ function Chat(props) {
     const sidebarIsOpen = useSelector(getSidebarIsOpen);
     const settingsIsOpen = useSelector(getSettingsIsOpen);
     const formSettings = useSelector(getSettings);
-    const messageLoading = useSelector(fetchMessageLoading);
+    const messageLoading = useSelector(createMessageLoading);
+    const messagesReceived = useSelector(fetchMessagesReceived);
+    const messageReceived = useSelector(createMessageReceived);
 
     useEffect(() => {
         document.addEventListener("mousedown", handleClickOutside);
@@ -38,53 +37,44 @@ function Chat(props) {
 
     useEffect(() => {
         handleSettingsSave(formSettings);
-    }, [settingsIsOpen])
+    }, [settingsIsOpen]);
 
     useEffect(() => {
-        if (!messages) {
+        if (!messagesReceived) {
             return;
         }
-
-        if (messagesHtml.length === 0) {
-            setMessagesHtmlToDisplay();
-        }
+        setMessagesHtmlToDisplay();
         scrollToBottom("smooth");
-    }, [messages, messagesHtml])
+    }, [messagesReceived]);
 
     useEffect(() => {
-        if (!messages) {
+        if (!messageReceived || messages.length === 0) {
             return;
         }
 
-        if (messageReceived) {
-            addMessageHtmlToDisplay();
-        }
-        setMessageReceived(false);
-    }, [messages, messageReceived])
-
-    useEffect(() => {
-        if (messageDeletedIndex !== -1) {
-            setMessagesHtml(prevMessages => {
-                const newMessages = [...prevMessages];
-                newMessages.splice(messageDeletedIndex, 1);
-                return newMessages;
-            });
-        }
-        setMessageDeletedIndex(-1);
-    }, [messageDeletedIndex])
+        addMessageHtmlToDisplay(messages[messages.length - 1]);
+        scrollToBottom("smooth");
+    }, [messageReceived]);
 
     function setMessagesHtmlToDisplay() {
         const htmlToDisplay = messages.map((message, index) => (
-            <Message key={index} index={index} message={message} onDelete={crudEvents.onDelete} onSelectChoice={handleOnSelectChoice} />
+            <Message key={index} index={index} message={message} onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} />
         ));
         setMessagesHtml(htmlToDisplay);
     }
 
-    function addMessageHtmlToDisplay() {
-        const messageIndex = messages.length - 1;
-        const message = messages[messageIndex];
-        const newMessageHtml = <Message key={messageIndex} index={messageIndex} message={message} onDelete={crudEvents.onDelete} onSelectChoice={handleOnSelectChoice} />
+    function addMessageHtmlToDisplay(message) {
+        const index = messagesHtml.length;
+        const newMessageHtml = <Message key={index} index={index} message={message} onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} />
         setMessagesHtml(prevMessages => [...prevMessages, newMessageHtml]);
+    }
+
+    function removeMessagesHtmlToDisplay(index) {
+        setMessagesHtml(prevMessages => {
+            const newMessages = [...prevMessages];
+            newMessages.splice(index, 1);
+            return newMessages;
+        });
     }
 
     function handleCanAdd(inputValue) {
@@ -95,23 +85,37 @@ function Chat(props) {
     }
 
     function handleAdd(inputValue) {
-        const message = { content: inputValue.trim() }
-        crudEvents.onCreate(index, message);
-    };
+        const text = inputValue.trim();
+        const messageRequest = { content: text };
+        crudEvents.onCreate(index, messageRequest);
+
+        const message = {
+            content: text,
+            isUser: true,
+            creationTime: new Date(),
+        }
+
+        addMessageHtmlToDisplay(message);
+    }
 
     function handleSettingsSave(settings) {
         crudEvents.onSettingsUpdate(index, settings);
-    };
+    }
+
+    function handleOnDeleteMessage(messageIndex) {
+        crudEvents.onDelete(index, messageIndex);
+        removeMessagesHtmlToDisplay(messageIndex);
+    }
+    
+    function handleOnSelectChoice(messageIndex, choiceIndex) {
+        crudEvents.onSelectChoice(index, messageIndex, choiceIndex);
+    }
 
     function handleClickOutside(event) {
         if (settingsRef.current && !settingsRef.current.contains(event.target) &&
             event.target.className !== "chatbot-settings-button" && event.target.className !== "fas fa-cog") {
             dispatch(setSettingsIsOpen(false));
         }
-    };
-
-    function handleOnSelectChoice(messageIndex, choiceIndex) {
-        crudEvents.onSelectChoice(index, messageIndex, choiceIndex);
     }
 
     function scrollToBottom(behavior) {
@@ -126,7 +130,7 @@ function Chat(props) {
             <div className='chatbot-container'>
                 <div className="chatbot-body" ref={chatBodyRef}>
                     <div className="chatbot-messages">
-                        {messagesHtml}
+                        {messages && (messagesHtml)}
                     </div>
                     {messageLoading && (
                         <div className='chatbot-dots'>

@@ -19,7 +19,7 @@ function TextInput(props) {
     useEffect(() => {
         updateButtonDisplay();
         resizeTextAreaHeight();
-    }, [inputValue])
+    }, [inputValue]);
 
     function handleKeyDown(event) {
         if (event.key !== "Enter") {

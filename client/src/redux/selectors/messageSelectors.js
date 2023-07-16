@@ -1,5 +1,6 @@
 export const fetchMessagesValue = (state) => state.messages.messages;
 export const fetchMessagesLoading = (state) => state.messages.loading;
+export const fetchMessagesReceived = (state) => state.messages.messagesReceived;
 export const fetchMessagesError = (state) => state.messages.error;
 
 export const fetchMessageValue = (state) => state.messages.message;
@@ -15,6 +16,7 @@ export const fetchChoiceLoading = (state) => state.messages.choiceLoading;
 export const fetchChoiceError = (state) => state.messages.choiceError;
 
 export const createMessageLoading = (state) => state.messages.createMessageLoading;
+export const createMessageReceived = (state) => state.messages.createMessageReceived;
 export const createMessageError = (state) => state.messages.createMessageError;
 
 export const deleteMessageLoading = (state) => state.messages.deleteMessageLoading;

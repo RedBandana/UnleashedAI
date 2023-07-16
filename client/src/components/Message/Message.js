@@ -35,10 +35,11 @@ import 'prismjs/components/prism-uri';
 import 'prismjs/components/prism-yaml';
 
 const Message = ({ message, index, onDelete, onSelectChoice }) => {
+
   const [showOptions, setShowOptions] = useState(false);
   const messageClass = message.isUser ? "chat-message-user" : "chat-message-bot";
   const textClass = message.isUser ? "chat-message-text-user" : "chat-message-text-bot";
-  const timestamp = moment(message.timestamp).format("h:mm A");
+  const timestamp = moment(message.creationTime).format("h:mm A");
   const optionsRef = useRef(null);
 
   useEffect(() => {

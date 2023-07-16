@@ -32,6 +32,7 @@ export interface IMessageBot {
 export interface IMessageLean {
   _id?: ObjectId;
   choiceCount?: number;
+  choiceIndex?: number;
   content: string;
   isUser: boolean;
   creationTime: Date;

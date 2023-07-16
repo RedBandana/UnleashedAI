@@ -28,7 +28,7 @@ function Navbar() {
     else {
       setNavbarTitle(chat.title);
     }
-  }, [chat])
+  }, [chat]);
 
   function handleToggleSidebar() {
     dispatch(toggleSidebar());

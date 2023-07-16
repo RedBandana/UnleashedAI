@@ -125,7 +125,7 @@ function Main() {
   };
 
   function handleOnClickItem(chatIndex) {
-    dispatch(fetchChatRequest({ userId: USER_ID, chatIndex: chatIndex }));
+    dispatchDisplayInfo(chatIndex);
   }
 
   function handleOnAddItem() {

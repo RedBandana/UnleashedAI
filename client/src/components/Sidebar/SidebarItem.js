@@ -12,7 +12,7 @@ function SidebarItem(props) {
       const input = document.getElementById("sidebarItemTitle");
       input.select();
     }
-  }, [editing])
+  }, [editing]);
 
   function enableEdit() {
     setEditing(true);

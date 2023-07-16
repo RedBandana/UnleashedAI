@@ -10,12 +10,14 @@ const initialState = {
   error: null,
   messageLoading: null,
   messageError: null,
+  messagesReceived: false,
   choicesLoading: false,
   choicesError: null,
   choiceLoading: false,
   choiceError: null,
   createMessageLoading: false,
   createMessageError: null,
+  createMessageReceived: false,
   deleteMessageLoading: false,
   deleteMessageError: null,
 };
@@ -24,17 +26,20 @@ const messageReducer = handleActions(
   {
     [action.fetchMessagesRequest]: (state) => ({
       ...state,
+      messagesReceived: false,
       loading: true,
       error: null,
     }),
     [action.fetchMessagesSuccess]: (state, { payload }) => ({
       ...state,
       messages: payload,
+      messagesReceived: true,
       loading: false,
       error: null,
     }),
     [action.fetchMessagesFailure]: (state, { payload }) => ({
       ...state,
+      messagesReceived: false,
       loading: false,
       error: payload,
     }),
@@ -88,17 +93,20 @@ const messageReducer = handleActions(
     }),
     [action.createMessageRequest]: (state) => ({
       ...state,
+      createMessageReceived: false,
       createMessageLoading: true,
       createMessageError: null,
     }),
     [action.createMessageSuccess]: (state, { payload }) => ({
       ...state,
       messages: [...state.messages, payload],
+      createMessageReceived: true,
       createMessageLoading: false,
       createMessageError: null,
     }),
     [action.createMessageFailure]: (state, { payload }) => ({
       ...state,
+      createMessageReceived: false,
       createMessageLoading: false,
       createMessageError: payload,
     }),

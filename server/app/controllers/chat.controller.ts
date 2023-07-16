@@ -119,11 +119,9 @@ export class ChatController {
             try {
                 const { userId, chatIndex } = req.params;
                 const chatNo = Number(chatIndex);
-
                 const userContent: IMessageRequest = req.body;
-                const userMessage = await userService.createMessage(userId, chatNo, userContent.content);
-                //user socket emit
 
+                const userMessage = await userService.createMessage(userId, chatNo, userContent.content);
                 const chat = await userService.getChatByIndex(userId, chatNo);
                 const messages = await userService.getMessages(userId, chatNo, 1, 100);
                 messages.push(userMessage);
@@ -134,10 +132,10 @@ export class ChatController {
 
                 const botChoices = await openAIService.sendChatCompletion(chatbotSettings);
                 const botMessage = await userService.createBotMessage(userId, chatNo, botChoices);
+                Converter.messageToLeanDtoNoReturn(botMessage);
 
                 //bot socket emit
-
-                res.status(StatusCodes.OK).send([userMessage, botMessage]);
+                res.status(StatusCodes.OK).send(botMessage);
 
             } catch (error) {
                 res.status(StatusCodes.BAD_REQUEST).send(error.message);
