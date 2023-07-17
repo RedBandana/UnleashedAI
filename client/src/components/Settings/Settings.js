@@ -8,8 +8,7 @@ import { getSettings } from "../../redux/selectors/uiSelectors";
 import { parseToRightType } from "../../utils/functions";
 import "./Settings.scss";
 
-const Settings = (props) => {
-
+const Settings = () => {
     const dispatch = useDispatch();
     const chat = useSelector(fetchChatValue);
     const formSettings = useSelector(getSettings);

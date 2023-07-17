@@ -11,18 +11,18 @@ export const fetchChats = async (userId) => {
   }
 };
 
-export const fetchChat = async (userId, chatIndex) => {
+export const fetchChat = async (userId, chatId) => {
   try {
-    const response = await axios.get(`${API_URL}/${userId}/chats/${chatIndex}`);
+    const response = await axios.get(`${API_URL}/${userId}/chats/${chatId}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
   }
 };
 
-export const editChat = async (userId, chatIndex, chat) => {
+export const editChat = async (userId, chatId, chat) => {
   try {
-    const response = await axios.put(`${API_URL}/${userId}/chats/${chatIndex}`, chat);
+    const response = await axios.put(`${API_URL}/${userId}/chats/${chatId}`, chat);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
@@ -38,9 +38,9 @@ export const createChat = async (userId) => {
   }
 };
 
-export const deleteChat = async (userId, chatIndex) => {
+export const deleteChat = async (userId, chatId) => {
   try {
-    await axios.delete(`${API_URL}/${userId}/chats/${chatIndex}`);
+    await axios.delete(`${API_URL}/${userId}/chats/${chatId}`);
   } catch (error) {
     throw new Error(error.response.data);
   }

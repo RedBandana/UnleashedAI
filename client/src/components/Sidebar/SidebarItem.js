@@ -4,7 +4,7 @@ import './SidebarItem.scss';
 import { SIDEBAR_TITLE_MAX_LENGTH } from '../../utils/constants';
 
 function SidebarItem(props) {
-  const { title, index, isSelected, crudEvents } = props;
+  const { id, title, index, isSelected, crudEvents } = props;
   const [editing, setEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
 
@@ -20,11 +20,11 @@ function SidebarItem(props) {
   }
 
   function getTitle() {
-    if (title.length > SIDEBAR_TITLE_MAX_LENGTH) {
-      return title.substr(0, SIDEBAR_TITLE_MAX_LENGTH) + '...';
+    if (newTitle.length > SIDEBAR_TITLE_MAX_LENGTH) {
+      return newTitle.substr(0, SIDEBAR_TITLE_MAX_LENGTH) + '...';
     }
     else {
-      return title;
+      return newTitle;
     }
   }
 
@@ -33,16 +33,16 @@ function SidebarItem(props) {
   }
 
   function handleOnClick() {
-    crudEvents.onRead(index);
+    crudEvents.onRead(id, index);
   }
 
   function handleTitleSubmit() {
-    crudEvents.onUpdate(index, newTitle);
+    crudEvents.onUpdate(id, index, newTitle);
     setEditing(false);
   }
 
   function handleOnDelete() {
-    crudEvents.onDelete(index);
+    crudEvents.onDelete(id, index);
   }
 
   return (
@@ -65,7 +65,7 @@ function SidebarItem(props) {
           />
         </div>
       ) : (
-        <div className="sidebaritem-title">{getTitle(title)}</div>
+        <div className="sidebaritem-title">{getTitle()}</div>
       )}
       <div className="sidebaritem-buttons">
         {crudEvents.onUpdate != null && (

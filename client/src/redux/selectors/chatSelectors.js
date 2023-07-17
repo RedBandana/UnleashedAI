@@ -2,7 +2,7 @@ export const fetchChatsValue = (state) => state.chats.chats;
 export const fetchChatsLoading = (state) => state.chats.loading;
 export const fetchChatsError = (state) => state.chats.error;
 
-export const fetchChatValue= (state) => state.chats.chat;
+export const fetchChatValue = (state) => state.chats.chat;
 export const fetchChatLoading = (state) => state.chats.chatLoading;
 export const fetchChatError = (state) => state.chats.chatError;
 

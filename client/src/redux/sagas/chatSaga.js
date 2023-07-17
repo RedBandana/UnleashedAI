@@ -15,8 +15,8 @@ function* fetchChatsSaga(action) {
 
 function* fetchChatSaga(action) {
   try {
-    const { userId, chatIndex } = action.payload;
-    const chat = yield call(chatService.fetchChat, userId, chatIndex);
+    const { userId, chatId } = action.payload;
+    const chat = yield call(chatService.fetchChat, userId, chatId);
     yield put(chatActions.fetchChatSuccess(chat));
   } catch (error) {
     yield put(chatActions.fetchChatFailure(error.message));
@@ -25,17 +25,13 @@ function* fetchChatSaga(action) {
 
 function* editChatSaga(action) {
   try {
-    const { chat, userId, chatIndex } = action.payload;
-    const editedChat = yield call(chatService.editChat, userId, chatIndex, chat);
+    const { chat, userId, chatId, chatIndex } = action.payload;
+    const editedChat = yield call(chatService.editChat, userId, chatId, chat);
     yield put(chatActions.fetchChatSuccess(editedChat));
     
     const chats = yield select(fetchChatsValue);
     const newChats = [...chats];
-    const updatedChat = {
-      ...newChats[chatIndex],
-      title: editedChat.title
-    };
-    newChats[chatIndex] = updatedChat;
+    newChats[chatIndex] = editedChat;
     yield put(chatActions.fetchChatsSuccess(newChats));
 
     yield put(chatActions.editChatSuccess());
@@ -56,8 +52,8 @@ function* createChatSaga(action) {
 
 function* deleteChatSaga(action) {
   try {
-    const { userId, chatIndex } = action.payload;
-    yield call(chatService.deleteChat, userId, chatIndex);
+    const { userId, chatId, chatIndex } = action.payload;
+    yield call(chatService.deleteChat, userId, chatId);
     
     const chats = yield select(fetchChatsValue);
     const newChats = [...chats];

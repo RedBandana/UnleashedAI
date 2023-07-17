@@ -5,8 +5,8 @@ import * as messageService from '../../services/messageService';
 
 function* fetchMessagesSaga(action) {
   try {
-    const { userId, chatIndex } = action.payload;
-    const messages = yield call(messageService.fetchMessages, userId, chatIndex);
+    const { userId, chatId } = action.payload;
+    const messages = yield call(messageService.fetchMessages, userId, chatId);
     yield put(messageActions.fetchMessagesSuccess(messages));
   } catch (error) {
     yield put(messageActions.fetchMessagesFailure(error.message));
@@ -15,10 +15,10 @@ function* fetchMessagesSaga(action) {
 
 function* fetchMessageSaga(action) {
   try {
-    const { userId, chatIndex, messageIndex } = action.payload;
+    const { userId, chatId, messageId } = action.payload;
     const message = yield select(fetchMessageValue);
 
-    if (message && message.id === messageIndex) {
+    if (message && message.id === messageId) {
       yield put(messageActions.fetchMessageSuccess(message));
       return;
     }
@@ -26,8 +26,8 @@ function* fetchMessageSaga(action) {
     const response = yield call(
       messageService.fetchMessage,
       userId,
-      chatIndex,
-      messageIndex
+      chatId,
+      messageId
     );
     const messageData = response.data;
 
@@ -39,12 +39,12 @@ function* fetchMessageSaga(action) {
 
 function* fetchChoicesSaga(action) {
   try {
-    const { userId, chatIndex, messageIndex } = action.payload;
+    const { userId, chatId, messageId } = action.payload;
     const choices = yield call(
       messageService.fetchChoices,
       userId,
-      chatIndex,
-      messageIndex
+      chatId,
+      messageId
     );
     yield put(messageActions.fetchChoicesSuccess(choices));
   } catch (error) {
@@ -54,7 +54,7 @@ function* fetchChoicesSaga(action) {
 
 function* fetchChoiceSaga(action) {
   try {
-    const { userId, chatIndex, messageIndex, choiceIndex } = action.payload;
+    const { userId, chatId, messageId, choiceIndex } = action.payload;
     const choice = yield select(fetchChoiceValue);
 
     if (choice && choice.id === choiceIndex) {
@@ -65,8 +65,8 @@ function* fetchChoiceSaga(action) {
     const response = yield call(
       messageService.fetchChoice,
       userId,
-      chatIndex,
-      messageIndex,
+      chatId,
+      messageId,
       choiceIndex
     );
     const choiceData = response.data;
@@ -79,11 +79,11 @@ function* fetchChoiceSaga(action) {
 
 function* createMessageSaga(action) {
   try {
-    const { userId, chatIndex, message } = action.payload;
+    const { userId, chatId, message } = action.payload;
     const newMessage = yield call(
       messageService.createMessage,
       userId,
-      chatIndex,
+      chatId,
       message
     );
     yield put(messageActions.createMessageSuccess(newMessage));
@@ -94,12 +94,12 @@ function* createMessageSaga(action) {
 
 function* deleteMessageSaga(action) {
   try {
-    const { userId, chatIndex, messageIndex } = action.payload;
-    yield call(messageService.deleteMessage, userId, chatIndex, messageIndex);
+    const { userId, chatId, messageId } = action.payload;
+    yield call(messageService.deleteMessage, userId, chatId, messageId);
 
     const messages = yield select(fetchMessagesValue);
     const newMessages = [...messages];
-    newMessages.splice(chatIndex, 1);
+    newMessages.splice(chatId, 1);
 
     yield put(messageActions.deleteMessageSuccess(messages));
   } catch (error) {

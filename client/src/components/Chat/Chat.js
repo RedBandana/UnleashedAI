@@ -13,9 +13,10 @@ import { createMessageLoading, createMessageReceived, fetchMessagesReceived } fr
 import { setSettingsIsOpen } from '../../redux/actions/uiActions';
 
 function Chat(props) {
-    const { index, messages, crudEvents } = props;
+    const { id, messages, crudEvents } = props;
     const [messagesHtml, setMessagesHtml] = useState([]);
     const [shouldScroll, setShouldScroll] = useState("none");
+    const [settingsInitialized, setSettingsInitialized] = useState(false);
 
     const chatBodyRef = useRef(null);
     const settingsRef = useRef(null);
@@ -36,7 +37,14 @@ function Chat(props) {
     }, []);
 
     useEffect(() => {
-        handleSettingsSave(formSettings);
+        if (settingsIsOpen) {
+            setSettingsInitialized(true);
+        }
+        
+        if (!settingsIsOpen && settingsInitialized) {
+            handleSettingsSave(formSettings);
+        }
+
     }, [settingsIsOpen]);
 
     useEffect(() => {
@@ -93,7 +101,7 @@ function Chat(props) {
     function handleAdd(inputValue) {
         const text = inputValue.trim();
         const messageRequest = { content: text };
-        crudEvents.onCreate(index, messageRequest);
+        crudEvents.onCreate(id, messageRequest);
 
         const message = {
             content: text,
@@ -105,16 +113,16 @@ function Chat(props) {
     }
 
     function handleSettingsSave(settings) {
-        crudEvents.onSettingsUpdate(index, settings);
+        crudEvents.onSettingsUpdate(id, settings);
     }
 
-    function handleOnDeleteMessage(messageIndex) {
-        crudEvents.onDelete(index, messageIndex);
+    function handleOnDeleteMessage(messageId, messageIndex) {
+        crudEvents.onDelete(id, messageId);
         removeMessagesHtmlToDisplay(messageIndex);
     }
     
-    function handleOnSelectChoice(messageIndex, choiceIndex) {
-        crudEvents.onSelectChoice(index, messageIndex, choiceIndex);
+    function handleOnSelectChoice(messageId, choiceIndex) {
+        crudEvents.onSelectChoice(id, messageId, choiceIndex);
     }
 
     function handleClickOutside(event) {
@@ -146,7 +154,7 @@ function Chat(props) {
                 </div>
                 {settingsIsOpen && (
                     <div className="chatbot-settings-container" ref={settingsRef}>
-                        <Settings onSave={handleSettingsSave} />
+                        <Settings />
                     </div>
                 )}
                 <div className="chatbot-footer">

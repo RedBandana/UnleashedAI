@@ -2,54 +2,54 @@ import axios from 'axios';
 
 const API_URL = `http://127.0.0.1:3000/api/users`;
 
-export const fetchMessages = async (userId, chatIndex) => {
+export const fetchMessages = async (userId, chatId) => {
   try {
-    const response = await axios.get(`${API_URL}/${userId}/chats/${chatIndex}/messages`);
+    const response = await axios.get(`${API_URL}/${userId}/chats/${chatId}/messages`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
   }
 };
 
-export const fetchMessage = async (userId, chatIndex, messageIndex) => {
+export const fetchMessage = async (userId, chatId, messageId) => {
   try {
-    const response = await axios.get(`${API_URL}/${userId}/chats/${chatIndex}/messages/${messageIndex}`);
+    const response = await axios.get(`${API_URL}/${userId}/chats/${chatId}/messages/${messageId}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
   }
 };
 
-export const fetchChoices = async (userId, chatIndex, messageIndex) => {
+export const fetchChoices = async (userId, chatId, messageId) => {
   try {
-    const response = await axios.get(`${API_URL}/${userId}/chats/${chatIndex}/messages/${messageIndex}/choices`);
+    const response = await axios.get(`${API_URL}/${userId}/chats/${chatId}/messages/${messageId}/choices`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
   }
 };
 
-export const fetchChoice = async (userId, chatIndex, messageIndex, choiceIndex) => {
+export const fetchChoice = async (userId, chatId, messageId, choiceIndex) => {
   try {
-    const response = await axios.get(`${API_URL}/${userId}/chats/${chatIndex}/messages/${messageIndex}/choices/${choiceIndex}`);
+    const response = await axios.get(`${API_URL}/${userId}/chats/${chatId}/messages/${messageId}/choices/${choiceIndex}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
   }
 };
 
-export const createMessage = async (userId, chatIndex, message) => {
+export const createMessage = async (userId, chatId, message) => {
   try {
-    const response = await axios.post(`${API_URL}/${userId}/chats/${chatIndex}/messages`, message);
+    const response = await axios.post(`${API_URL}/${userId}/chats/${chatId}/messages`, message);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);
   }
 };
 
-export const deleteMessage = async (userId, chatIndex, messageIndex) => {
+export const deleteMessage = async (userId, chatId, messageId) => {
   try {
-    await axios.delete(`${API_URL}/${userId}/chats/${chatIndex}/messages/${messageIndex}`);
+    await axios.delete(`${API_URL}/${userId}/chats/${chatId}/messages/${messageId}`);
   } catch (error) {
     throw new Error(error.response.data);
   }

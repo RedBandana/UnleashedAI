@@ -20,13 +20,16 @@ export class Converter {
     }
 
     static chatToChatDtoNoReturn = (chat: any) => {
-        chat.id = chat.index;
-        delete chat._id;
-        delete chat.index;
+        if (chat.index) {
+            chat.id = chat.index;
+            delete chat.index;
+        }
 
         if (chat.settings) {
             delete chat.settings._id;
         }
+
+        delete chat._id;
     }
 
     static messageToChatbotMessage = (message: IMessageDto): ChatbotMessage => {
@@ -51,9 +54,12 @@ export class Converter {
                 message.choiceCount = message.choices.length;
             }
         }
-        message.id = message.index;
 
-        delete message._id;
+        if (message.index) {
+            message.id = message.index;
+            delete message._id;
+        }
+
         delete message.index;
         delete message.choices;
 

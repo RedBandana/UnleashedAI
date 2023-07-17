@@ -53,7 +53,7 @@ const Message = ({ message, index, onDelete, onSelectChoice }) => {
     // Call Prism.highlightAll() after rendering the Markdown content
     Prism.highlightAll();
 
-    const chatMessage = document.getElementById(`chat-message-${index}`);
+    const chatMessage = document.getElementById(`chat-message-${message.id}`);
     const preElements = chatMessage.querySelectorAll('pre');
 
     preElements.forEach((preElement) => {
@@ -79,14 +79,14 @@ const Message = ({ message, index, onDelete, onSelectChoice }) => {
     lists.forEach((list) => {
       list.classList.add('markdown-list');
     });
-  }, [index, message]);
+  }, [message.id, message]);
   
   function handleOptionsClick() {
     setShowOptions(!showOptions);
   };
 
   function handleDeleteClick() {
-    onDelete(index);
+    onDelete(message.id, index);
     setShowOptions(false);
   };
 
@@ -112,7 +112,7 @@ const Message = ({ message, index, onDelete, onSelectChoice }) => {
 
   function trySendSelectChoice(choiceIndex) {
     if (choiceIndex >= 0 && choiceIndex < message.choiceCount) {
-      onSelectChoice(index, choiceIndex);
+      onSelectChoice(message.id, choiceIndex);
     }
   }
 
@@ -120,7 +120,7 @@ const Message = ({ message, index, onDelete, onSelectChoice }) => {
     <div className={`chat-message ${messageClass}`}>
       <div className={`chat-message-container ${textClass}`}>
         <div className={`chat-message-bubble ${textClass}`}>
-          <div className="chat-message-text" id={`chat-message-${index}`}>
+          <div className="chat-message-text" id={`chat-message-${message.id}`}>
             <ReactMarkdown children={message.content} remarkPlugins={[remarkGfm]} />
           </div>
           {message.choiceCount > 1 && (

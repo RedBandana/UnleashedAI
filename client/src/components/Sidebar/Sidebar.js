@@ -45,16 +45,16 @@ function Sidebar(props) {
     crudEvents.onCreate();
   }
 
-  function handleOnClickItem(index) {
-    crudEvents.onRead(index);
+  function handleOnClickItem(id, index) {
+    crudEvents.onRead(id, index);
   }
 
-  function handleOnEditItem(index, newTitle) {
-    crudEvents.onUpdate(index, newTitle);
+  function handleOnEditItem(id, index, newTitle) {
+    crudEvents.onUpdate(id, index, newTitle);
   }
 
-  function handleOnDeleteItem(index) {
-    crudEvents.onDelete(index);
+  function handleOnDeleteItem(id, index) {
+    crudEvents.onDelete(id, index);
   }
 
   function handleOnClearItems() {
@@ -120,6 +120,7 @@ function Sidebar(props) {
             <SidebarItem
               key={index}
               index={index}
+              id={item.id}
               title={item.title}
               isSelected={index === chatSelectedIndex}
               crudEvents={sidebarItemsCrudEvents}

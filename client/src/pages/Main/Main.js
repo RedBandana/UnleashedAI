@@ -26,10 +26,10 @@ function Main() {
   const chatDeleted = useSelector(deleteChatValue);
   const chatCreated = useSelector(createChatValue);
   const messages = useSelector(fetchMessagesValue);
-
+  
   const chatSelectedIndex = useSelector(getChatSelectedIndex);
   const themeIsLight = useSelector(getThemeIsLight);
-
+  
   const touchStartX = useRef(0);
   const touchIsDragging = useRef(false);
   const [sidebarChanged, setSidebarChanged] = useState(false);
@@ -47,21 +47,21 @@ function Main() {
 
   useEffect(() => {
     if (!isInitialized && chats?.length > 0) {
-      dispatchDisplayInfo(0);
+      dispatchDisplayInfo(chats[0].id, 0);
       setIsInitialize(true);
     }
   }, [chats]);
 
   useEffect(() => {
     if (chats.length > 0 && chatDeleted) {
-      dispatchDisplayInfo(0);
+      dispatchDisplayInfo(chats[0].id, 0);
     }
   }, [chatDeleted])
 
   useEffect(() => {
     if (chats.length > 0 && chatCreated) {
-      const chatIndex = chats.length - 1;
-      dispatchDisplayInfo(chatIndex);
+      const sidebarIndex = chats.length - 1;
+      dispatchDisplayInfo(chats[sidebarIndex].id, sidebarIndex);
     }
   }, [chatCreated])
 
@@ -113,10 +113,10 @@ function Main() {
     };
   }, [sidebarChanged]);
 
-  function dispatchDisplayInfo(chatIndex) {
-    dispatch(fetchChatRequest({ userId: USER_ID, chatIndex: chatIndex }));
-    dispatch(fetchMessagesRequest({ userId: USER_ID, chatIndex: chatIndex }));
-    dispatch(setChatSelectedIndex(chatIndex));
+  function dispatchDisplayInfo(chatId, sidebarIndex) {
+    dispatch(fetchChatRequest({ userId: USER_ID, chatId: chatId }));
+    dispatch(fetchMessagesRequest({ userId: USER_ID, chatId: chatId }));
+    dispatch(setChatSelectedIndex(sidebarIndex));
   }
 
   function handleOnToggleTheme() {
@@ -124,17 +124,18 @@ function Main() {
     localStorage.setItem("themeIsLight", themeIsLight);
   };
 
-  function handleOnClickItem(chatIndex) {
-    dispatchDisplayInfo(chatIndex);
+  function handleOnClickItem(chatId, sidebarIndex) {
+    dispatchDisplayInfo(chatId, sidebarIndex);
   }
 
   function handleOnAddItem() {
     dispatch(createChatRequest({ userId: USER_ID }));
   }
 
-  function handleOnEditItem(chatIndex, newTitle) {
+  function handleOnEditItem(chatId, chatIndex, newTitle) {
     dispatch(editChatRequest({
       userId: USER_ID,
+      chatId: chatId,
       chatIndex: chatIndex,
       chat: {
         title: newTitle
@@ -142,45 +143,50 @@ function Main() {
     }));
   }
 
-  function handleOnDeleteItem(index) {
-    dispatch(deleteChatRequest({ userId: USER_ID, chatIndex: index }));
-  }
-
-  function handleOnClearItems() {
-    dispatch(clearChatsRequest({ userId: USER_ID }))
-  }
-
-  function handleOnEditSettings(chatIndex, settings) {
+  function handleOnEditSettings(chatId, settings) {
     dispatch(editChatRequest({
       userId: USER_ID,
-      chatIndex: chatIndex,
+      chatId: chatId,
+      chatIndex: chatSelectedIndex,
       chat: {
         settings: settings
       }
     }));
   }
 
-  function handleOnSendMessage(chatIndex, message) {
+  function handleOnDeleteItem(index, chatIndex) {
+    dispatch(deleteChatRequest({
+      userId: USER_ID,
+      chatId: index,
+      chatIndex: chatIndex,
+    }));
+  }
+
+  function handleOnClearItems() {
+    dispatch(clearChatsRequest({ userId: USER_ID }))
+  }
+
+  function handleOnSendMessage(chatId, message) {
     dispatch(createMessageRequest({
       userId: USER_ID,
-      chatIndex: chatIndex,
+      chatId: chatId,
       message: message
     }))
   }
 
-  function handleOnDeleteMessage(chatIndex, messageIndex) {
+  function handleOnDeleteMessage(chatId, messageId) {
     dispatch(deleteMessageRequest({
       userId: USER_ID,
-      chatIndex: chatIndex,
-      messageIndex: messageIndex
+      chatId: chatId,
+      messageId: messageId
     }))
   }
 
-  function handleOnSelectChoice(chatIndex, messageIndex, choiceIndex) {
+  function handleOnSelectChoice(chatId, messageId, choiceIndex) {
     dispatch(fetchChoiceRequest({
       userId: USER_ID,
-      chatIndex: chatIndex,
-      messageIndex: messageIndex,
+      chatId: chatId,
+      messageId: messageId,
       choiceIndex: choiceIndex
     }))
   }
@@ -220,9 +226,9 @@ function Main() {
             />
           )
         }
-        {messages && chats.length > 0 ? (
+        {messages && chat?.id ? (
           <Chat
-            index={chatSelectedIndex}
+            id={chat.id}
             messages={messages}
             crudEvents={chatCrudEvents}
           />

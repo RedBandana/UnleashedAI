@@ -111,10 +111,7 @@ export class UserService extends DBCollectionService {
             { $set: updateOperations }
         );
         await this.query.lean().exec();
-
         const newChat = await this.getChatByIndex(userId, chatIndex);
-        Converter.chatToChatDtoNoReturn(newChat);
-
         return newChat;
     }
 
