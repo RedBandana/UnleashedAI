@@ -1,12 +1,13 @@
-import { IChat, IMessageLean, ISettings } from "@app/db-models/chat";
+import { IChat, IMessageBot, IMessageLean, IMessageUser, ISettings } from "@app/db-models/chat";
 
 export class ChatUtils {
     static DEFAULT_COUNT = 50;
 
-    static getDefaultChat = () => {
-        const chat: IChat =
-        {
-            title: 'New chat',
+    static getDefaultChat = (index: number) => {
+        const chat: IChat = {
+            title: `Chat ${index + 1}`,
+            isActive: true,
+            index: index,
             messages: [],
             settings: {
                 model: 'gpt-3.5-turbo',
@@ -26,6 +27,31 @@ export class ChatUtils {
             creationTime: new Date()
         }
         return chat;
+    }
+
+    static getDefaultUserMessage(index: number, content: string): IMessageUser {
+        const message: IMessageUser = {
+            content: content,
+            index: index,
+            isActive: true,
+            isUser: true,
+            creationTime: new Date()
+        }
+
+        return message;
+    }
+
+    static getDefaultBotMessage(index: number, choices: string[]) {
+        const message: IMessageBot = {
+            choices: choices, 
+            index: index,
+            isActive: true,
+            choiceIndex: 0, 
+            isUser: false, 
+            creationTime: new Date()
+        }
+
+        return message;
     }
 
     static getMessagesTokens = (messages: IMessageLean[]) => {

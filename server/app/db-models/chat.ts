@@ -6,6 +6,8 @@ export interface IMessage {
   choices?: string[];
   choiceIndex?: number;
   content?: string;
+  index: number;
+  isActive: boolean;
   isUser: boolean;
   creationTime: Date;
 }
@@ -16,6 +18,8 @@ export interface IMessageRequest {
 
 export interface IMessageUser {
   _id?: ObjectId;
+  index: number;
+  isActive: boolean;
   content: string;
   isUser: boolean;
   creationTime: Date;
@@ -27,12 +31,15 @@ export interface IMessageBot {
   choiceIndex: number;
   isUser: boolean;
   creationTime: Date;
+  index: number;
+  isActive: boolean;
 }
 
 export interface IMessageLean {
   _id?: ObjectId;
   choiceCount?: number;
   choiceIndex?: number;
+  index: number;
   content: string;
   isUser: boolean;
   creationTime: Date;
@@ -40,6 +47,8 @@ export interface IMessageLean {
 
 export interface IChat {
   _id?: ObjectId;
+  index: number;
+  isActive: boolean;
   title: string;
   settings: ISettings;
   messages: IMessage[];
@@ -47,13 +56,16 @@ export interface IChat {
 }
 
 export interface IChatDetail {
-  _id?: ObjectId;
-  title?: string;
+  _id: ObjectId;
+  index: number;
+  title: string;
   settings: ISettings;
   messageCount?: number;
 }
 
 export interface IChatLean {
+  _id: ObjectId;
+  index: number;
   title: string;
   settings: ISettings;
 }
@@ -99,22 +111,18 @@ export const MessageSchema = new Schema<IMessage>({
   choices: { type: [String] },
   choiceIndex: { type: Number },
   content: { type: String },
+  index: { type: Number, required: true },
+  isActive: { type: Boolean, required: true, default: true },
   isUser: { type: Boolean, required: true },
   creationTime: { type: Date, required: true, default: Date.now },
 });
 
 export const ChatSchema = new Schema<IChat>({
   title: { type: String, required: true },
+  index: { type: Number, required: true },
+  isActive: { type: Boolean, required: true, default: true },
   settings: { type: SettingsSchema, required: true },
   messages: { type: [MessageSchema], required: true, default: [] },
   creationTime: { type: Date, required: true, default: Date.now },
 });
 
-export class ChatProjection {
-  static chatbot: { [key: string]: number } = {
-    _id: 0,
-    system: 0,
-    memory: 0,
-    devOptions: 0,
-  };
-}

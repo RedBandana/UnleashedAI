@@ -2,32 +2,40 @@ import { ObjectId } from "mongodb"
 import { PipelineStage } from "mongoose"
 
 export abstract class UserProjection {
-  static user: { [key: string]: boolean } = {
+  static chatCount: { [key: string]: any } = {
+    "_id": true,
+    "chatCount": { $size: "$chats" },
+  }
+
+  static chatMessageCount: { [key: string]: any } = {
+    "chat._id": true,
+    "chat.messageCount": { $size: "$chat.messages" },
+  }
+
+  static user: { [key: string]: any } = {
     "_id": true,
     "name": true,
     "email": true,
   }
 
-  static chats: { [key: string]: boolean } = {
-    "_id": true,
-    "chats": true,
-  }
-
-  static chatsLean: { [key: string]: boolean } = {
+  static chatsLean: { [key: string]: any } = {
     "_id": true,
     "chats._id": true,
     "chats.title": true,
+    "chats.index": true,
   }
 
   static chat: { [key: string]: any } = {
     "chat._id": true,
     "chat.title": true,
     "chat.settings": true,
+    "chat.index": true,
     "chat.messageCount": { $size: "$chat.messages" },
   }
 
   static message: { [key: string]: any } = {
     "message._id": true,
+    "message.index": true,
     "message.content": true,
     "message.isUser": true,
     "message.creationTime": true,
@@ -37,11 +45,12 @@ export abstract class UserProjection {
 
   static messages: { [key: string]: any } = {
     "messages._id": true,
+    "messages.index": true,
     "messages.content": true,
     "messages.isUser": true,
     "messages.creationTime": true,
     "messages.choices": true,
-    "messages.choiceIndex": true
+    "messages.choiceIndex": true,
   }
 }
 
@@ -55,15 +64,19 @@ export abstract class UserPipeline {
         $match: { _id: new ObjectId(userId) }
       },
       {
-        $project: { chats: { $slice: ["$chats", startIndex, endIndex] } }
+        $project: {
+          chats: {
+            $filter: {
+              input: { $slice: ["$chats", startIndex, endIndex] },
+              cond: { $eq: ["$$this.isActive", true] }
+            }
+          }
+        }
       },
       {
         $project: UserProjection.chatsLean
-      },
-      {
-        $limit: 1
       }
-    ]
+    ];
 
     return aggregate;
   }
@@ -74,13 +87,22 @@ export abstract class UserPipeline {
         $match: { _id: new ObjectId(userId) }
       },
       {
-        $project: { chat: { $arrayElemAt: ["$chats", -1] } }
+        $project: {
+          chat: {
+            $arrayElemAt: [
+              {
+                $filter: {
+                  input: "$chats",
+                  cond: { $eq: ["$$this.isActive", true] }
+                }
+              },
+              -1
+            ]
+          }
+        }
       },
       {
         $project: UserProjection.chat
-      },
-      {
-        $limit: 1
       }
     ]
 
@@ -96,10 +118,29 @@ export abstract class UserPipeline {
         $project: { chat: { $arrayElemAt: ["$chats", chatIndex] } }
       },
       {
-        $project: UserProjection.chat
+        $match: { "chat.isActive": true }
       },
       {
-        $limit: 1
+        $project: UserProjection.chat
+      }
+    ]
+
+    return aggregate;
+  }
+
+  static chatIndexMessageCount(userId: string, chatIndex: number): PipelineStage[] {
+    const aggregate: PipelineStage[] = [
+      {
+        $match: { _id: new ObjectId(userId) }
+      },
+      {
+        $project: { chat: { $arrayElemAt: ["$chats", chatIndex] } }
+      },
+      {
+        $match: { "chat.isActive": true }
+      },
+      {
+        $project: UserProjection.chatMessageCount
       }
     ]
 
@@ -117,13 +158,20 @@ export abstract class UserPipeline {
         $project: { chat: { $arrayElemAt: ["$chats", chatIndex] } }
       },
       {
-        $project: { messages: { $slice: ["$chat.messages", startIndex, endIndex] } }
+        $match: { "chat.isActive": true }
+      },
+      {
+        $project: {
+          messages: {
+            $filter: {
+              input: { $slice: ["$chat.messages", startIndex, endIndex] },
+              cond: { $eq: ["$$this.isActive", true] }
+            }
+          }
+        }
       },
       {
         $project: UserProjection.messages
-      },
-      {
-        $limit: 1
       }
     ]
 
@@ -139,13 +187,16 @@ export abstract class UserPipeline {
         $project: { chat: { $arrayElemAt: ["$chats", chatIndex] } }
       },
       {
+        $match: { "chat.isActive": true }
+      },
+      {
         $project: { message: { $arrayElemAt: ["$chat.messages", messageIndex] } }
       },
       {
-        $project: UserProjection.message
+        $match: { "message.isActive": true }
       },
       {
-        $limit: 1
+        $project: UserProjection.message
       }
     ]
 
@@ -162,13 +213,25 @@ export abstract class UserPipeline {
         $project: { chat: { $arrayElemAt: ["$chats", chatIndex] } }
       },
       {
-        $project: { message: { $arrayElemAt: ["$chat.messages", -1] } }
+        $match: { "chat.isActive": true }
+      },
+      {
+        $project: {
+          message: {
+            $arrayElemAt: [
+              {
+                $filter: {
+                  input: "$chat.messages",
+                  cond: { $eq: ["$$this.isActive", true] }
+                }
+              },
+              -1
+            ]
+          }
+        }
       },
       {
         $project: UserProjection.message
-      },
-      {
-        $limit: 1
       }
     ]
 

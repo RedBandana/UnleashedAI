@@ -30,7 +30,7 @@ export class UserController {
         this.router.get('/:userId', async (req: Request, res: Response) => {
             const id = decodeURIComponent(req.params.userId);
             try {
-                const user = await this.userService.getDocumentByIdLean(id, UserProjection.user)
+                const user = await this.userService.getDocumentByIdLean(id, UserProjection.user);
                 Controller.handleGetResponse(res, user);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);

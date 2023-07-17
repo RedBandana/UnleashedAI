@@ -5,7 +5,7 @@ import { DBModelName } from "@app/enums/db-model-name";
 import { UserModel } from '@app/db-models/user';
 import { IChat, IChatLean, IChatDetail, IMessage, IMessageLean, IMessageBot, IMessageUser } from '@app/db-models/chat';
 import { ChatUtils } from '@app/utils/chat.utils';
-import { UserPipeline } from '@app/db-models/dto/user.dto';
+import { UserPipeline, UserProjection } from '@app/db-models/dto/user.dto';
 import { Converter } from '@app/utils/converter';
 
 const COLLECTION_NAME = DBModelName.USER;
@@ -62,18 +62,20 @@ export class UserService extends DBCollectionService {
             name,
             email,
             creationTime: Date.now(),
-            chats: ChatUtils.getDefaultChat()
+            chats: ChatUtils.getDefaultChat(0)
         });
         await user.save();
         return user;
     }
 
     async createChat(userId: string): Promise<IChatDetail> {
-        const chat: IChat = ChatUtils.getDefaultChat();
+        const user: any = await this.getDocumentByIdLean(userId, UserProjection.chatCount);
+        const chatIndex = user.chatCount;
+        const chat: IChat = ChatUtils.getDefaultChat(chatIndex);
         this.query = this.model.updateOne({ _id: userId }, { $push: { chats: chat } });
         await this.query.lean().exec();
 
-        const newChat = await this.getChatLatest(userId);
+        const newChat = await this.getChatByIndex(userId, chatIndex);
         return newChat;
     }
 
@@ -114,50 +116,54 @@ export class UserService extends DBCollectionService {
     }
 
     async createMessage(userId: string, chatIndex: number, content: string): Promise<IMessageUser> {
-        const message: IMessageUser = { content: content, isUser: true, creationTime: new Date() }
+        const user = await this.getOneDocumentByAggregate(UserPipeline.chatIndexMessageCount(userId, chatIndex));
+        const messageIndex = user.chat.messageCount;
+        const message: IMessageUser = ChatUtils.getDefaultUserMessage(messageIndex, content);
         this.query = this.model.updateOne(
             { _id: userId },
             { $push: { [`chats.${chatIndex}.messages`]: message } }
         );
         await this.query.lean().exec();
-        const newMessage: any = await this.getMessageLatest(userId, chatIndex);
+        const newMessage: any = await this.getMessageByIndex(userId, chatIndex, messageIndex);
 
         return newMessage;
     }
 
     async createBotMessage(userId: string, chatIndex: number, choices: string[]): Promise<IMessageBot> {
-        const message: IMessageBot = {
-            choices: choices, choiceIndex: 0, isUser: false, creationTime: new Date()
-        }
-        this.query = this.model.updateOne({ _id: userId }, { $push: { [`chats.${chatIndex}.messages`]: message } });
-        await this.query.lean().exec();
+        const user = await this.getOneDocumentByAggregate(UserPipeline.chatIndexMessageCount(userId, chatIndex));
+        const messageIndex = user.chat.messageCount;
+        const message: IMessageBot = ChatUtils.getDefaultBotMessage(user.chat.messageCount, choices);
 
-        const newMessage: any = await this.getMessageLatest(userId, chatIndex);
+        this.query = this.model.updateOne(
+            { _id: userId },
+            { $push: { [`chats.${chatIndex}.messages`]: message } }
+        );
+        await this.query.lean().exec();
+        const newMessage: any = await this.getMessageByIndex(userId, chatIndex, messageIndex);
+        
         return newMessage;
     }
 
     async deleteChats(userId: string): Promise<void> {
         this.query = this.model.updateOne(
             { _id: userId },
-            { $set: { chats: [] } }
+            { $set: { "chats.$[].isActive": false } }
         );
         await this.query.lean().exec();
     }
 
     async deleteChat(userId: string, chatIndex: number): Promise<void> {
-        const chat = await this.getChatByIndex(userId, chatIndex);
         this.query = this.model.updateOne(
             { _id: userId },
-            { $pull: { chats: { _id: chat._id } } }
+            { $set: { [`chats.${chatIndex}.isActive`]: false } }
         );
         await this.query.lean().exec();
     }
 
     async deleteMessage(userId: string, chatIndex: number, messageIndex: number): Promise<void> {
-        const message = await this.getMessageByIndex(userId, chatIndex, messageIndex);
         this.query = this.model.updateOne(
             { _id: userId },
-            { $pull: { [`chats.${chatIndex}.messages`]: { _id: message._id } } }
+            { $set: { [`chats.${chatIndex}.messages.${messageIndex}.isActive`]: false } }
         );
         await this.query.lean().exec();
     }
