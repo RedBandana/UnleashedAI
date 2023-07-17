@@ -12,37 +12,17 @@ export interface IMessage {
   creationTime: Date;
 }
 
+export interface IMessageDto {
+  id: number;
+  content: string;
+  choiceIndex?: number;
+  choiceCount?: number;
+  isUser: boolean;
+  creationTime: Date;
+}
+
 export interface IMessageRequest {
   content: string;
-}
-
-export interface IMessageUser {
-  _id?: ObjectId;
-  index: number;
-  isActive: boolean;
-  content: string;
-  isUser: boolean;
-  creationTime: Date;
-}
-
-export interface IMessageBot {
-  _id?: ObjectId;
-  choices: string[];
-  choiceIndex: number;
-  isUser: boolean;
-  creationTime: Date;
-  index: number;
-  isActive: boolean;
-}
-
-export interface IMessageLean {
-  _id?: ObjectId;
-  choiceCount?: number;
-  choiceIndex?: number;
-  index: number;
-  content: string;
-  isUser: boolean;
-  creationTime: Date;
 }
 
 export interface IChat {
@@ -55,17 +35,15 @@ export interface IChat {
   creationTime: Date;
 }
 
-export interface IChatDetail {
-  _id: ObjectId;
-  index: number;
+export interface IChatDto {
+  id: number;
   title: string;
-  settings: ISettings;
+  settings?: ISettings;
+  creationTime?: Date;
   messageCount?: number;
 }
 
-export interface IChatLean {
-  _id: ObjectId;
-  index: number;
+export interface IChatRequest {
   title: string;
   settings: ISettings;
 }

@@ -3,7 +3,7 @@ import { DatabaseService } from './database.service';
 import { DBCollectionService } from './db-collection.service';
 import { DBModelName } from "@app/enums/db-model-name";
 import { UserModel } from '@app/db-models/user';
-import { IChat, IChatLean, IChatDetail, IMessage, IMessageLean, IMessageBot, IMessageUser } from '@app/db-models/chat';
+import { IChat, IChatDto, IChatRequest, IMessage, IMessageDto } from '@app/db-models/chat';
 import { ChatUtils } from '@app/utils/chat.utils';
 import { UserPipeline, UserProjection } from '@app/db-models/dto/user.dto';
 import { Converter } from '@app/utils/converter';
@@ -23,25 +23,29 @@ export class UserService extends DBCollectionService {
         return await this.query.lean().select(projection).exec();
     }
 
-    async getChats(userId: string, page: number, count: number): Promise<IChatLean[]> {
+    async getChats(userId: string, page: number, count: number): Promise<IChatDto[]> {
         const user = await this.getOneDocumentByAggregate(UserPipeline.chats(userId, page, count));
-        return user.chats;
+        const chats: [] = user.chats;
+        chats.forEach(c => Converter.chatToChatDtoNoReturn(c));
+        return chats;
     }
 
-    async getChatByIndex(userId: string, chatIndex: number): Promise<IChatDetail> {
+    async getChatByIndex(userId: string, chatIndex: number): Promise<IChatDto> {
         const user = await this.getOneDocumentByAggregate(UserPipeline.chatIndex(userId, chatIndex));
+        Converter.chatToChatDtoNoReturn(user.chat);
         return user.chat;
     }
 
-    async getChatLatest(userId: string): Promise<IChatDetail> {
+    async getChatLatest(userId: string): Promise<IChatDto> {
         const user = await this.getOneDocumentByAggregate(UserPipeline.chatLatest(userId));
+        Converter.chatToChatDtoNoReturn(user.chat);
         return user.chat;
     }
 
-    async getMessages(userId: string, chatIndex: number, page: number, count: number): Promise<IMessageLean[]> {
+    async getMessages(userId: string, chatIndex: number, page: number, count: number): Promise<IMessageDto[]> {
         const user = await this.getOneDocumentByAggregate(UserPipeline.messages(userId, chatIndex, page, count));
         const messages: [] = user.messages;
-        messages.forEach(m => Converter.messageToLeanDtoNoReturn(m));
+        messages.forEach(m => Converter.messageToDtoNoReturn(m));
         return messages;
     }
 
@@ -56,6 +60,13 @@ export class UserService extends DBCollectionService {
         Converter.messageToDtoNoReturn(user.message);
         return user.message;
     }
+    
+    async getMessageChoices(userId: string, chatIndex: number, messageIndex: number): Promise<IMessage> {
+        console.log('choices');
+        const user = await this.getOneDocumentByAggregate(UserPipeline.messageIndexChoices(userId, chatIndex, messageIndex));
+        console.log('choices', user);
+        return user.choices;
+    }
 
     async createUser(name: string, email: string) {
         const user = new UserModel({
@@ -68,7 +79,7 @@ export class UserService extends DBCollectionService {
         return user;
     }
 
-    async createChat(userId: string): Promise<IChatDetail> {
+    async createChat(userId: string): Promise<IChatDto> {
         const user: any = await this.getDocumentByIdLean(userId, UserProjection.chatCount);
         const chatIndex = user.chatCount;
         const chat: IChat = ChatUtils.getDefaultChat(chatIndex);
@@ -79,7 +90,7 @@ export class UserService extends DBCollectionService {
         return newChat;
     }
 
-    async updateChat(userId: string, chatIndex: number, chat: IChatLean): Promise<IChatDetail> {
+    async updateChat(userId: string, chatIndex: number, chat: IChatRequest): Promise<IChatDto> {
         const updateOperations: any = {};
 
         if (chat.title) {
@@ -102,6 +113,8 @@ export class UserService extends DBCollectionService {
         await this.query.lean().exec();
 
         const newChat = await this.getChatByIndex(userId, chatIndex);
+        Converter.chatToChatDtoNoReturn(newChat);
+
         return newChat;
     }
 
@@ -115,32 +128,33 @@ export class UserService extends DBCollectionService {
         await this.query.lean().exec();
     }
 
-    async createMessage(userId: string, chatIndex: number, content: string): Promise<IMessageUser> {
+    async createMessage(userId: string, chatIndex: number, content: string): Promise<IMessageDto> {
         const user = await this.getOneDocumentByAggregate(UserPipeline.chatIndexMessageCount(userId, chatIndex));
         const messageIndex = user.chat.messageCount;
-        const message: IMessageUser = ChatUtils.getDefaultUserMessage(messageIndex, content);
+        const message = ChatUtils.getDefaultUserMessage(messageIndex, content);
+
         this.query = this.model.updateOne(
             { _id: userId },
             { $push: { [`chats.${chatIndex}.messages`]: message } }
         );
+
         await this.query.lean().exec();
         const newMessage: any = await this.getMessageByIndex(userId, chatIndex, messageIndex);
-
         return newMessage;
     }
 
-    async createBotMessage(userId: string, chatIndex: number, choices: string[]): Promise<IMessageBot> {
+    async createBotMessage(userId: string, chatIndex: number, choices: string[]): Promise<IMessageDto> {
         const user = await this.getOneDocumentByAggregate(UserPipeline.chatIndexMessageCount(userId, chatIndex));
         const messageIndex = user.chat.messageCount;
-        const message: IMessageBot = ChatUtils.getDefaultBotMessage(user.chat.messageCount, choices);
+        const message = ChatUtils.getDefaultBotMessage(user.chat.messageCount, choices);
 
         this.query = this.model.updateOne(
             { _id: userId },
             { $push: { [`chats.${chatIndex}.messages`]: message } }
         );
+
         await this.query.lean().exec();
         const newMessage: any = await this.getMessageByIndex(userId, chatIndex, messageIndex);
-        
         return newMessage;
     }
 

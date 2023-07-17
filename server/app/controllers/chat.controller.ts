@@ -5,8 +5,7 @@ import { OpenAIService } from '@app/services/openai.service';
 import { Converter } from '@app/utils/converter';
 import { Controller } from './base.controller';
 import { ChatUtils } from '@app/utils/chat.utils';
-import { UserPipeline } from '@app/db-models/dto/user.dto';
-import { IChatLean, IMessageRequest } from '@app/db-models/chat';
+import { IChatRequest, IMessageRequest } from '@app/db-models/chat';
 
 export class ChatController {
 
@@ -30,8 +29,8 @@ export class ChatController {
             try {
                 const { userId, chatIndex } = req.params;
                 const chatNo = Number(chatIndex);
-                const user = await userService.getOneDocumentByAggregate(UserPipeline.chatIndex(userId, chatNo));
-                Controller.handleGetResponse(res, user.chat);
+                const chat: any = await userService.getChatByIndex(userId, chatNo);
+                Controller.handleGetResponse(res, chat);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }
@@ -68,8 +67,8 @@ export class ChatController {
                 const { userId, chatIndex, messageIndex } = req.params;
                 const chatNo = Number(chatIndex);
                 const messageNo = Number(messageIndex);
-                const message = await userService.getMessageByIndex(userId, chatNo, messageNo);
-                Controller.handleGetResponse(res, message.choices);
+                const choices = await userService.getMessageChoices(userId, chatNo, messageNo);
+                Controller.handleGetResponse(res, choices);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }
@@ -81,12 +80,10 @@ export class ChatController {
                 const chatNo = Number(chatIndex);
                 const messageNo = Number(messageIndex);
                 const choiceNo = Number(choiceIndex);
-                const message: any = await userService.getMessageByIndex(userId, chatNo, messageNo);
-                
-                message.choiceIndex = choiceNo;
+                const choices: any = await userService.getMessageChoices(userId, chatNo, messageNo);
                 await userService.updateMessageChoice(userId, chatNo, messageNo, choiceNo);
-                
-                const choice = message.choices[choiceNo];
+
+                const choice = choices[choiceNo];
                 Controller.handleGetResponse(res, choice);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
@@ -97,7 +94,7 @@ export class ChatController {
             try {
                 const { userId, chatIndex } = req.params;
                 const chatNo = Number(chatIndex);
-                const chatEdit = req.body as IChatLean;
+                const chatEdit = req.body as IChatRequest;
                 const finalChat = await userService.updateChat(userId, chatNo, chatEdit);
                 Controller.handlePutResponse(res, finalChat);
             } catch (error) {
@@ -122,7 +119,7 @@ export class ChatController {
                 const userContent: IMessageRequest = req.body;
 
                 const userMessage = await userService.createMessage(userId, chatNo, userContent.content);
-                const chat = await userService.getChatByIndex(userId, chatNo);
+                const chat: any = await userService.getChatByIndex(userId, chatNo);
                 const messages = await userService.getMessages(userId, chatNo, 1, 100);
                 messages.push(userMessage);
 
@@ -132,7 +129,6 @@ export class ChatController {
 
                 const botChoices = await openAIService.sendChatCompletion(chatbotSettings);
                 const botMessage = await userService.createBotMessage(userId, chatNo, botChoices);
-                Converter.messageToLeanDtoNoReturn(botMessage);
 
                 //bot socket emit
                 res.status(StatusCodes.OK).send(botMessage);

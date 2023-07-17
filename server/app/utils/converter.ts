@@ -1,5 +1,5 @@
 import { ChatbotMessage, ChatbotSettings } from "@app/db-models/chatbot";
-import { ISettings, IMessageLean } from "@app/db-models/chat";
+import { ISettings, IMessageDto } from "@app/db-models/chat";
 
 export class Converter {
 
@@ -14,7 +14,22 @@ export class Converter {
         return projectedObject;
     }
 
-    static messageToChatbotMessage = (message: IMessageLean): ChatbotMessage => {
+    static userToUserDtoNoReturn = (user: any) => {
+        user.id = user._id;
+        delete user._id;
+    }
+
+    static chatToChatDtoNoReturn = (chat: any) => {
+        chat.id = chat.index;
+        delete chat._id;
+        delete chat.index;
+
+        if (chat.settings) {
+            delete chat.settings._id;
+        }
+    }
+
+    static messageToChatbotMessage = (message: IMessageDto): ChatbotMessage => {
         const chatbotMessages: ChatbotMessage = {
             role: message.isUser ? "user" : "assistant",
             content: message.content
@@ -23,18 +38,6 @@ export class Converter {
     }
 
     static messageToDtoNoReturn(message: any): void {
-        if (message.isUser) {
-            delete message.choices;
-            delete message.choiceIndex;
-        }
-        else {
-            delete message.content;
-        }
-
-        return message;
-    }
-
-    static messageToLeanDtoNoReturn(message: any): void {
         if (message.isUser) {
             delete message.choiceIndex;
         }
@@ -48,7 +51,10 @@ export class Converter {
                 message.choiceCount = message.choices.length;
             }
         }
+        message.id = message.index;
 
+        delete message._id;
+        delete message.index;
         delete message.choices;
 
         return message;

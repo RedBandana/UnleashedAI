@@ -56,6 +56,32 @@ export abstract class UserProjection {
 
 export abstract class UserPipeline {
 
+  static user(userId: string): PipelineStage[] {
+    const aggregate: PipelineStage[] = [
+      {
+        $match: { _id: new ObjectId(userId) }
+      },
+      {
+        $project: UserProjection.user
+      }
+    ]
+
+    return aggregate;
+  }
+
+  static userByEmail(email: string): PipelineStage[] {
+    const aggregate: PipelineStage[] = [
+      {
+        $match: { email: email }
+      },
+      {
+        $project: UserProjection.user
+      }
+    ]
+
+    return aggregate;
+  }
+
   static chats(userId: string, page: number, count: number): PipelineStage[] {
     const startIndex = (page - 1) * count;
     const endIndex = startIndex + count;
@@ -238,4 +264,28 @@ export abstract class UserPipeline {
     return aggregate;
   }
 
+  static messageIndexChoices(userId: string, chatIndex: number, messageIndex: number): PipelineStage[] {
+    const aggregate: PipelineStage[] = [
+      {
+        $match: { _id: new ObjectId(userId) }
+      },
+      {
+        $project: { chat: { $arrayElemAt: ["$chats", chatIndex] } }
+      },
+      {
+        $match: { "chat.isActive": true }
+      },
+      {
+        $project: { message: { $arrayElemAt: ["$chat.messages", messageIndex] } }
+      },
+      {
+        $match: { "message.isActive": true }
+      },
+      {
+        $project: { choices: "$message.choices" }
+      }
+    ];
+
+    return aggregate;
+  }
 }

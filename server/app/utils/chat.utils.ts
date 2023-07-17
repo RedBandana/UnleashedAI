@@ -1,4 +1,4 @@
-import { IChat, IMessageBot, IMessageLean, IMessageUser, ISettings } from "@app/db-models/chat";
+import { IChat, IMessage, IMessageDto, ISettings } from "@app/db-models/chat";
 
 export class ChatUtils {
     static DEFAULT_COUNT = 50;
@@ -29,8 +29,8 @@ export class ChatUtils {
         return chat;
     }
 
-    static getDefaultUserMessage(index: number, content: string): IMessageUser {
-        const message: IMessageUser = {
+    static getDefaultUserMessage(index: number, content: string): IMessage {
+        const message: IMessage = {
             content: content,
             index: index,
             isActive: true,
@@ -41,8 +41,8 @@ export class ChatUtils {
         return message;
     }
 
-    static getDefaultBotMessage(index: number, choices: string[]) {
-        const message: IMessageBot = {
+    static getDefaultBotMessage(index: number, choices: string[]): IMessage {
+        const message: IMessage = {
             choices: choices, 
             index: index,
             isActive: true,
@@ -54,7 +54,7 @@ export class ChatUtils {
         return message;
     }
 
-    static getMessagesTokens = (messages: IMessageLean[]) => {
+    static getMessagesTokens = (messages: IMessageDto[]) => {
         let totalTokens = 0;
         for (let message of messages) {
             totalTokens += message.content.length;
@@ -83,7 +83,7 @@ export class ChatUtils {
         }
     }
 
-    static getRequestMessages = (messages: IMessageLean[], settings: ISettings) => {
+    static getRequestMessages = (messages: IMessageDto[], settings: ISettings) => {
         const memorizedMessages = messages.slice(-settings.memory);
         const modelMaxToken = this.getModelMaxTokens(settings.model);
         const tokenSafeDelta = 2000;
