@@ -9,7 +9,7 @@ import TypingDots from '../TypingDots/TypingDots';
 
 import './Chat.scss';
 import { getSettings, getSettingsIsOpen, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
-import { createMessageLoading, createMessageReceived, fetchMessagesReceived } from '../../redux/selectors/messageSelectors';
+import { createMessageLoading, createMessageReceived, fetchChoiceValue, fetchMessagesReceived } from '../../redux/selectors/messageSelectors';
 import { setSettingsIsOpen } from '../../redux/actions/uiActions';
 import { deleteChatValue } from '../../redux/selectors/chatSelectors';
 
@@ -30,6 +30,7 @@ function Chat(props) {
     const messagesReceived = useSelector(fetchMessagesReceived);
     const messageReceived = useSelector(createMessageReceived);
     const chatDeleted = useSelector(deleteChatValue);
+    const choice = useSelector(fetchChoiceValue);
 
     useEffect(() => {
         document.addEventListener("mousedown", handleClickOutside);
@@ -68,6 +69,23 @@ function Chat(props) {
             setMessagesHtml([]);
         }
     }, [chatDeleted])
+
+    useEffect(() => {
+        if (!choice || !messages) {
+            return;
+        }
+
+        const index = messages.findIndex(m => m.id == choice.messageId);
+        const message = messages[index];
+        if (!message) {
+            return;
+        }
+
+        const updatedMessageHtml = <Message key={index} id={message.id} message={message} onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} />
+        const messagesToDisplay = [...messagesHtml];
+        messagesToDisplay[index] = updatedMessageHtml;
+        setMessagesHtml(messagesToDisplay);
+    }, [choice]);
 
     useEffect(() => {
         if (shouldScroll != "none") {

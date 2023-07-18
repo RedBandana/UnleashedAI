@@ -1,5 +1,5 @@
 import { takeLatest, select, call, put } from 'redux-saga/effects';
-import { fetchChoiceValue, fetchMessageValue, fetchMessagesValue } from '../selectors/messageSelectors';
+import { fetchMessageValue, fetchMessagesValue } from '../selectors/messageSelectors';
 import * as messageActions from '../actions/messageActions';
 import * as messageService from '../../services/messageService';
 
@@ -55,23 +55,29 @@ function* fetchChoicesSaga(action) {
 function* fetchChoiceSaga(action) {
   try {
     const { userId, chatId, messageId, choiceIndex } = action.payload;
-    const choice = yield select(fetchChoiceValue);
 
-    if (choice && choice.id === choiceIndex) {
-      yield put(messageActions.fetchChoiceSuccess(choice));
-      return;
-    }
-
-    const response = yield call(
+    const choice = yield call(
       messageService.fetchChoice,
       userId,
       chatId,
       messageId,
       choiceIndex
     );
-    const choiceData = response.data;
 
-    yield put(messageActions.fetchChoiceSuccess(choiceData));
+    const messages = yield select(fetchMessagesValue);
+    const index = messages.findIndex(m => m.id == messageId);
+    const updateMessage = {
+      ...messages[index],
+      content: choice,
+      choiceIndex: choiceIndex
+    };
+    const newMessages = [...messages];
+    newMessages[index] = updateMessage;
+
+    const payload = { content: choice, messageId: messageId, choiceIndex: choiceIndex }
+
+    yield put(messageActions.fetchMessagesSuccess(newMessages));
+    yield put(messageActions.fetchChoiceSuccess(payload));
   } catch (error) {
     yield put(messageActions.fetchChoiceFailure(error.message));
   }
@@ -98,8 +104,9 @@ function* deleteMessageSaga(action) {
     yield call(messageService.deleteMessage, userId, chatId, messageId);
 
     const messages = yield select(fetchMessagesValue);
+    const index = messages.findIndex(m => m.id == messageId);
     const newMessages = [...messages];
-    newMessages.splice(chatId, 1);
+    newMessages.splice(index, 1);
 
     yield put(messageActions.deleteMessageSuccess(messages));
   } catch (error) {

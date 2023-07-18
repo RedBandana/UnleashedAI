@@ -42,14 +42,14 @@ const Message = ({ id, message, onDelete, onSelectChoice }) => {
   const timestamp = moment(message.creationTime).format("h:mm A");
   const optionsRef = useRef(null);
   const [hide, setHide] = useState(false);
-
+  
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  
+
   useEffect(() => {
     // Call Prism.highlightAll() after rendering the Markdown content
     Prism.highlightAll();
