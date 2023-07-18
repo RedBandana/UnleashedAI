@@ -11,6 +11,7 @@ import './Chat.scss';
 import { getSettings, getSettingsIsOpen, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
 import { createMessageLoading, createMessageReceived, fetchMessagesReceived } from '../../redux/selectors/messageSelectors';
 import { setSettingsIsOpen } from '../../redux/actions/uiActions';
+import { deleteChatValue } from '../../redux/selectors/chatSelectors';
 
 function Chat(props) {
     const { id, messages, crudEvents } = props;
@@ -28,6 +29,7 @@ function Chat(props) {
     const messageLoading = useSelector(createMessageLoading);
     const messagesReceived = useSelector(fetchMessagesReceived);
     const messageReceived = useSelector(createMessageReceived);
+    const chatDeleted = useSelector(deleteChatValue);
 
     useEffect(() => {
         document.addEventListener("mousedown", handleClickOutside);
@@ -40,7 +42,7 @@ function Chat(props) {
         if (settingsIsOpen) {
             setSettingsInitialized(true);
         }
-        
+
         if (!settingsIsOpen && settingsInitialized) {
             handleSettingsSave(formSettings);
         }
@@ -62,6 +64,12 @@ function Chat(props) {
     }, [messageReceived]);
 
     useEffect(() => {
+        if (chatDeleted) {
+            setMessagesHtml([]);
+        }
+    }, [chatDeleted])
+
+    useEffect(() => {
         if (shouldScroll != "none") {
             scrollToBottom(shouldScroll);
             setShouldScroll("none");
@@ -70,7 +78,7 @@ function Chat(props) {
 
     function setMessagesHtmlToDisplay() {
         const htmlToDisplay = messages.map((message, index) => (
-            <Message key={index} index={index} message={message} onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} />
+            <Message key={index} id={message.id} message={message} onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} />
         ));
         setMessagesHtml(htmlToDisplay);
         setShouldScroll("auto");
@@ -78,17 +86,9 @@ function Chat(props) {
 
     function addMessageHtmlToDisplay(message) {
         const index = messagesHtml.length;
-        const newMessageHtml = <Message key={index} index={index} message={message} onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} />
+        const newMessageHtml = <Message key={index} id={message.id} message={message} onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} />
         setMessagesHtml(prevMessages => [...prevMessages, newMessageHtml]);
         setShouldScroll("smooth");
-    }
-
-    function removeMessagesHtmlToDisplay(index) {
-        setMessagesHtml(prevMessages => {
-            const newMessages = [...prevMessages];
-            newMessages.splice(index, 1);
-            return newMessages;
-        });
     }
 
     function handleCanAdd(inputValue) {
@@ -116,11 +116,10 @@ function Chat(props) {
         crudEvents.onSettingsUpdate(id, settings);
     }
 
-    function handleOnDeleteMessage(messageId, messageIndex) {
+    function handleOnDeleteMessage(messageId) {
         crudEvents.onDelete(id, messageId);
-        removeMessagesHtmlToDisplay(messageIndex);
     }
-    
+
     function handleOnSelectChoice(messageId, choiceIndex) {
         crudEvents.onSelectChoice(id, messageId, choiceIndex);
     }

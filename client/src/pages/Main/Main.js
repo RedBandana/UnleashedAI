@@ -9,7 +9,7 @@ import AlertDialog from '../../components/AlertDialog/AlertDialog';
 import ChatEmpty from '../../components/Chat/ChatEmpty';
 
 import { createChatRequest, deleteChatRequest, editChatRequest, fetchChatsRequest, fetchChatRequest, clearChatsRequest } from '../../redux/actions/chatActions';
-import { createMessageRequest, deleteMessageRequest, fetchChoiceRequest, fetchMessagesRequest } from '../../redux/actions/messageActions';
+import { clearMessagesSuccess, createMessageRequest, deleteMessageRequest, fetchChoiceRequest, fetchMessagesRequest } from '../../redux/actions/messageActions';
 import { setChatSelectedIndex, setSidebarIsOpen, setThemeIsLight, toggleTheme } from '../../redux/actions/uiActions';
 import { getChatSelectedIndex, getThemeIsLight } from '../../redux/selectors/uiSelectors';
 import { createChatValue, deleteChatValue, fetchChatValue, fetchChatsValue } from '../../redux/selectors/chatSelectors';
@@ -160,10 +160,12 @@ function Main() {
       chatId: index,
       chatIndex: chatIndex,
     }));
+    dispatch(clearMessagesSuccess);
   }
 
   function handleOnClearItems() {
-    dispatch(clearChatsRequest({ userId: USER_ID }))
+    dispatch(clearChatsRequest({ userId: USER_ID }));
+    dispatch(clearMessagesSuccess);
   }
 
   function handleOnSendMessage(chatId, message) {
@@ -171,7 +173,7 @@ function Main() {
       userId: USER_ID,
       chatId: chatId,
       message: message
-    }))
+    }));
   }
 
   function handleOnDeleteMessage(chatId, messageId) {
@@ -179,7 +181,7 @@ function Main() {
       userId: USER_ID,
       chatId: chatId,
       messageId: messageId
-    }))
+    }));
   }
 
   function handleOnSelectChoice(chatId, messageId, choiceIndex) {
@@ -188,7 +190,7 @@ function Main() {
       chatId: chatId,
       messageId: messageId,
       choiceIndex: choiceIndex
-    }))
+    }));
   }
 
   const sidebarCrudEvents = {

@@ -23,3 +23,5 @@ export const createMessageFailure = createAction('CREATE_MESSAGE_FAILURE');
 export const deleteMessageRequest = createAction('DELETE_MESSAGE_REQUEST');
 export const deleteMessageSuccess = createAction('DELETE_MESSAGE_SUCCESS');
 export const deleteMessageFailure = createAction('DELETE_MESSAGE_FAILURE');
+
+export const clearMessagesSuccess = createAction('CLEAR_MESSAGES_SUCCESS');

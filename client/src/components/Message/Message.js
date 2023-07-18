@@ -34,13 +34,14 @@ import 'prismjs/components/prism-swift';
 import 'prismjs/components/prism-uri';
 import 'prismjs/components/prism-yaml';
 
-const Message = ({ message, index, onDelete, onSelectChoice }) => {
+const Message = ({ id, message, onDelete, onSelectChoice }) => {
 
   const [showOptions, setShowOptions] = useState(false);
   const messageClass = message.isUser ? "chat-message-user" : "chat-message-bot";
   const textClass = message.isUser ? "chat-message-text-user" : "chat-message-text-bot";
   const timestamp = moment(message.creationTime).format("h:mm A");
   const optionsRef = useRef(null);
+  const [hide, setHide] = useState(false);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -79,15 +80,16 @@ const Message = ({ message, index, onDelete, onSelectChoice }) => {
     lists.forEach((list) => {
       list.classList.add('markdown-list');
     });
-  }, [message.id, message]);
+  }, [message]);
   
   function handleOptionsClick() {
     setShowOptions(!showOptions);
   };
 
   function handleDeleteClick() {
-    onDelete(message.id, index);
+    onDelete(id);
     setShowOptions(false);
+    setHide(true);
   };
 
   async function handleCopyClick() {
@@ -114,6 +116,10 @@ const Message = ({ message, index, onDelete, onSelectChoice }) => {
     if (choiceIndex >= 0 && choiceIndex < message.choiceCount) {
       onSelectChoice(message.id, choiceIndex);
     }
+  }
+
+  if (hide) {
+    return null;
   }
 
   return (

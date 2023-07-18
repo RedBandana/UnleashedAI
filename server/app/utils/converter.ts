@@ -20,7 +20,7 @@ export class Converter {
     }
 
     static chatToChatDtoNoReturn = (chat: any) => {
-        if (chat.index) {
+        if (!isNaN(chat.index)) {
             chat.id = chat.index;
             delete chat.index;
         }
@@ -41,6 +41,11 @@ export class Converter {
     }
 
     static messageToDtoNoReturn(message: any): void {
+        if (!isNaN(message.index)) {
+            message.id = message.index;
+            delete message.index;
+        }
+
         if (message.isUser) {
             delete message.choiceIndex;
         }
@@ -55,12 +60,7 @@ export class Converter {
             }
         }
 
-        if (message.index) {
-            message.id = message.index;
-            delete message._id;
-        }
-
-        delete message.index;
+        delete message._id;
         delete message.choices;
 
         return message;

@@ -126,6 +126,13 @@ const messageReducer = handleActions(
       deleteMessageLoading: false,
       deleteMessageError: payload,
     }),
+    [action.clearMessagesSuccess]: (state) => ({
+      ...state,
+      messages: [],
+      message: null,
+      messagesReceived: false,
+      createMessageReceived: false,
+    }),
   },
   initialState
 );

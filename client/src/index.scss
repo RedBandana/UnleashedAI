@@ -25,6 +25,9 @@ body {
     width: calc(100vw - 300px);
 }
 
+.no-conversation-messages {
+    margin: 0 150px;
+}
 .no-conversation-options {
     margin: 20px 0;
     color: var(--color-accent-main);

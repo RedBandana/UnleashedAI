@@ -93,7 +93,7 @@ export abstract class UserPipeline {
         $project: {
           chats: {
             $filter: {
-              input: { $slice: ["$chats", startIndex, endIndex] },
+              input: "$chats",
               cond: { $eq: ["$$this.isActive", true] }
             }
           }
@@ -101,6 +101,11 @@ export abstract class UserPipeline {
       },
       {
         $project: UserProjection.chatsLean
+      },
+      {
+        $project: {
+          chats: { $slice: ["$chats", startIndex, endIndex] }
+        }
       }
     ];
 
@@ -190,7 +195,7 @@ export abstract class UserPipeline {
         $project: {
           messages: {
             $filter: {
-              input: { $slice: ["$chat.messages", startIndex, endIndex] },
+              input: "$chat.messages",
               cond: { $eq: ["$$this.isActive", true] }
             }
           }
@@ -198,6 +203,11 @@ export abstract class UserPipeline {
       },
       {
         $project: UserProjection.messages
+      },
+      {
+        $project: {
+          messages: { $slice: ["$messages", startIndex, endIndex] }
+        }
       }
     ]
 

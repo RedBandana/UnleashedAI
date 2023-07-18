@@ -118,6 +118,7 @@ const chatReducer = handleActions(
       ...state,
       chats: [],
       chat: null,
+      deleteChatReceived: true,
       clearChatsLoading: false,
       clearChatsError: null,
     }),

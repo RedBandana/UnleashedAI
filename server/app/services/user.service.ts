@@ -62,9 +62,7 @@ export class UserService extends DBCollectionService {
     }
     
     async getMessageChoices(userId: string, chatIndex: number, messageIndex: number): Promise<IMessage> {
-        console.log('choices');
         const user = await this.getOneDocumentByAggregate(UserPipeline.messageIndexChoices(userId, chatIndex, messageIndex));
-        console.log('choices', user);
         return user.choices;
     }
 
@@ -81,7 +79,7 @@ export class UserService extends DBCollectionService {
 
     async createChat(userId: string): Promise<IChatDto> {
         const user: any = await this.getDocumentByIdLean(userId, UserProjection.chatCount);
-        const chatIndex = user.chatCount;
+        const chatIndex = user.chatCount ?? 0;
         const chat: IChat = ChatUtils.getDefaultChat(chatIndex);
         this.query = this.model.updateOne({ _id: userId }, { $push: { chats: chat } });
         await this.query.lean().exec();
@@ -127,9 +125,8 @@ export class UserService extends DBCollectionService {
 
     async createMessage(userId: string, chatIndex: number, content: string): Promise<IMessageDto> {
         const user = await this.getOneDocumentByAggregate(UserPipeline.chatIndexMessageCount(userId, chatIndex));
-        const messageIndex = user.chat.messageCount;
+        const messageIndex = user.chat.messageCount ?? 0;
         const message = ChatUtils.getDefaultUserMessage(messageIndex, content);
-
         this.query = this.model.updateOne(
             { _id: userId },
             { $push: { [`chats.${chatIndex}.messages`]: message } }
