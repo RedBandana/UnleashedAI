@@ -65,7 +65,7 @@ function* fetchChoiceSaga(action) {
     );
 
     const messages = yield select(fetchMessagesValue);
-    const index = messages.findIndex(m => m.id == messageId);
+    const index = messages.findIndex(m => m.id === messageId);
     const updateMessage = {
       ...messages[index],
       content: choice,
@@ -104,7 +104,7 @@ function* deleteMessageSaga(action) {
     yield call(messageService.deleteMessage, userId, chatId, messageId);
 
     const messages = yield select(fetchMessagesValue);
-    const index = messages.findIndex(m => m.id == messageId);
+    const index = messages.findIndex(m => m.id === messageId);
     const newMessages = [...messages];
     newMessages.splice(index, 1);
 

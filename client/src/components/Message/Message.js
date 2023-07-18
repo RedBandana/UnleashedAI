@@ -42,7 +42,7 @@ const Message = ({ id, message, onDelete, onSelectChoice }) => {
   const timestamp = moment(message.creationTime).format("h:mm A");
   const optionsRef = useRef(null);
   const [hide, setHide] = useState(false);
-  
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -81,7 +81,7 @@ const Message = ({ id, message, onDelete, onSelectChoice }) => {
       list.classList.add('markdown-list');
     });
   }, [message]);
-  
+
   function handleOptionsClick() {
     setShowOptions(!showOptions);
   };
@@ -131,7 +131,9 @@ const Message = ({ id, message, onDelete, onSelectChoice }) => {
           </div>
           {message.choiceCount > 1 && (
             <div className={`chat-message-controls-container ${textClass}`}>
-              <button className="chat-message-control" onClick={handlePrevClick} disabled={message.choiceIndex === 0}>
+              <button
+                className={`chat-message-control ${message.choiceIndex === 0 ? "chat-message-control-inactive" : ""}`}
+                onClick={handlePrevClick}>
                 <i className="fa fa-chevron-left"></i>
               </button>
               <div className="chat-message-dots-container">
@@ -151,9 +153,8 @@ const Message = ({ id, message, onDelete, onSelectChoice }) => {
                 }
               </div>
               <button
-                className="chat-message-control"
+                className={`chat-message-control ${message.choiceIndex === message.choiceCount - 1 ? "chat-message-control-inactive" : ""}`}
                 onClick={handleNextClick}
-                disabled={message.choiceIndex === message.choiceCount - 1}
               >
                 <i className="fa fa-chevron-right"></i>
               </button>

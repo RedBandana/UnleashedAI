@@ -34,6 +34,7 @@ function Main() {
   const touchIsDragging = useRef(false);
   const [sidebarChanged, setSidebarChanged] = useState(false);
   const [isInitialized, setIsInitialize] = useState(false);
+  const [themeIsInitialized, setThemeIsInitialized] = useState(false);
 
   useEffect(() => {
     dispatch(fetchChatsRequest({ userId: USER_ID }));
@@ -42,6 +43,10 @@ function Main() {
       dispatch(setSidebarIsOpen(true));
       document.body.classList.toggle("native-platform", false);
     }
+
+    const savedThemeIsLight = localStorage.getItem("themeIsLight");
+    dispatch(setThemeIsLight(savedThemeIsLight === "true"));
+    setThemeIsInitialized(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -66,12 +71,16 @@ function Main() {
   }, [chatCreated])
 
   useEffect(() => {
-    const savedThemeIsLight = localStorage.getItem("themeIsLight");
-    if (savedThemeIsLight === "true" && !themeIsLight) {
-      dispatch(setThemeIsLight(false));
+    if (themeIsLight) {
+      document.body.classList.remove("theme-dark");
+    }
+    else {
+      document.body.classList.add("theme-dark");
     }
 
-    document.body.classList.toggle("theme-dark", !themeIsLight);
+    if (themeIsInitialized) {
+      localStorage.setItem("themeIsLight", themeIsLight);
+    }
   }, [themeIsLight]);
 
   useEffect(() => {
@@ -121,7 +130,6 @@ function Main() {
 
   function handleOnToggleTheme() {
     dispatch(toggleTheme());
-    localStorage.setItem("themeIsLight", themeIsLight);
   };
 
   function handleOnClickItem(chatId, sidebarIndex) {
@@ -217,7 +225,7 @@ function Main() {
       <Navbar />
       <div className="main">
         <AlertDialog
-          text="Hello, Chat Unleashed AI is still in early stages. If you have any feedback, please contact us at contact@email.com"
+          text="Hello, Unleashed AI Chat is still in early stages. If you have any feedback, please contact us at contact@email.com"
         />
         {
           chats && (
