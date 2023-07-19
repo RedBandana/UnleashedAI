@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Capacitor } from '@capacitor/core';
+import Prism from 'prismjs';
 
 import Message from '../Message/Message';
 import Settings from '../Settings/Settings';
@@ -9,15 +10,20 @@ import TypingDots from '../TypingDots/TypingDots';
 
 import './Chat.scss';
 import { getSettings, getSettingsIsOpen, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
-import { createMessageLoading, createMessageReceived, fetchChoiceValue, fetchMessagesReceived } from '../../redux/selectors/messageSelectors';
+import { createMessageLoading, createMessageReceived, fetchChoiceValue, fetchMessagesLoading, fetchMessagesReceived } from '../../redux/selectors/messageSelectors';
 import { setSettingsIsOpen } from '../../redux/actions/uiActions';
 import { deleteChatValue } from '../../redux/selectors/chatSelectors';
+import Loading from '../Loading/Loading';
+import { fixHtmlMarkdown } from '../../utils/functions';
 
 function Chat(props) {
     const { id, messages, crudEvents } = props;
     const [messagesHtml, setMessagesHtml] = useState([]);
     const [shouldScroll, setShouldScroll] = useState("none");
     const [settingsInitialized, setSettingsInitialized] = useState(false);
+    const [mesagesRendered, setMesagesRendered] = useState([]);
+    const [baseMessagesRendered, setBaseMessagesRendered] = useState(false);
+    const [page, setPage] = useState(1);
 
     const chatBodyRef = useRef(null);
     const settingsRef = useRef(null);
@@ -26,13 +32,15 @@ function Chat(props) {
     const sidebarIsOpen = useSelector(getSidebarIsOpen);
     const settingsIsOpen = useSelector(getSettingsIsOpen);
     const formSettings = useSelector(getSettings);
-    const messageLoading = useSelector(createMessageLoading);
+    const isWaitingAnswer = useSelector(createMessageLoading);
+    const isLoading = useSelector(fetchMessagesLoading);
     const messagesReceived = useSelector(fetchMessagesReceived);
     const messageReceived = useSelector(createMessageReceived);
     const chatDeleted = useSelector(deleteChatValue);
     const choice = useSelector(fetchChoiceValue);
 
     useEffect(() => {
+        setBaseMessagesRendered(false);
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
@@ -52,8 +60,10 @@ function Chat(props) {
 
     useEffect(() => {
         if (!messagesReceived) {
+            setMessagesHtml([]);
             return;
         }
+        setBaseMessagesRendered(false);
         setMessagesHtmlToDisplay();
     }, [messagesReceived]);
 
@@ -75,42 +85,65 @@ function Chat(props) {
             return;
         }
 
-        const index = messages.findIndex(m => m.id == choice.messageId);
+        const index = messages.findIndex(m => m.id === choice.messageId);
         const message = messages[index];
         if (!message) {
             return;
         }
 
-        const updatedMessageHtml = <Message key={index} id={message.id} message={message} onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} />
+        const updatedMessageHtml = <Message key={index} index={index} id={message.id} message={message} shouldRender={true}
+            onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} onRender={handleMessageRendered} />
         const messagesToDisplay = [...messagesHtml];
         messagesToDisplay[index] = updatedMessageHtml;
         setMessagesHtml(messagesToDisplay);
     }, [choice]);
 
     useEffect(() => {
-        if (shouldScroll != "none") {
+        if (shouldScroll !== "none") {
             scrollToBottom(shouldScroll);
             setShouldScroll("none");
         }
     }, [shouldScroll])
 
+    useEffect(() => {
+        if (!messages || messages.length === 0 || baseMessagesRendered) {
+            return;
+        }
+
+        if (!baseMessagesRendered && messages.length > 0 && mesagesRendered.every(rendered => rendered === true)) {
+            const chatMessages = document.getElementsByClassName(`chat-message-text`);
+            fixHtmlMarkdown(Prism, chatMessages);
+            setBaseMessagesRendered(true);
+            setShouldScroll("auto");
+        }
+    }, [mesagesRendered]);
+
+    function handleMessageRendered(index) {
+        setMesagesRendered(prevStatus => {
+            const updatedStatus = [...prevStatus];
+            updatedStatus[index] = true;
+            return updatedStatus;
+        });
+    };
+
     function setMessagesHtmlToDisplay() {
         const htmlToDisplay = messages.map((message, index) => (
-            <Message key={index} id={message.id} message={message} onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} />
+            <Message key={index} index={index} id={message.id} message={message} shouldRender={false}
+                onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} onRender={handleMessageRendered} />
         ));
         setMessagesHtml(htmlToDisplay);
-        setShouldScroll("auto");
     }
 
     function addMessageHtmlToDisplay(message) {
         const index = messagesHtml.length;
-        const newMessageHtml = <Message key={index} id={message.id} message={message} onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} />
+        const newMessageHtml = <Message key={index} index={index} id={message.id} message={message} shouldRender={true}
+            onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} onRender={handleMessageRendered} />
         setMessagesHtml(prevMessages => [...prevMessages, newMessageHtml]);
         setShouldScroll("smooth");
     }
 
     function handleCanAdd(inputValue) {
-        if (messageLoading || inputValue.trim() === '') {
+        if (isWaitingAnswer || inputValue.trim() === '') {
             return false;
         }
         return true;
@@ -163,7 +196,10 @@ function Chat(props) {
                     <div className="chatbot-messages">
                         {messages && (messagesHtml)}
                     </div>
-                    {messageLoading && (
+                    {page === 1 && (isLoading) && (
+                        <Loading />
+                    )}
+                    {isWaitingAnswer && (
                         <div className='chatbot-dots'>
                             <TypingDots />
                         </div>

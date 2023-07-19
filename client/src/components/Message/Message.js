@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReactMarkdown from 'react-markdown';
-import PropTypes from "prop-types";
 import moment from "moment";
 import "./Message.scss";
 import { Clipboard } from '@capacitor/clipboard';
@@ -33,8 +32,9 @@ import 'prismjs/components/prism-scss';
 import 'prismjs/components/prism-swift';
 import 'prismjs/components/prism-uri';
 import 'prismjs/components/prism-yaml';
+import { fixHtmlMarkdown } from "../../utils/functions";
 
-const Message = ({ id, message, onDelete, onSelectChoice }) => {
+const Message = ({ index, id, message, onDelete, onSelectChoice, onRender, shouldRender }) => {
 
   const [showOptions, setShowOptions] = useState(false);
   const messageClass = message.isUser ? "chat-message-user" : "chat-message-bot";
@@ -51,35 +51,12 @@ const Message = ({ id, message, onDelete, onSelectChoice }) => {
   }, []);
 
   useEffect(() => {
-    // Call Prism.highlightAll() after rendering the Markdown content
-    Prism.highlightAll();
+    if (shouldRender) {
+      const chatMessage = document.getElementById(`chat-message-${message.id}`);
+      fixHtmlMarkdown(Prism, [chatMessage])
+    }
 
-    const chatMessage = document.getElementById(`chat-message-${message.id}`);
-    const preElements = chatMessage.querySelectorAll('pre');
-
-    preElements.forEach((preElement) => {
-      const codeElement = preElement.querySelector('code');
-
-      if (codeElement) {
-        if (!preElement.className.includes('language')) {
-          preElement.classList.add('language-none');
-        }
-
-        // Todo: Add Copy and Language
-      }
-    });
-
-    const paragraphs = chatMessage.querySelectorAll('p > code');
-    paragraphs.forEach((codeElement) => {
-      if (!codeElement.innerHTML.startsWith('`')) {
-        codeElement.innerText = '`' + codeElement.innerText + '`';
-      }
-    });
-
-    const lists = chatMessage.querySelectorAll('ol, ul');
-    lists.forEach((list) => {
-      list.classList.add('markdown-list');
-    });
+    onRender(index);
   }, [message]);
 
   function handleOptionsClick() {
