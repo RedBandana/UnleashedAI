@@ -65,8 +65,7 @@ function Main() {
 
   useEffect(() => {
     if (chats.length > 0 && chatCreated) {
-      const sidebarIndex = chats.length - 1;
-      dispatchDisplayInfo(chats[sidebarIndex].id, sidebarIndex);
+      dispatchDisplayInfo(chats[0].id, 0);
     }
   }, [chatCreated])
 
@@ -162,10 +161,10 @@ function Main() {
     }));
   }
 
-  function handleOnDeleteItem(index, chatIndex) {
+  function handleOnDeleteItem(chatId, chatIndex) {
     dispatch(deleteChatRequest({
       userId: USER_ID,
-      chatId: index,
+      chatId: chatId,
       chatIndex: chatIndex,
     }));
     dispatch(clearMessagesSuccess);

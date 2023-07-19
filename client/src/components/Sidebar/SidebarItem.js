@@ -9,6 +9,10 @@ function SidebarItem(props) {
   const [newTitle, setNewTitle] = useState(title);
 
   useEffect(() => {
+    setNewTitle(title);
+  }, [title])
+
+  useEffect(() => {
     if (editing) {
       const input = document.getElementById("sidebarItemTitle");
       input.select();

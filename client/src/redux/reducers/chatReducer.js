@@ -78,7 +78,7 @@ const chatReducer = handleActions(
     }),
     [action.createChatSuccess]: (state, { payload }) => ({
       ...state,
-      chats: [...state.chats, payload],
+      chats: [payload, ...state.chats],
       chat: payload,
       createChatReceived: true,
       createChatLoading: false,

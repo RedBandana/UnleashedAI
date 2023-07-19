@@ -39,7 +39,7 @@ function Sidebar(props) {
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
-  }, [dispatch]);
+  }, []);
 
   function handleOnAddItem() {
     crudEvents.onCreate();

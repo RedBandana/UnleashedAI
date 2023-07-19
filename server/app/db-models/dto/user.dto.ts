@@ -104,7 +104,13 @@ export abstract class UserPipeline {
       },
       {
         $project: {
-          chats: { $slice: ["$chats", startIndex, endIndex] }
+          chats: {
+            $slice: [
+              { $reverseArray: "$chats" },
+              startIndex,
+              endIndex
+            ]
+          }
         }
       }
     ];
@@ -180,7 +186,6 @@ export abstract class UserPipeline {
 
   static messages(userId: string, chatIndex: number, page: number, count: number): PipelineStage[] {
     const startIndex = (page - 1) * count;
-    const endIndex = startIndex + count;
     const aggregate: PipelineStage[] = [
       {
         $match: { _id: new ObjectId(userId) }
@@ -206,7 +211,13 @@ export abstract class UserPipeline {
       },
       {
         $project: {
-          messages: { $slice: ["$messages", startIndex, endIndex] }
+          messages: {
+            $slice: [
+              "$messages",
+              { $subtract: [{ $size: "$messages" }, startIndex + count] },
+              count
+            ]
+          }
         }
       }
     ]
