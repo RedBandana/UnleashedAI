@@ -9,12 +9,13 @@ import TextInput from '../TextInput/TextInput';
 import TypingDots from '../TypingDots/TypingDots';
 
 import './Chat.scss';
-import { getSettings, getSettingsIsOpen, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
-import { createMessageLoading, createMessageReceived, fetchChoiceValue, fetchMessagesLoading, fetchMessagesReceived } from '../../redux/selectors/messageSelectors';
-import { setSettingsIsOpen } from '../../redux/actions/uiActions';
+import { getMessagesPage, getSettings, getSettingsIsOpen, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
+import { createMessageLoading, createMessageReceived, fetchChoiceValue, fetchMessagesLoading, fetchMessagesPageReceived, fetchMessagesReceived } from '../../redux/selectors/messageSelectors';
+import { SetMessagesPage, setSettingsIsOpen } from '../../redux/actions/uiActions';
 import { deleteChatValue } from '../../redux/selectors/chatSelectors';
 import Loading from '../Loading/Loading';
 import { fixHtmlMarkdown } from '../../utils/functions';
+import { COUNT } from '../../utils/constants';
 
 function Chat(props) {
     const { id, messages, crudEvents } = props;
@@ -23,7 +24,6 @@ function Chat(props) {
     const [settingsInitialized, setSettingsInitialized] = useState(false);
     const [mesagesRendered, setMesagesRendered] = useState([]);
     const [baseMessagesRendered, setBaseMessagesRendered] = useState(false);
-    const [page, setPage] = useState(1);
 
     const chatBodyRef = useRef(null);
     const settingsRef = useRef(null);
@@ -35,13 +35,16 @@ function Chat(props) {
     const isWaitingAnswer = useSelector(createMessageLoading);
     const isLoading = useSelector(fetchMessagesLoading);
     const messagesReceived = useSelector(fetchMessagesReceived);
+    const messagesPageReceived = useSelector(fetchMessagesPageReceived);
     const messageReceived = useSelector(createMessageReceived);
     const chatDeleted = useSelector(deleteChatValue);
     const choice = useSelector(fetchChoiceValue);
+    const page = useSelector(getMessagesPage);
 
     useEffect(() => {
         setBaseMessagesRendered(false);
         document.addEventListener("mousedown", handleClickOutside);
+
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
@@ -68,6 +71,23 @@ function Chat(props) {
     }, [messagesReceived]);
 
     useEffect(() => {
+        if (!messagesPageReceived) {
+            return;
+        }
+
+        const retrievedMessages = [];
+        for (let i = 0; i < COUNT; i++) {
+            const message = messages[i];
+            const newMessageHtml = <Message key={message.id} index={i} id={message.id} message={message} shouldRender={true}
+                onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} onRender={handleMessageRendered} />;
+            retrievedMessages.push(newMessageHtml);
+        }
+        setMessagesHtml(prevMessages => [...retrievedMessages, ...prevMessages]);
+        chatBodyRef.current.scrollTop = 100;
+
+    }, [messagesPageReceived])
+
+    useEffect(() => {
         if (!messageReceived || messages.length === 0) {
             return;
         }
@@ -91,19 +111,12 @@ function Chat(props) {
             return;
         }
 
-        const updatedMessageHtml = <Message key={index} index={index} id={message.id} message={message} shouldRender={true}
+        const updatedMessageHtml = <Message key={message.id} index={index} id={message.id} message={message} shouldRender={true}
             onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} onRender={handleMessageRendered} />
         const messagesToDisplay = [...messagesHtml];
         messagesToDisplay[index] = updatedMessageHtml;
         setMessagesHtml(messagesToDisplay);
     }, [choice]);
-
-    useEffect(() => {
-        if (shouldScroll !== "none") {
-            scrollToBottom(shouldScroll);
-            setShouldScroll("none");
-        }
-    }, [shouldScroll])
 
     useEffect(() => {
         if (!messages || messages.length === 0 || baseMessagesRendered) {
@@ -118,6 +131,21 @@ function Chat(props) {
         }
     }, [mesagesRendered]);
 
+    useEffect(() => {
+        if (shouldScroll !== "none") {
+            scrollToBottom(shouldScroll);
+            setShouldScroll("none");
+        }
+    }, [shouldScroll])
+
+    useEffect(() => {
+        chatBodyRef.current.addEventListener('scroll', handleScroll);
+
+        return () => {
+            chatBodyRef.current.removeEventListener('scroll', handleScroll);
+        };
+    }, [chatBodyRef, id, isLoading, handleScroll]);
+
     function handleMessageRendered(index) {
         setMesagesRendered(prevStatus => {
             const updatedStatus = [...prevStatus];
@@ -128,7 +156,7 @@ function Chat(props) {
 
     function setMessagesHtmlToDisplay() {
         const htmlToDisplay = messages.map((message, index) => (
-            <Message key={index} index={index} id={message.id} message={message} shouldRender={false}
+            <Message key={message.id} index={index} id={message.id} message={message} shouldRender={false}
                 onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} onRender={handleMessageRendered} />
         ));
         setMessagesHtml(htmlToDisplay);
@@ -136,8 +164,8 @@ function Chat(props) {
 
     function addMessageHtmlToDisplay(message) {
         const index = messagesHtml.length;
-        const newMessageHtml = <Message key={index} index={index} id={message.id} message={message} shouldRender={true}
-            onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} onRender={handleMessageRendered} />
+        const newMessageHtml = <Message key={message.id} index={index} id={message.id} message={message} shouldRender={true}
+            onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} onRender={handleMessageRendered} />;
         setMessagesHtml(prevMessages => [...prevMessages, newMessageHtml]);
         setShouldScroll("smooth");
     }
@@ -182,6 +210,14 @@ function Chat(props) {
         }
     }
 
+    function handleScroll() {
+        if (!isLoading && chatBodyRef.current.scrollTop === 0) {
+            const nextPage = page + 1;
+            dispatch(SetMessagesPage(nextPage));
+            crudEvents.onScrollTop(id, nextPage);
+        }
+    }
+
     function scrollToBottom(behavior) {
         chatBodyRef.current.scrollTo({
             top: chatBodyRef.current.scrollHeight,
@@ -193,6 +229,9 @@ function Chat(props) {
         <div className="chatbot" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={Capacitor.isNativePlatform()}>
             <div className='chatbot-container'>
                 <div className="chatbot-body" ref={chatBodyRef}>
+                    {page !== 1 && (isLoading) && (
+                        <Loading />
+                    )}
                     <div className="chatbot-messages">
                         {messages && (messagesHtml)}
                     </div>

@@ -118,7 +118,7 @@ function Sidebar(props) {
         <div className="sidebar-list">
           {items.map((item, index) => (
             <SidebarItem
-              key={index}
+              key={item.id}
               index={index}
               id={item.id}
               title={item.title}

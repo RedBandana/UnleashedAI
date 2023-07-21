@@ -2,9 +2,9 @@ import axios from 'axios';
 
 const API_URL = `http://127.0.0.1:3000/api/users`;
 
-export const fetchMessages = async (userId, chatId) => {
+export const fetchMessages = async (userId, chatId, page, count) => {
   try {
-    const response = await axios.get(`${API_URL}/${userId}/chats/${chatId}/messages`);
+    const response = await axios.get(`${API_URL}/${userId}/chats/${chatId}/messages?page=${page}&count=${count}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);

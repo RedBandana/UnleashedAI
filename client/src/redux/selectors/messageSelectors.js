@@ -1,6 +1,7 @@
 export const fetchMessagesValue = (state) => state.messages.messages;
 export const fetchMessagesLoading = (state) => state.messages.loading;
 export const fetchMessagesReceived = (state) => state.messages.messagesReceived;
+export const fetchMessagesPageReceived = (state) => state.messages.messagesPageReceived;
 export const fetchMessagesError = (state) => state.messages.error;
 
 export const fetchMessageValue = (state) => state.messages.message;

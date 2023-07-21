@@ -9,12 +9,12 @@ import AlertDialog from '../../components/AlertDialog/AlertDialog';
 import ChatEmpty from '../../components/Chat/ChatEmpty';
 
 import { createChatRequest, deleteChatRequest, editChatRequest, fetchChatsRequest, fetchChatRequest, clearChatsRequest } from '../../redux/actions/chatActions';
-import { clearMessagesSuccess, createMessageRequest, deleteMessageRequest, fetchChoiceRequest, fetchMessagesRequest } from '../../redux/actions/messageActions';
-import { setChatSelectedIndex, setSidebarIsOpen, setThemeIsLight, toggleTheme } from '../../redux/actions/uiActions';
+import { clearMessagesSuccess, createMessageRequest, deleteMessageRequest, fetchChoiceRequest, fetchMessagesPageRequest, fetchMessagesRequest } from '../../redux/actions/messageActions';
+import { SetMessagesPage, setChatSelectedIndex, setSidebarIsOpen, setThemeIsLight, toggleTheme } from '../../redux/actions/uiActions';
 import { getChatSelectedIndex, getThemeIsLight } from '../../redux/selectors/uiSelectors';
 import { createChatValue, deleteChatValue, fetchChatValue, fetchChatsValue } from '../../redux/selectors/chatSelectors';
 
-import { USER_ID } from '../../utils/constants'
+import { COUNT, USER_ID } from '../../utils/constants'
 import '@fortawesome/fontawesome-free/css/all.css';
 import '../../index.scss';
 import { fetchMessagesValue } from '../../redux/selectors/messageSelectors';
@@ -123,8 +123,9 @@ function Main() {
 
   function dispatchDisplayInfo(chatId, sidebarIndex) {
     dispatch(fetchChatRequest({ userId: USER_ID, chatId: chatId }));
-    dispatch(fetchMessagesRequest({ userId: USER_ID, chatId: chatId }));
+    dispatch(fetchMessagesRequest({ userId: USER_ID, chatId: chatId, page: 1, count: COUNT }));
     dispatch(setChatSelectedIndex(sidebarIndex));
+    dispatch(SetMessagesPage(1));
   }
 
   function handleOnToggleTheme() {
@@ -200,6 +201,10 @@ function Main() {
     }));
   }
 
+  function handleOnScrollTopMessages(chatId, page) {
+    dispatch(fetchMessagesPageRequest({ userId: USER_ID, chatId: chatId, page: page, count: COUNT }));
+  }
+
   const sidebarCrudEvents = {
     onCreate: handleOnAddItem,
     onRead: handleOnClickItem,
@@ -216,6 +221,7 @@ function Main() {
     onSettingsUpdate: handleOnEditSettings,
     onCreate: handleOnSendMessage,
     onDelete: handleOnDeleteMessage,
+    onScrollTop: handleOnScrollTopMessages,
     onSelectChoice: handleOnSelectChoice,
   }
 

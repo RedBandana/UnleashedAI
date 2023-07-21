@@ -5,11 +5,21 @@ import * as messageService from '../../services/messageService';
 
 function* fetchMessagesSaga(action) {
   try {
-    const { userId, chatId } = action.payload;
-    const messages = yield call(messageService.fetchMessages, userId, chatId);
+    const { userId, chatId, page, count } = action.payload;
+    const messages = yield call(messageService.fetchMessages, userId, chatId, page, count);
     yield put(messageActions.fetchMessagesSuccess(messages));
   } catch (error) {
     yield put(messageActions.fetchMessagesFailure(error.message));
+  }
+}
+
+function* fetchMessagesPageSaga(action) {
+  try {
+    const { userId, chatId, page, count } = action.payload;
+    const messages = yield call(messageService.fetchMessages, userId, chatId, page, count);
+    yield put(messageActions.fetchMessagesPageSuccess(messages));
+  } catch (error) {
+    yield put(messageActions.fetchMessagesPageFailure(error.message));
   }
 }
 
@@ -116,6 +126,7 @@ function* deleteMessageSaga(action) {
 
 function* messageSaga() {
   yield takeLatest(messageActions.fetchMessagesRequest().type, fetchMessagesSaga);
+  yield takeLatest(messageActions.fetchMessagesPageRequest().type, fetchMessagesPageSaga);
   yield takeLatest(messageActions.fetchMessageRequest().type, fetchMessageSaga);
   yield takeLatest(messageActions.fetchChoicesRequest().type, fetchChoicesSaga);
   yield takeLatest(messageActions.fetchChoiceRequest().type, fetchChoiceSaga);

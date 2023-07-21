@@ -7,6 +7,7 @@ const initialState = {
   settings: null,
   themeIsLight: true,
   chatSelectedIndex: 0,
+  messagesPage: 1,
 };
 
 const uiReducer = handleActions(
@@ -42,6 +43,10 @@ const uiReducer = handleActions(
     [actions.setChatSelectedIndex]: (state, { payload }) => ({
       ...state,
       chatSelectedIndex: payload,
+    }),
+    [actions.SetMessagesPage]: (state, { payload }) => ({
+      ...state,
+      messagesPage: payload,
     }),
   },
   initialState

@@ -4,6 +4,10 @@ export const fetchMessagesRequest = createAction('FETCH_MESSAGES_REQUEST');
 export const fetchMessagesSuccess = createAction('FETCH_MESSAGES_SUCCESS');
 export const fetchMessagesFailure = createAction('FETCH_MESSAGES_FAILURE');
 
+export const fetchMessagesPageRequest = createAction('FETCH_MESSAGES_PAGE_REQUEST');
+export const fetchMessagesPageSuccess = createAction('FETCH_MESSAGES_PAGE_SUCCESS');
+export const fetchMessagesPageFailure = createAction('FETCH_MESSAGES_PAGE_FAILURE');
+
 export const fetchMessageRequest = createAction('FETCH_MESSAGE_REQUEST');
 export const fetchMessageSuccess = createAction('FETCH_MESSAGE_SUCCESS');
 export const fetchMessageFailure = createAction('FETCH_MESSAGE_FAILURE');

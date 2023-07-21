@@ -8,3 +8,4 @@ export const toggleSettings = createAction('TOGGLE_SETTINGS_VISIBILITY');
 export const setSettingsIsOpen = createAction('SET_SETTINGS_VISIBILITY');
 export const setSettings = createAction('SET_SETTINGS');
 export const setChatSelectedIndex = createAction('SET_CHAT_INDEX');
+export const SetMessagesPage = createAction('SET_CHAT_PAGE');

@@ -11,6 +11,7 @@ const initialState = {
   messageLoading: null,
   messageError: null,
   messagesReceived: false,
+  messagesPageReceived: false,
   choicesLoading: false,
   choicesError: null,
   choiceLoading: false,
@@ -40,6 +41,25 @@ const messageReducer = handleActions(
     [action.fetchMessagesFailure]: (state, { payload }) => ({
       ...state,
       messagesReceived: false,
+      loading: false,
+      error: payload,
+    }),
+    [action.fetchMessagesPageRequest]: (state) => ({
+      ...state,
+      messagesPageReceived: false,
+      loading: true,
+      error: null,
+    }),
+    [action.fetchMessagesPageSuccess]: (state, { payload }) => ({
+      ...state,
+      messages: [...payload, ...state.messages],
+      messagesPageReceived: true,
+      loading: false,
+      error: null,
+    }),
+    [action.fetchMessagesPageFailure]: (state, { payload }) => ({
+      ...state,
+      messagesPageReceived: false,
       loading: false,
       error: payload,
     }),
