@@ -120,7 +120,7 @@ export class ChatController {
 
                 const userMessage = await userService.createMessage(userId, chatNo, userContent.content);
                 const chat: any = await userService.getChatByIndex(userId, chatNo);
-                const messages = await userService.getMessages(userId, chatNo, 1, 100);
+                const messages = await userService.getMessages(userId, chatNo, 1, chat.settings.memory);
                 messages.push(userMessage);
 
                 const chatbotSettings = Converter.chatToChatbotSettings(chat.settings);
@@ -129,6 +129,10 @@ export class ChatController {
 
                 const botChoices = await openAIService.sendChatCompletion(chatbotSettings);
                 const botMessage = await userService.createBotMessage(userId, chatNo, botChoices);
+
+                const chatUpdate: any = { };
+                chatUpdate[`chats.${chatIndex}.latestMessageCreatedOn`] = botMessage.createdOn;
+                await userService.updateChatForce(userId, chatNo, chatUpdate);
 
                 //bot socket emit
                 res.status(StatusCodes.OK).send(botMessage);

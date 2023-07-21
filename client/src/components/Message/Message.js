@@ -39,7 +39,7 @@ const Message = ({ index, id, message, onDelete, onSelectChoice, onRender, shoul
   const [showOptions, setShowOptions] = useState(false);
   const messageClass = message.isUser ? "chat-message-user" : "chat-message-bot";
   const textClass = message.isUser ? "chat-message-text-user" : "chat-message-text-bot";
-  const timestamp = moment(message.creationTime).format("h:mm A");
+  const timestamp = moment(message.createdOn).format("h:mm A");
   const optionsRef = useRef(null);
   const [hide, setHide] = useState(false);
 

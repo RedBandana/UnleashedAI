@@ -7,14 +7,14 @@ export interface IUser extends Document {
   _id: ObjectId;
   name: string;
   email: string;
-  creationTime: Date;
+  createdOn: Date;
   chats: IChat[];
 }
 
 const UserSchema = new Schema<IUser>({
   name: { type: String, required: true },
   email: { type: String, required: true },
-  creationTime: { type: Date, default: Date.now, required: true },
+  createdOn: { type: Date, default: Date.now, required: true },
   chats: { type: [ChatSchema], required: true, default: [] },
 });
 

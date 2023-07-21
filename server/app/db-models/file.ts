@@ -4,7 +4,7 @@ import { DBModelName } from "@app/enums/db-model-name";
 
 export interface IFile extends Document {
     _id: ObjectId,
-    creationTime: Date,
+    createdOn: Date,
     filename: string;
     path: string;
     originalName: string;
@@ -16,7 +16,7 @@ const FileSchema = new mongoose.Schema<IFile>({
     path: { type: String, required: true },
     originalName: { type: String, required: true },
     mimeType: { type: String, required: true },
-    creationTime: { type: Date, default: Date.now, required: true },
+    createdOn: { type: Date, default: Date.now, required: true },
 });
 
 export const FileModel = mongoose.model(DBModelName.FILE, FileSchema)

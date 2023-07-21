@@ -9,7 +9,7 @@ export interface IMessage {
   index: number;
   isActive: boolean;
   isUser: boolean;
-  creationTime: Date;
+  createdOn: Date;
 }
 
 export interface IMessageDto {
@@ -18,7 +18,7 @@ export interface IMessageDto {
   choiceIndex?: number;
   choiceCount?: number;
   isUser: boolean;
-  creationTime: Date;
+  createdOn: Date;
 }
 
 export interface IMessageRequest {
@@ -32,14 +32,15 @@ export interface IChat {
   title: string;
   settings: ISettings;
   messages: IMessage[];
-  creationTime: Date;
+  createdOn: Date;
+  latestMessageCreatedOn: Date;
 }
 
 export interface IChatDto {
   id: number;
   title: string;
   settings?: ISettings;
-  creationTime?: Date;
+  createdOn?: Date;
   messageCount?: number;
 }
 
@@ -92,7 +93,7 @@ export const MessageSchema = new Schema<IMessage>({
   index: { type: Number, required: true },
   isActive: { type: Boolean, required: true, default: true },
   isUser: { type: Boolean, required: true },
-  creationTime: { type: Date, required: true, default: Date.now },
+  createdOn: { type: Date, required: true, default: Date.now },
 });
 
 export const ChatSchema = new Schema<IChat>({
@@ -101,6 +102,7 @@ export const ChatSchema = new Schema<IChat>({
   isActive: { type: Boolean, required: true, default: true },
   settings: { type: SettingsSchema, required: true },
   messages: { type: [MessageSchema], required: true, default: [] },
-  creationTime: { type: Date, required: true, default: Date.now },
+  createdOn: { type: Date, required: true, default: Date.now },
+  latestMessageCreatedOn: { type: Date, required: true, default: Date.now },
 });
 

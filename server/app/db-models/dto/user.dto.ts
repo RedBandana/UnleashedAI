@@ -2,20 +2,46 @@ import { ObjectId } from "mongodb"
 import { PipelineStage } from "mongoose"
 
 export abstract class UserProjection {
-  static chatCount: { [key: string]: any } = {
-    "_id": true,
-    "chatCount": { $size: "$chats" },
-  }
-
-  static chatMessageCount: { [key: string]: any } = {
-    "chat._id": true,
-    "chat.messageCount": { $size: "$chat.messages" },
-  }
 
   static user: { [key: string]: any } = {
     "_id": true,
     "name": true,
     "email": true,
+    "chatCount": {
+      $size: {
+        $filter: {
+          input: "$chats",
+          as: "chat",
+          cond: { $eq: ["$$chat.isActive", true] }
+        }
+      }
+    },
+  }
+
+  static chatCount: { [key: string]: any } = {
+    "_id": true,
+    "chatCount": {
+      $size: {
+        $filter: {
+          input: "$chats",
+          as: "chat",
+          cond: { $eq: ["$$chat.isActive", true] }
+        }
+      }
+    },
+  }
+
+  static chatMessageCount: { [key: string]: any } = {
+    "chat._id": true,
+    "chat.messageCount": {
+      $size: {
+        $filter: {
+          input: "$chat.messages",
+          as: "message",
+          cond: { $eq: ["$$message.isActive", true] }
+        }
+      }
+    },
   }
 
   static chatsLean: { [key: string]: any } = {
@@ -30,7 +56,15 @@ export abstract class UserProjection {
     "chat.title": true,
     "chat.settings": true,
     "chat.index": true,
-    "chat.messageCount": { $size: "$chat.messages" },
+    "chat.messageCount": {
+      $size: {
+        $filter: {
+          input: "$chat.messages",
+          as: "message",
+          cond: { $eq: ["$$message.isActive", true] }
+        }
+      }
+    },
   }
 
   static message: { [key: string]: any } = {
@@ -38,7 +72,7 @@ export abstract class UserProjection {
     "message.index": true,
     "message.content": true,
     "message.isUser": true,
-    "message.creationTime": true,
+    "message.createdOn": true,
     "message.choices": true,
     "message.choiceIndex": true,
   }
@@ -48,7 +82,7 @@ export abstract class UserProjection {
     "messages.index": true,
     "messages.content": true,
     "messages.isUser": true,
-    "messages.creationTime": true,
+    "messages.createdOn": true,
     "messages.choices": true,
     "messages.choiceIndex": true,
   }
@@ -100,13 +134,16 @@ export abstract class UserPipeline {
         }
       },
       {
+        $sort: { "chats.latestMessageCreatedOn": -1 }
+      },
+      {
         $project: UserProjection.chatsLean
       },
       {
         $project: {
           chats: {
             $slice: [
-              { $reverseArray: "$chats" },
+              "$chats",
               startIndex,
               endIndex
             ]

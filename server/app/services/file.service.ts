@@ -29,7 +29,7 @@ export class FileService extends DBCollectionService {
 
     async deleteOldFiles(): Promise<void> {
         const tenMinutesAgo = new Date(Date.now() - 600000);
-        const filesToDelete = await this.model.find({ creationTime: { $lt: tenMinutesAgo } });
+        const filesToDelete = await this.model.find({ createdOn: { $lt: tenMinutesAgo } });
         const fileIdsToDelete = filesToDelete.map((file) => file._id);
 
         for (const fileId of fileIdsToDelete) {

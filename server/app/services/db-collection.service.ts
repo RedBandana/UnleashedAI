@@ -21,13 +21,13 @@ export abstract class DBCollectionService {
     }
 
     async getDocumentById(documentId: string, projection?: { [key: string]: boolean }): Promise<Document | null> {
-        return await this.model.findById(documentId).sort({ creationTime: -1 }).select(projection).lean();
+        return await this.model.findById(documentId).sort({ createdOn: -1 }).select(projection).lean();
     }
 
     async getDocumentByIdLean(documentId: string, projection?: { [key: string]: boolean }): Promise<Document> {
         this.query = this.model.findById(documentId);
         this.setSingleDocumentQuery();
-        return await this.query.lean().sort({ creationTime: -1 }).select(projection).exec();
+        return await this.query.lean().sort({ createdOn: -1 }).select(projection).exec();
     }
 
     async getOneDocumentByAggregate(stages: PipelineStage[]): Promise<any> {
@@ -41,7 +41,7 @@ export abstract class DBCollectionService {
     async filterBy(filter: any, option?: DBRequestOptions, projection?: { [key: string]: boolean }): Promise<Document[]> {
         this.query = this.model.find(filter);
         this.setQueryPipeline(option);
-        return await this.query.lean().sort({ creationTime: -1 }).select(projection).exec();
+        return await this.query.lean().sort({ createdOn: -1 }).select(projection).exec();
     }
 
     // TODO: make sure that the pipeline: [{ $limit: 1 }] really improve performance

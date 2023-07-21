@@ -24,7 +24,8 @@ export class ChatUtils {
                 frequency_penalty: 0,
                 logit_bias: {}
             },
-            creationTime: new Date()
+            createdOn: new Date(),
+            latestMessageCreatedOn: new Date(),
         }
         return chat;
     }
@@ -35,7 +36,7 @@ export class ChatUtils {
             index: index,
             isActive: true,
             isUser: true,
-            creationTime: new Date()
+            createdOn: new Date()
         }
 
         return message;
@@ -48,7 +49,7 @@ export class ChatUtils {
             isActive: true,
             choiceIndex: 0, 
             isUser: false, 
-            creationTime: new Date()
+            createdOn: new Date()
         }
 
         return message;

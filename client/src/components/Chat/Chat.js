@@ -184,7 +184,7 @@ function Chat(props) {
         const message = {
             content: text,
             isUser: true,
-            creationTime: new Date(),
+            createdOn: new Date(),
         }
 
         addMessageHtmlToDisplay(message);

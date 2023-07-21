@@ -70,7 +70,7 @@ export class UserService extends DBCollectionService {
         const user = new UserModel({
             name,
             email,
-            creationTime: Date.now(),
+            createdOn: Date.now(),
             chats: ChatUtils.getDefaultChat(0)
         });
         await user.save();
@@ -107,6 +107,16 @@ export class UserService extends DBCollectionService {
         this.query = this.model.updateOne(
             { _id: userId },
             { $set: updateOperations }
+        );
+        await this.query.lean().exec();
+        const newChat = await this.getChatByIndex(userId, chatIndex);
+        return newChat;
+    }
+
+    async updateChatForce(userId: string, chatIndex: number, chat: any): Promise<IChatDto> {
+        this.query = this.model.updateOne(
+            { _id: userId },
+            { $set: chat }
         );
         await this.query.lean().exec();
         const newChat = await this.getChatByIndex(userId, chatIndex);
