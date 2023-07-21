@@ -44,10 +44,6 @@ const uiReducer = handleActions(
       ...state,
       chatSelectedIndex: payload,
     }),
-    [actions.SetMessagesPage]: (state, { payload }) => ({
-      ...state,
-      messagesPage: payload,
-    }),
   },
   initialState
 );

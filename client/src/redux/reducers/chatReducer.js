@@ -8,6 +8,7 @@ const initialState = {
   error: null,
   chatLoading: null,
   chatError: null,
+  chatsPageReceived: false,
   editChatReceived: false,
   editChatLoading: false,
   editChatError: null,
@@ -36,6 +37,25 @@ const chatReducer = handleActions(
     }),
     [action.fetchChatsFailure]: (state, { payload }) => ({
       ...state,
+      loading: false,
+      error: payload,
+    }),
+    [action.fetchChatsPageRequest]: (state) => ({
+      ...state,
+      chatsPageReceived: false,
+      loading: true,
+      error: null,
+    }),
+    [action.fetchChatsPageSuccess]: (state, { payload }) => ({
+      ...state,
+      chats: [...state.chats, ...payload],
+      chatsPageReceived: true,
+      loading: false,
+      error: null,
+    }),
+    [action.fetchChatsPageFailure]: (state, { payload }) => ({
+      ...state,
+      chatsPageReceived: false,
       loading: false,
       error: payload,
     }),

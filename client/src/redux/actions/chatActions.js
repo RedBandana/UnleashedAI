@@ -4,6 +4,10 @@ export const fetchChatsRequest = createAction('FETCH_CHATS_REQUEST');
 export const fetchChatsSuccess = createAction('FETCH_CHATS_SUCCESS');
 export const fetchChatsFailure = createAction('FETCH_CHATS_FAILURE');
 
+export const fetchChatsPageRequest = createAction('FETCH_CHATS_PAGE_REQUEST');
+export const fetchChatsPageSuccess = createAction('FETCH_CHATS_PAGE_SUCCESS');
+export const fetchChatsPageFailure = createAction('FETCH_CHATS_PAGE_FAILURE');
+
 export const fetchChatRequest = createAction('FETCH_CHAT_REQUEST');
 export const fetchChatSuccess = createAction('FETCH_CHAT_SUCCESS');
 export const fetchChatFailure = createAction('FETCH_CHAT_FAILURE');

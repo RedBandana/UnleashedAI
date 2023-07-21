@@ -5,11 +5,22 @@ import * as chatService from '../../services/chatService';
 
 function* fetchChatsSaga(action) {
   try {
-    const { userId } = action.payload;
-    const chats = yield call(chatService.fetchChats, userId);
+    const { userId, page, count } = action.payload;
+    const chats = yield call(chatService.fetchChats, userId, page, count);
     yield put(chatActions.fetchChatsSuccess(chats));
   } catch (error) {
     yield put(chatActions.fetchChatsFailure(error.message));
+  }
+}
+
+
+function* fetchChatsPageSaga(action) {
+  try {
+    const { userId, page, count } = action.payload;
+    const chats = yield call(chatService.fetchChats, userId, page, count);
+    yield put(chatActions.fetchChatsPageSuccess(chats));
+  } catch (error) {
+    yield put(chatActions.fetchChatsPageFailure(error.message));
   }
 }
 
@@ -78,6 +89,7 @@ function* clearChatsSaga(action) {
 
 function* chatSaga() {
   yield takeLatest(chatActions.fetchChatsRequest().type, fetchChatsSaga);
+  yield takeLatest(chatActions.fetchChatsPageRequest().type, fetchChatsPageSaga);
   yield takeLatest(chatActions.fetchChatRequest().type, fetchChatSaga);
   yield takeLatest(chatActions.editChatRequest().type, editChatSaga);
   yield takeLatest(chatActions.createChatRequest().type, createChatSaga);

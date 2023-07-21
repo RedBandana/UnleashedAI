@@ -8,13 +8,13 @@ import Navbar from '../../components/Navbar/Navbar';
 import AlertDialog from '../../components/AlertDialog/AlertDialog';
 import ChatEmpty from '../../components/Chat/ChatEmpty';
 
-import { createChatRequest, deleteChatRequest, editChatRequest, fetchChatsRequest, fetchChatRequest, clearChatsRequest } from '../../redux/actions/chatActions';
+import { createChatRequest, deleteChatRequest, editChatRequest, fetchChatsRequest, fetchChatRequest, clearChatsRequest, fetchChatsPageRequest } from '../../redux/actions/chatActions';
 import { clearMessagesSuccess, createMessageRequest, deleteMessageRequest, fetchChoiceRequest, fetchMessagesPageRequest, fetchMessagesRequest } from '../../redux/actions/messageActions';
-import { SetMessagesPage, setChatSelectedIndex, setSidebarIsOpen, setThemeIsLight, toggleTheme } from '../../redux/actions/uiActions';
+import { setChatSelectedIndex, setSidebarIsOpen, setThemeIsLight, toggleTheme } from '../../redux/actions/uiActions';
 import { getChatSelectedIndex, getThemeIsLight } from '../../redux/selectors/uiSelectors';
 import { createChatValue, deleteChatValue, fetchChatValue, fetchChatsValue } from '../../redux/selectors/chatSelectors';
 
-import { COUNT, USER_ID } from '../../utils/constants'
+import { COUNT_CHATS, COUNT_MESSAGES, USER_ID } from '../../utils/constants'
 import '@fortawesome/fontawesome-free/css/all.css';
 import '../../index.scss';
 import { fetchMessagesValue } from '../../redux/selectors/messageSelectors';
@@ -26,18 +26,20 @@ function Main() {
   const chatDeleted = useSelector(deleteChatValue);
   const chatCreated = useSelector(createChatValue);
   const messages = useSelector(fetchMessagesValue);
-  
+
   const chatSelectedIndex = useSelector(getChatSelectedIndex);
   const themeIsLight = useSelector(getThemeIsLight);
-  
+
   const touchStartX = useRef(0);
   const touchIsDragging = useRef(false);
   const [sidebarChanged, setSidebarChanged] = useState(false);
   const [isInitialized, setIsInitialize] = useState(false);
   const [themeIsInitialized, setThemeIsInitialized] = useState(false);
+  const [chatsPage, setChatsPage] = useState(1);
+  const [messagesPage, setMessagesPage] = useState(1);
 
   useEffect(() => {
-    dispatch(fetchChatsRequest({ userId: USER_ID }));
+    dispatch(fetchChatsRequest({ userId: USER_ID, page: 1, count: COUNT_CHATS }));
 
     if (!Capacitor.isNativePlatform()) {
       dispatch(setSidebarIsOpen(true));
@@ -123,9 +125,9 @@ function Main() {
 
   function dispatchDisplayInfo(chatId, sidebarIndex) {
     dispatch(fetchChatRequest({ userId: USER_ID, chatId: chatId }));
-    dispatch(fetchMessagesRequest({ userId: USER_ID, chatId: chatId, page: 1, count: COUNT }));
+    dispatch(fetchMessagesRequest({ userId: USER_ID, chatId: chatId, page: 1, count: COUNT_MESSAGES }));
     dispatch(setChatSelectedIndex(sidebarIndex));
-    dispatch(SetMessagesPage(1));
+    setMessagesPage(1);
   }
 
   function handleOnToggleTheme() {
@@ -201,8 +203,16 @@ function Main() {
     }));
   }
 
-  function handleOnScrollTopMessages(chatId, page) {
-    dispatch(fetchMessagesPageRequest({ userId: USER_ID, chatId: chatId, page: page, count: COUNT }));
+  function handleOnScrollTopMessages(chatId) {
+    const nextPage = messagesPage + 1;
+    setMessagesPage(nextPage);
+    dispatch(fetchMessagesPageRequest({ userId: USER_ID, chatId: chatId, page: nextPage, count: COUNT_MESSAGES }));
+  }
+
+  function handleOnScrollBottomChats() {
+    const nextPage = chatsPage + 1;
+    setChatsPage(nextPage);
+    dispatch(fetchChatsPageRequest({ userId: USER_ID, page: nextPage, count: COUNT_CHATS }));
   }
 
   const sidebarCrudEvents = {
@@ -211,6 +221,7 @@ function Main() {
     onUpdate: handleOnEditItem,
     onDelete: handleOnDeleteItem,
     onClear: handleOnClearItems,
+    onScrollBottom: handleOnScrollBottomChats,
   };
 
   const sidebarUiEvents = {

@@ -8,6 +8,8 @@ import { setSidebarIsOpen } from '../../redux/actions/uiActions';
 
 import SidebarItem from './SidebarItem';
 import './Sidebar.scss';
+import { fetchChatsLoading, fetchChatsPageReceived } from '../../redux/selectors/chatSelectors';
+import Loading from '../Loading/Loading';
 
 function Sidebar(props) {
   const { items, crudEvents, fileEvents, uiEvents } = props;
@@ -15,8 +17,11 @@ function Sidebar(props) {
   const dispatch = useDispatch();
   const sidebarIsOpen = useSelector(getSidebarIsOpen);
   const chatSelectedIndex = useSelector(getChatSelectedIndex);
+  const isLoading = useSelector(fetchChatsLoading);
+  const chatsPageReceived = useSelector(fetchChatsPageReceived);
 
   const sidebarRef = useRef(null);
+  const sidebarListRef = useRef(null);
 
   useEffect(() => {
 
@@ -40,6 +45,32 @@ function Sidebar(props) {
       document.removeEventListener('click', handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (!chatsPageReceived) {
+      return;
+    }
+
+    sidebarListRef.current.scrollTop -= 5;
+  }, [chatsPageReceived])
+
+  useEffect(() => {
+    sidebarListRef.current.addEventListener('scroll', handleScroll);
+
+    return () => {
+      sidebarListRef.current.removeEventListener('scroll', handleScroll);
+    };
+  }, [sidebarListRef, isLoading, handleScroll]);
+
+  function handleScroll() {
+    if (isLoading) {
+      return;
+    }
+
+    if (sidebarListRef.current.scrollHeight - sidebarListRef.current.scrollTop === sidebarListRef.current.clientHeight) {
+      crudEvents.onScrollBottom();
+    }
+  }
 
   function handleOnAddItem() {
     crudEvents.onCreate();
@@ -115,7 +146,7 @@ function Sidebar(props) {
             )
           }
         </div>
-        <div className="sidebar-list">
+        <div className="sidebar-list" ref={sidebarListRef}>
           {items.map((item, index) => (
             <SidebarItem
               key={item.id}
@@ -126,6 +157,7 @@ function Sidebar(props) {
               crudEvents={sidebarItemsCrudEvents}
             />
           ))}
+          {isLoading && (<Loading />)}
         </div>
         <div className="sidebar-footer sidebar-no-move-parent">
           <div className="sidebar-clear-button" onClick={handleOnClearItems}>Clear conversations</div>

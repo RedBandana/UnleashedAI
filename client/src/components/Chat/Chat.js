@@ -9,13 +9,13 @@ import TextInput from '../TextInput/TextInput';
 import TypingDots from '../TypingDots/TypingDots';
 
 import './Chat.scss';
-import { getMessagesPage, getSettings, getSettingsIsOpen, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
+import { getSettings, getSettingsIsOpen, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
 import { createMessageLoading, createMessageReceived, fetchChoiceValue, fetchMessagesLoading, fetchMessagesPageReceived, fetchMessagesReceived } from '../../redux/selectors/messageSelectors';
-import { SetMessagesPage, setSettingsIsOpen } from '../../redux/actions/uiActions';
+import { setSettingsIsOpen } from '../../redux/actions/uiActions';
 import { deleteChatValue } from '../../redux/selectors/chatSelectors';
 import Loading from '../Loading/Loading';
 import { fixHtmlMarkdown } from '../../utils/functions';
-import { COUNT } from '../../utils/constants';
+import { COUNT_MESSAGES } from '../../utils/constants';
 
 function Chat(props) {
     const { id, messages, crudEvents } = props;
@@ -39,7 +39,6 @@ function Chat(props) {
     const messageReceived = useSelector(createMessageReceived);
     const chatDeleted = useSelector(deleteChatValue);
     const choice = useSelector(fetchChoiceValue);
-    const page = useSelector(getMessagesPage);
 
     useEffect(() => {
         setBaseMessagesRendered(false);
@@ -76,16 +75,16 @@ function Chat(props) {
         }
 
         const retrievedMessages = [];
-        for (let i = 0; i < COUNT; i++) {
+        for (let i = 0; i < COUNT_MESSAGES && i < messages.length; i++) {
             const message = messages[i];
             const newMessageHtml = <Message key={message.id} index={i} id={message.id} message={message} shouldRender={true}
                 onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} onRender={handleMessageRendered} />;
             retrievedMessages.push(newMessageHtml);
         }
         setMessagesHtml(prevMessages => [...retrievedMessages, ...prevMessages]);
-        chatBodyRef.current.scrollTop = 100;
+        chatBodyRef.current.scrollTop = 5;
 
-    }, [messagesPageReceived])
+    }, [messagesPageReceived]);
 
     useEffect(() => {
         if (!messageReceived || messages.length === 0) {
@@ -212,9 +211,7 @@ function Chat(props) {
 
     function handleScroll() {
         if (!isLoading && chatBodyRef.current.scrollTop === 0) {
-            const nextPage = page + 1;
-            dispatch(SetMessagesPage(nextPage));
-            crudEvents.onScrollTop(id, nextPage);
+            crudEvents.onScrollTop(id);
         }
     }
 
@@ -229,15 +226,12 @@ function Chat(props) {
         <div className="chatbot" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={Capacitor.isNativePlatform()}>
             <div className='chatbot-container'>
                 <div className="chatbot-body" ref={chatBodyRef}>
-                    {page !== 1 && (isLoading) && (
+                    {isLoading && (
                         <Loading />
                     )}
                     <div className="chatbot-messages">
                         {messages && (messagesHtml)}
                     </div>
-                    {page === 1 && (isLoading) && (
-                        <Loading />
-                    )}
                     {isWaitingAnswer && (
                         <div className='chatbot-dots'>
                             <TypingDots />

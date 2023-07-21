@@ -1,5 +1,6 @@
 export const fetchChatsValue = (state) => state.chats.chats;
 export const fetchChatsLoading = (state) => state.chats.loading;
+export const fetchChatsPageReceived = (state) => state.chats.chatsPageReceived;
 export const fetchChatsError = (state) => state.chats.error;
 
 export const fetchChatValue = (state) => state.chats.chat;
