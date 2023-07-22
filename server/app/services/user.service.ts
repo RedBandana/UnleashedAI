@@ -166,7 +166,7 @@ export class UserService extends DBCollectionService {
     async createBotMessage(userId: string, chatIndex: number, choices: string[]): Promise<IMessageDto> {
         const user = await this.getOneDocumentByAggregate(UserPipeline.chatIndexAllMessageCount(userId, chatIndex));
         const messageIndex = user.chat.messageCount;
-        const message = ChatUtils.getDefaultBotMessage(user.chat.messageCount, choices);
+        const message = ChatUtils.getDefaultBotMessage(messageIndex, choices);
 
         this.query = this.model.updateOne(
             { _id: userId },

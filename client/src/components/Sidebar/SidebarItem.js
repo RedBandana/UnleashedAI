@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import './SidebarItem.scss';
 import { SIDEBAR_TITLE_MAX_LENGTH } from '../../utils/constants';
+import { Capacitor } from '@capacitor/core';
 
 function SidebarItem(props) {
   const { id, title, index, isSelected, crudEvents } = props;
   const [editing, setEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
+
+  const isNativePlatform = Capacitor.isNativePlatform();
 
   useEffect(() => {
     setNewTitle(title);
@@ -71,7 +73,7 @@ function SidebarItem(props) {
       ) : (
         <div className="sidebaritem-title">{getTitle()}</div>
       )}
-      <div className="sidebaritem-buttons">
+      <div className={`sidebaritem-buttons ${isSelected && !isNativePlatform || isNativePlatform ? '' : 'hide'}`}>
         {crudEvents.onUpdate != null && (
           <button className="sidebaritem-button-edit" onClick={enableEdit}>
             <i className="fas fa-edit sidebar-no-move"></i>
@@ -86,16 +88,5 @@ function SidebarItem(props) {
     </div>
   );
 }
-
-SidebarItem.propTypes = {
-  title: PropTypes.string,
-  index: PropTypes.number.isRequired,
-  isSelected: PropTypes.bool.isRequired,
-  crudEvents: PropTypes.shape({
-    onRead: PropTypes.func.isRequired,
-    onUpdate: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
-  }).isRequired,
-};
 
 export default SidebarItem;

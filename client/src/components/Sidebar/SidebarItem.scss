@@ -17,6 +17,10 @@
   background-color: var(--color-hover-sidebar);
 }
 
+.sidebaritem:hover .sidebaritem-buttons {
+  display: flex;
+}
+
 .sidebaritem-title {
   font-size: var(--font-size-main);
   color: var(--color-text-sidebar);

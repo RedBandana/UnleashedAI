@@ -240,7 +240,7 @@ export abstract class UserPipeline {
         $project: { chat: { $arrayElemAt: ["$chats", chatIndex] } }
       },
       {
-        $project: UserProjection.chatMessageCount
+        $project: UserProjection.allChatMessageCount
       }
     ]
 

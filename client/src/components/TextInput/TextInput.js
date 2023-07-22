@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import './TextInput.scss';
 import { Capacitor } from '@capacitor/core';
 import { useDispatch } from 'react-redux';
@@ -114,10 +113,5 @@ function TextInput(props) {
         </form>
     );
 }
-
-TextInput.propTypes = {
-    onSubmit: PropTypes.func.isRequired,
-    canSubmit: PropTypes.func.isRequired,
-};
 
 export default TextInput;

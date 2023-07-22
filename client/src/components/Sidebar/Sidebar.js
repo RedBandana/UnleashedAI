@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Capacitor } from '@capacitor/core';
-import PropTypes from 'prop-types';
 
 import { getChatSelectedIndex, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
 import { setSidebarIsOpen } from '../../redux/actions/uiActions';
@@ -19,14 +18,16 @@ function Sidebar(props) {
   const chatSelectedIndex = useSelector(getChatSelectedIndex);
   const isLoading = useSelector(fetchChatsLoading);
   const chatsPageReceived = useSelector(fetchChatsPageReceived);
-
+  
   const sidebarRef = useRef(null);
   const sidebarListRef = useRef(null);
-
+  
+  const isNativePlatform = Capacitor.isNativePlatform();
+  
   useEffect(() => {
 
     function handleClickOutside(event) {
-      if (!Capacitor.isNativePlatform()) {
+      if (!isNativePlatform) {
         return;
       }
 
@@ -115,7 +116,7 @@ function Sidebar(props) {
   }
 
   return (
-    <div className="sidebar" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={Capacitor.isNativePlatform()} ref={sidebarRef}>
+    <div className="sidebar" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={isNativePlatform} ref={sidebarRef}>
       <div className="sidebar-body">
         <div className='sidebar-filestream-container sidebar-no-move-parent'>
           <div className="sidebar-add-button" onClick={handleOnAddItem}>+ New chat</div>
@@ -169,24 +170,5 @@ function Sidebar(props) {
     </div>
   );
 }
-
-Sidebar.propTypes = {
-  crudEvents: PropTypes.shape({
-    onCreate: PropTypes.func.isRequired,
-    onRead: PropTypes.func.isRequired,
-    onUpdate: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
-    onClear: PropTypes.func.isRequired,
-  }).isRequired,
-  fileEvents: PropTypes.shape({
-    onSave: PropTypes.func,
-    onSaveAs: PropTypes.func,
-    onOpen: PropTypes.func,
-  }),
-  uiEvents: PropTypes.shape({
-    onToggleTheme: PropTypes.func,
-  }),
-  items: PropTypes.array.isRequired,
-};
 
 export default Sidebar;
