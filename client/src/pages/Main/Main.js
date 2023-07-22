@@ -215,7 +215,7 @@ function Main() {
   }
 
   function handleOnScrollBottomChats() {
-    const user = { chatCount: 1 };
+    const user = { chatCount: COUNT_MESSAGES * 2 };
     const maxPage = Math.ceil(user.chatCount / COUNT_MESSAGES);
     const nextPage = chatsPage + 1;
     if (nextPage > maxPage) {

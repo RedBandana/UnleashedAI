@@ -15,7 +15,6 @@ import { setSettingsIsOpen } from '../../redux/actions/uiActions';
 import { deleteChatValue } from '../../redux/selectors/chatSelectors';
 import Loading from '../Loading/Loading';
 import { fixHtmlMarkdown } from '../../utils/functions';
-import { COUNT_MESSAGES } from '../../utils/constants';
 
 function Chat(props) {
     const { id, messages, crudEvents } = props;
