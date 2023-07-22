@@ -18,6 +18,11 @@ export abstract class UserProjection {
     },
   }
 
+  static allChatCount: { [key: string]: any } = {
+    "_id": true,
+    "chatCount": { $size: "$chats" },
+  }
+
   static chatCount: { [key: string]: any } = {
     "_id": true,
     "chatCount": {
@@ -29,6 +34,11 @@ export abstract class UserProjection {
         }
       }
     },
+  }
+
+  static allChatMessageCount: { [key: string]: any } = {
+    "chat._id": true,
+    "chat.messageCount": { $size: "$chat.messages" },
   }
 
   static chatMessageCount: { [key: string]: any } = {
@@ -134,7 +144,11 @@ export abstract class UserPipeline {
         }
       },
       {
-        $sort: { "chats.latestMessageCreatedOn": -1 }
+        $project: {
+          chats: {
+            $sortArray: { input: "$chats", sortBy: { "latestMessageCreatedOn": -1 } }
+          }
+        }
       },
       {
         $project: UserProjection.chatsLean
@@ -142,11 +156,7 @@ export abstract class UserPipeline {
       {
         $project: {
           chats: {
-            $slice: [
-              "$chats",
-              startIndex,
-              endIndex
-            ]
+            $slice: ["$chats", startIndex, endIndex]
           }
         }
       }
@@ -221,8 +231,23 @@ export abstract class UserPipeline {
     return aggregate;
   }
 
-  static messages(userId: string, chatIndex: number, page: number, count: number): PipelineStage[] {
-    const startIndex = (page - 1) * count;
+  static chatIndexAllMessageCount(userId: string, chatIndex: number): PipelineStage[] {
+    const aggregate: PipelineStage[] = [
+      {
+        $match: { _id: new ObjectId(userId) }
+      },
+      {
+        $project: { chat: { $arrayElemAt: ["$chats", chatIndex] } }
+      },
+      {
+        $project: UserProjection.chatMessageCount
+      }
+    ]
+
+    return aggregate;
+  }
+
+  static messages(userId: string, chatIndex: number, startIndex: number, count: number): PipelineStage[] {
     const aggregate: PipelineStage[] = [
       {
         $match: { _id: new ObjectId(userId) }
@@ -258,7 +283,7 @@ export abstract class UserPipeline {
         }
       }
     ]
-
+    
     return aggregate;
   }
 

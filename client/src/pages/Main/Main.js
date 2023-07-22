@@ -204,13 +204,24 @@ function Main() {
   }
 
   function handleOnScrollTopMessages(chatId) {
+    const maxPage = Math.ceil(chat.messageCount / COUNT_MESSAGES);
     const nextPage = messagesPage + 1;
+    if (nextPage > maxPage) {
+      return;
+    }
+
     setMessagesPage(nextPage);
     dispatch(fetchMessagesPageRequest({ userId: USER_ID, chatId: chatId, page: nextPage, count: COUNT_MESSAGES }));
   }
 
   function handleOnScrollBottomChats() {
+    const user = { chatCount: 1 };
+    const maxPage = Math.ceil(user.chatCount / COUNT_MESSAGES);
     const nextPage = chatsPage + 1;
+    if (nextPage > maxPage) {
+      return;
+    }
+
     setChatsPage(nextPage);
     dispatch(fetchChatsPageRequest({ userId: USER_ID, page: nextPage, count: COUNT_CHATS }));
   }

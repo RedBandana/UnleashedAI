@@ -75,7 +75,7 @@ function Chat(props) {
         }
 
         const retrievedMessages = [];
-        for (let i = 0; i < COUNT_MESSAGES && i < messages.length; i++) {
+        for (let i = 0; i < messagesPageReceived && i < messages.length; i++) {
             const message = messages[i];
             const newMessageHtml = <Message key={message.id} index={i} id={message.id} message={message} shouldRender={true}
                 onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} onRender={handleMessageRendered} />;
@@ -139,7 +139,6 @@ function Chat(props) {
 
     useEffect(() => {
         chatBodyRef.current.addEventListener('scroll', handleScroll);
-
         return () => {
             chatBodyRef.current.removeEventListener('scroll', handleScroll);
         };

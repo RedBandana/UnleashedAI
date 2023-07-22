@@ -85,14 +85,13 @@ export class ChatUtils {
     }
 
     static getRequestMessages = (messages: IMessageDto[], settings: ISettings) => {
-        const memorizedMessages = messages.slice(-settings.memory);
         const modelMaxToken = this.getModelMaxTokens(settings.model);
         const tokenSafeDelta = 2000;
 
-        while (memorizedMessages.length > 1 && this.getMessagesTokens(memorizedMessages) > modelMaxToken - tokenSafeDelta) {
-            memorizedMessages.splice(0, 1);
+        while (messages.length > 1 && this.getMessagesTokens(messages) > modelMaxToken - tokenSafeDelta) {
+            messages.splice(0, 1);
         }
 
-        return memorizedMessages;
+        return messages;
     }
 }
