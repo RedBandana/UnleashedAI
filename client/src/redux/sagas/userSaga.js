@@ -13,7 +13,7 @@ function* fetchUserSaga(action) {
       return;
     }
 
-    const response = yield call(userService.fetchUser, userId);
+    const response = yield call(userService.getCurrentUser);
     const userData = response.data;
 
     yield put(userActions.fetchUserSuccess(userData));

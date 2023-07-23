@@ -101,7 +101,6 @@ export class UserService extends DBCollectionService {
             email: '',
             type: UserType.GUEST,
             createdOn: Date.now(),
-            chats: ChatUtils.getDefaultChat(0)
         });
         await user.save();
         return user;

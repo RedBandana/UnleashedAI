@@ -1,4 +1,5 @@
 import { IRequest } from '@app/interfaces/request';
+import { TOKEN_LIFESPAN } from '@app/utils/constants';
 import { Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { VerifyErrors, verify, sign, decode } from 'jsonwebtoken';
@@ -15,28 +16,6 @@ export function verifySessionToken(req: IRequest, res: Response, next: NextFunct
   }
 
   verify(sessionToken, secretKey, (err: VerifyErrors | null, decoded: any): any => {
-    const { userId } = req.params;
-
-    if (err ||
-      unauthorizedTokens[decoded.jti] ||
-      decoded.userId !== userId) {
-      return res.status(StatusCodes.UNAUTHORIZED).send('Invalid access token');
-    }
-
-    req.user = decoded;
-    next();
-  });
-
-};
-
-export function verifySessionTokenOnly(req: IRequest, res: Response, next: NextFunction): any {
-  const sessionToken = req.headers.authorization?.split(' ')[1];
-  if (!sessionToken) {
-    return res.status(StatusCodes.UNAUTHORIZED).send('Session token is missing');
-  }
-
-  verify(sessionToken, secretKey, (err: VerifyErrors | null, decoded: any): any => {
-
     if (err || unauthorizedTokens[decoded.jti]) {
       return res.status(StatusCodes.UNAUTHORIZED).send('Invalid access token');
     }
@@ -61,7 +40,7 @@ export function generateSessionToken(userId: string) {
     { userId },
     secretKey,
     {
-      expiresIn: '7d',
+      expiresIn: `${TOKEN_LIFESPAN}d`,
       jwtid: new ObjectId().toString(),
     });
   return token;

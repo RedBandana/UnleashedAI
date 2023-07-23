@@ -1,14 +1,11 @@
-import { useSelector } from 'react-redux';
-import { Navigate, useLocation, useSearchParams } from 'react-router-dom'
-import { fetchUserValue } from '../redux/selectors/userSelectors';
+import { Navigate, useLocation } from 'react-router-dom'
+import { getCookie } from '../utils/functions';
 
 
 export function RequireUser({ children }) {
-   
     const location = useLocation();
-    const user = useSelector(fetchUserValue);
 
-    return user ? (
+    return getCookie('sessionToken') ? (
         children
     ) : (
         <Navigate to="/login" replace state={{ path: location.pathname }} />

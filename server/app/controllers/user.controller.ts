@@ -8,7 +8,7 @@ import { Controller } from './base.controller';
 import { Converter } from '@app/utils/converter';
 import { UserProjection } from '@app/db-models/dto/user.dto';
 
-import { generateSessionToken, verifyAdminSessionToken, verifySessionTokenOnly } from './authentication';
+import { generateSessionToken, verifyAdminSessionToken, verifySessionToken } from './authentication';
 import { IRequest } from '@app/interfaces/request';
 
 @Service()
@@ -22,20 +22,30 @@ export class UserController {
         this.router = Router();
         ChatController.configureRouter(this.userService, this.router);
 
-        this.router.get('/', async (req: Request, res: Response) => {
+        this.router.get('/me', verifySessionToken, async (req: IRequest, res: Response) => {
             try {
-                res.status(StatusCodes.OK).send('Server working');
+                const userId = req.user.userId;
+                const user = await this.userService.getDocumentByIdLean(userId, UserProjection.user);
+                Controller.handleGetResponse(res, user);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }
         });
 
-        this.router.get('/me', verifySessionTokenOnly, async (req: IRequest, res: Response) => {
+        this.router.post("/guests", async (req, res) => {
             try {
-                const userId = req.user.userId;
-                console.log('req.user', req.user);
-                const user = await this.userService.getDocumentByIdLean(userId, UserProjection.user);
-                Controller.handleGetResponse(res, user);
+                const user = await this.userService.createGuest();
+                const userDto = Converter.objectToProjected(user, UserProjection.user);
+                const sessionToken = generateSessionToken(userDto._id);
+                res.status(StatusCodes.CREATED).send({ id: userDto._id, sessionToken });
+            } catch (error) {
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
+            }
+        });
+
+        this.router.get('/', verifyAdminSessionToken, async (req: Request, res: Response) => {
+            try {
+                res.status(StatusCodes.OK).send('Server working');
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }
@@ -67,17 +77,6 @@ export class UserController {
                 const user = await this.userService.createUser(reqUser.name, reqUser.email);
                 const userDto = Converter.objectToProjected(user, UserProjection.user);
                 Controller.handlePostResponse(res, userDto);
-            } catch (error) {
-                res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
-            }
-        });
-
-        this.router.post("/guests", async (req: Request, res: Response) => {
-            try {
-                const user = await this.userService.createGuest();
-                const userDto = Converter.objectToProjected(user, UserProjection.user);
-                const sessionToken = generateSessionToken(userDto._id);
-                Controller.handlePostResponse(res, { id: userDto._id, sessionToken });
             } catch (error) {
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
             }

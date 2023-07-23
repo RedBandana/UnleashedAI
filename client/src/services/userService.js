@@ -1,19 +1,7 @@
 import axios from 'axios';
+import { getHttpResponseConfig } from '../utils/functions';
 
 const API_URL = `http://127.0.0.1:3000/api/users`;
-
-export const fetchUser = async (id, token) => {
-  try {
-    const response = await axios.get(`${API_URL}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response.data);
-  }
-};
 
 export const createUser = async (userData) => {
   try {
@@ -33,13 +21,9 @@ export const createGuest = async () => {
   }
 };
 
-export const getCurrentUser = async (token) => {
+export const getCurrentUser = async () => {
   try {
-    const response = await axios.get(`${API_URL}/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.get(`${API_URL}/me`, getHttpResponseConfig());
     return response.data;
   } catch (error) {
     throw new Error(error.response.data);

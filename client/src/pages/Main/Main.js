@@ -263,7 +263,7 @@ function Main() {
             />
           )
         }
-        {messages && chat?.id ? (
+        {messages != null && chat?.id != null ? (
           <Chat
             id={chat.id}
             messages={messages}

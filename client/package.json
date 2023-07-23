@@ -16,7 +16,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.4.0",
-    "dotenv": "^16.0.3",
+    "dotenv": "^16.3.1",
     "moment": "^2.29.4",
     "prism-themes": "^1.9.0",
     "prismjs": "^1.29.0",

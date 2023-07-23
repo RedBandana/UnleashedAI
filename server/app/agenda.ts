@@ -16,5 +16,5 @@ export async function startAgenda() {
     agenda.define('removeExpiredTokens', removeExpiredTokensJob);
     agenda.every('0 1 * * *', 'removeExpiredTokens'); // Run removeExpiredAccessToken once a day at 1:00 AM
     
-    console.log('Agenda started');
+    console.log('Successfully started the agenda');
 }
