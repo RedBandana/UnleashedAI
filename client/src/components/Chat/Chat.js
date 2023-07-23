@@ -136,10 +136,10 @@ function Chat(props) {
         }
     }, [shouldScroll])
 
-    useEffect(() => {
-        chatBodyRef.current.addEventListener('scroll', handleScroll);
+    useEffect(() => {   
+        chatBodyRef.current?.addEventListener('scroll', handleScroll);
         return () => {
-            chatBodyRef.current.removeEventListener('scroll', handleScroll);
+            chatBodyRef.current?.removeEventListener('scroll', handleScroll);
         };
     }, [chatBodyRef, id, isLoading, handleScroll]);
 
