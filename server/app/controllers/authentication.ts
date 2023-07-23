@@ -29,6 +29,24 @@ export function verifySessionToken(req: IRequest, res: Response, next: NextFunct
 
 };
 
+export function verifySessionTokenOnly(req: IRequest, res: Response, next: NextFunction): any {
+  const sessionToken = req.headers.authorization?.split(' ')[1];
+  if (!sessionToken) {
+    return res.status(StatusCodes.UNAUTHORIZED).send('Session token is missing');
+  }
+
+  verify(sessionToken, secretKey, (err: VerifyErrors | null, decoded: any): any => {
+
+    if (err || unauthorizedTokens[decoded.jti]) {
+      return res.status(StatusCodes.UNAUTHORIZED).send('Invalid access token');
+    }
+
+    req.user = decoded;
+    next();
+  });
+
+};
+
 export function verifyAdminSessionToken(req: IRequest, res: Response, next: NextFunction): any {
   const sessionToken = req.headers.authorization?.split(' ')[1];
   if (!sessionToken) {

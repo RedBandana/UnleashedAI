@@ -1,9 +1,12 @@
-import { Navigate, useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux';
+import { Navigate, useLocation, useSearchParams } from 'react-router-dom'
+import { fetchUserValue } from '../redux/selectors/userSelectors';
 
 
 export function RequireUser({ children }) {
-    const user = true;
+   
     const location = useLocation();
+    const user = useSelector(fetchUserValue);
 
     return user ? (
         children

@@ -3,20 +3,10 @@ import * as userActions from '../actions/userActions';
 import * as userService from '../../services/userService';
 import * as selectors from '../selectors/userSelectors';
 
-function* fetchUsersSaga(action) {
-  try {
-    const { page, count } = action.payload;
-    const users = yield call(userService.fetchUsers, page, count);
-    yield put(userActions.fetchUsersSuccess(users));
-  } catch (error) {
-    yield put(userActions.fetchUsersFailure(error.message));
-  }
-}
-
 function* fetchUserSaga(action) {
   try {
     const userId = action.payload;
-    const user = yield select(selectors.fetchUser);
+    const user = yield select(selectors.fetchUserValue);
 
     if (user && user.id === userId) {
       yield put(userActions.fetchUserSuccess(user));
@@ -35,16 +25,27 @@ function* fetchUserSaga(action) {
 function* createUserSaga(action) {
   try {
     const newUser = yield call(userService.createUser, action.payload);
+    delete newUser.sessionToken;
     yield put(userActions.createUserSuccess(newUser));
   } catch (error) {
     yield put(userActions.createUserFailure(error.message));
   }
 }
 
+function* createGuestSaga(action) {
+  try {
+    const newUser = yield call(userService.createGuest, action.payload);
+    delete newUser.sessionToken;
+    yield put(userActions.createGuestSuccess(newUser));
+  } catch (error) {
+    yield put(userActions.createGuestFailure(error.message));
+  }
+}
+
 function* userSaga() {
-  yield takeLatest(userActions.fetchUsersRequest().type, fetchUsersSaga);
   yield takeLatest(userActions.fetchUserRequest().type, fetchUserSaga);
   yield takeLatest(userActions.createUserRequest().type, createUserSaga);
+  yield takeLatest(userActions.createGuestRequest().type, createGuestSaga);
 }
 
 export default userSaga;

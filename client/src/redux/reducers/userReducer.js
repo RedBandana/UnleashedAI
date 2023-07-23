@@ -2,49 +2,32 @@ import { handleActions } from 'redux-actions';
 import * as action from '../actions/userActions';
 
 const initialState = {
-  users: [],
   user: null,
   loading: false,
   error: null,
-  userLoading: null,
-  userError: null,
   createUserLoading: false,
   createUserError: null,
+  createGuestLoading: false,
+  createGuestError: null,
 };
 
 const userReducer = handleActions(
   {
-    [action.fetchUsersRequest]: (state) => ({
+    [action.fetchUserRequest]: (state) => ({
       ...state,
       loading: true,
       error: null,
     }),
-    [action.fetchUsersSuccess]: (state, { payload }) => ({
-      ...state,
-      users: payload,
-      loading: false,
-      error: null,
-    }),
-    [action.fetchUsersFailure]: (state, { payload }) => ({
-      ...state,
-      loading: false,
-      error: payload,
-    }),
-    [action.fetchUserRequest]: (state) => ({
-      ...state,
-      userLoading: true,
-      userError: null,
-    }),
     [action.fetchUserSuccess]: (state, { payload }) => ({
       ...state,
       user: payload,
-      userLoading: false,
-      userError: null,
+      loading: false,
+      error: null,
     }),
     [action.fetchUserFailure]: (state, { payload }) => ({
       ...state,
-      userLoading: false,
-      userError: payload,
+      loading: false,
+      error: payload,
     }),
     [action.createUserRequest]: (state) => ({
       ...state,
@@ -53,7 +36,7 @@ const userReducer = handleActions(
     }),
     [action.createUserSuccess]: (state, { payload }) => ({
       ...state,
-      users: [...state.users, payload],
+      user: payload,
       createUserLoading: false,
       createUserError: null,
     }),
@@ -61,6 +44,22 @@ const userReducer = handleActions(
       ...state,
       createUserLoading: false,
       createUserError: payload,
+    }),
+    [action.createGuestRequest]: (state) => ({
+      ...state,
+      createGuestLoading: true,
+      createGuestError: null,
+    }),
+    [action.createGuestSuccess]: (state, { payload }) => ({
+      ...state,
+      user: payload,
+      createGuestLoading: false,
+      createGuestError: null,
+    }),
+    [action.createGuestFailure]: (state, { payload }) => ({
+      ...state,
+      createGuestLoading: false,
+      createGuestError: payload,
     }),
   },
   initialState

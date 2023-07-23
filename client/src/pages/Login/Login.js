@@ -1,34 +1,74 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { loginRequest } from '../../redux/actions/authActions';
-import { authUserValue, authUserLoading, authUserError } from '../../redux/selectors/authSelectors';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
-import { fetchUser } from '../../services/userService';
+import { createGuest, getCurrentUser } from '../../services/userService';
+import { createGuestFailure, createGuestSuccess } from '../../redux/actions/userActions';
+import { createGuestError } from '../../redux/selectors/userSelectors';
+import { useState } from 'react';
 
 function LoginPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { state } = useLocation();
-  
-  const user = useSelector(authUserValue);
-  const loading = useSelector(authUserLoading);
-  const error = useSelector(authUserError);
 
-  const handleLogin = () => {
-    // Dispatch the login request action
-    dispatch(loginRequest());
+  const [loading, setLoading] = useState(false);
+  const error = useSelector(createGuestError);
+
+  function handleLogin() {
+    setLoading(true);
+
+    const token = getSessionTokenFromCookie();
+    console.log(token);
+
+    if (token) {
+      getCurrentUserWithToken(token);
+    }
+    else {
+      createGuest();
+    }
   };
 
-  useEffect(() => {
-    if (user) {
-      // Dispatch an action to fetch additional user data
-      dispatch(fetchUser(user));
-      navigate(state?.path || "/");
+  function createGuest() {
+    createGuest().then((guest) => {
+      if (!guest.sessionToken) {
+        dispatch(createGuestFailure(guest));
+        return;
+      }
+
+      document.cookie = `sessionToken=${guest.sessionToken}; path=/; secure; SameSite=Lax`;
+      onUserConnected(guest);
+    })
+  }
+
+  function getCurrentUserWithToken(token) {
+    getCurrentUser(token).then((user) => {
+      onUserConnected(user);
+    })
+  }
+
+  function onUserConnected(user) {
+    delete user.sessionToken;
+    dispatch(createGuestSuccess(user));
+    navigate(state?.path || "/");
+  }
+
+  function getSessionTokenFromCookie() {
+    const cookieString = document.cookie;
+    const cookies = cookieString.split(';');
+
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+
+      if (cookie.startsWith('sessionToken=')) {
+        const sessionToken = cookie.substring('sessionToken='.length);
+        return sessionToken;
+      }
     }
-  }, [user, dispatch, navigate, state]);
+
+    return null;
+  };
+
 
   return (
-    // Login page UI
     <div>
       {loading ? <p>Loading...</p> : null}
       {error ? <p>Error: {error.message}</p> : null}

@@ -8,7 +8,8 @@ import { Controller } from './base.controller';
 import { Converter } from '@app/utils/converter';
 import { UserProjection } from '@app/db-models/dto/user.dto';
 
-import { generateSessionToken, verifyAdminSessionToken } from './authentication';
+import { generateSessionToken, verifyAdminSessionToken, verifySessionTokenOnly } from './authentication';
+import { IRequest } from '@app/interfaces/request';
 
 @Service()
 export class UserController {
@@ -24,6 +25,17 @@ export class UserController {
         this.router.get('/', async (req: Request, res: Response) => {
             try {
                 res.status(StatusCodes.OK).send('Server working');
+            } catch (error) {
+                res.status(StatusCodes.NOT_FOUND).send(error.message);
+            }
+        });
+
+        this.router.get('/me', verifySessionTokenOnly, async (req: IRequest, res: Response) => {
+            try {
+                const userId = req.user.userId;
+                console.log('req.user', req.user);
+                const user = await this.userService.getDocumentByIdLean(userId, UserProjection.user);
+                Controller.handleGetResponse(res, user);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }
