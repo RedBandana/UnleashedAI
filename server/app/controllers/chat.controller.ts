@@ -6,13 +6,14 @@ import { Converter } from '@app/utils/converter';
 import { Controller } from './base.controller';
 import { ChatUtils } from '@app/utils/chat.utils';
 import { IChatRequest, IMessageRequest } from '@app/db-models/chat';
+import { verifySessionToken } from './authentication';
 
 export class ChatController {
 
     static configureRouter(userService: UserService, userRouter: Router) {
         const openAIService = new OpenAIService();
 
-        userRouter.get('/:userId/chats', async (req: Request, res: Response) => {
+        userRouter.get('/:userId/chats', verifySessionToken, async (req: Request, res: Response) => {
             try {
                 const userId = req.params.userId;
                 const { page, count } = req.query;
@@ -25,7 +26,7 @@ export class ChatController {
             }
         });
 
-        userRouter.get('/:userId/chats/:chatIndex', async (req: Request, res: Response) => {
+        userRouter.get('/:userId/chats/:chatIndex', verifySessionToken,async (req: Request, res: Response) => {
             try {
                 const { userId, chatIndex } = req.params;
                 const chatNo = Number(chatIndex);
@@ -36,7 +37,7 @@ export class ChatController {
             }
         });
 
-        userRouter.get('/:userId/chats/:chatIndex/messages', async (req: Request, res: Response) => {
+        userRouter.get('/:userId/chats/:chatIndex/messages', verifySessionToken, async (req: Request, res: Response) => {
             try {
                 const { userId, chatIndex } = req.params;
                 const { page, count } = req.query;
@@ -50,7 +51,7 @@ export class ChatController {
             }
         });
 
-        userRouter.get('/:userId/chats/:chatIndex/messages/:messageIndex', async (req: Request, res: Response) => {
+        userRouter.get('/:userId/chats/:chatIndex/messages/:messageIndex', verifySessionToken, async (req: Request, res: Response) => {
             try {
                 const { userId, chatIndex, messageIndex } = req.params;
                 const chatNo = Number(chatIndex);
@@ -62,7 +63,7 @@ export class ChatController {
             }
         });
 
-        userRouter.get('/:userId/chats/:chatIndex/messages/:messageIndex/choices', async (req: Request, res: Response) => {
+        userRouter.get('/:userId/chats/:chatIndex/messages/:messageIndex/choices', verifySessionToken, async (req: Request, res: Response) => {
             try {
                 const { userId, chatIndex, messageIndex } = req.params;
                 const chatNo = Number(chatIndex);
@@ -74,7 +75,7 @@ export class ChatController {
             }
         });
 
-        userRouter.get('/:userId/chats/:chatIndex/messages/:messageIndex/choices/:choiceIndex', async (req: Request, res: Response) => {
+        userRouter.get('/:userId/chats/:chatIndex/messages/:messageIndex/choices/:choiceIndex', verifySessionToken, async (req: Request, res: Response) => {
             try {
                 const { userId, chatIndex, messageIndex, choiceIndex } = req.params;
                 const chatNo = Number(chatIndex);
@@ -90,7 +91,7 @@ export class ChatController {
             }
         });
 
-        userRouter.put('/:userId/chats/:chatIndex', async (req: Request, res: Response) => {
+        userRouter.put('/:userId/chats/:chatIndex', verifySessionToken, async (req: Request, res: Response) => {
             try {
                 const { userId, chatIndex } = req.params;
                 const chatNo = Number(chatIndex);
@@ -102,7 +103,7 @@ export class ChatController {
             }
         });
 
-        userRouter.post('/:userId/chats', async (req: Request, res: Response) => {
+        userRouter.post('/:userId/chats', verifySessionToken, async (req: Request, res: Response) => {
             try {
                 const { userId } = req.params;
                 const chat = await userService.createChat(userId);
@@ -112,7 +113,7 @@ export class ChatController {
             }
         });
 
-        userRouter.post('/:userId/chats/:chatIndex/messages', async (req: Request, res: Response) => {
+        userRouter.post('/:userId/chats/:chatIndex/messages', verifySessionToken, async (req: Request, res: Response) => {
             try {
                 const { userId, chatIndex } = req.params;
                 const chatNo = Number(chatIndex);
@@ -142,7 +143,7 @@ export class ChatController {
             }
         });
 
-        userRouter.delete('/:userId/chats', async (req: Request, res: Response) => {
+        userRouter.delete('/:userId/chats', verifySessionToken, async (req: Request, res: Response) => {
             try {
                 const userId = req.params.userId;
                 await userService.deleteChats(userId);
@@ -152,7 +153,7 @@ export class ChatController {
             }
         });
 
-        userRouter.delete('/:userId/chats/:chatIndex', async (req: Request, res: Response) => {
+        userRouter.delete('/:userId/chats/:chatIndex', verifySessionToken, async (req: Request, res: Response) => {
             try {
                 const { userId, chatIndex } = req.params;
                 const chatNo = Number(chatIndex);
@@ -163,7 +164,7 @@ export class ChatController {
             }
         });
 
-        userRouter.delete('/:userId/chats/:chatIndex/messages/:messageIndex', async (req: Request, res: Response) => {
+        userRouter.delete('/:userId/chats/:chatIndex/messages/:messageIndex', verifySessionToken, async (req: Request, res: Response) => {
             try {
                 const { userId, chatIndex, messageIndex } = req.params;
                 const chatNo = Number(chatIndex);

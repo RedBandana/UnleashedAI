@@ -7,6 +7,7 @@ import { IChat, IChatDto, IChatRequest, IMessage, IMessageDto } from '@app/db-mo
 import { ChatUtils } from '@app/utils/chat.utils';
 import { UserPipeline, UserProjection } from '@app/db-models/dto/user.dto';
 import { Converter } from '@app/utils/converter';
+import { UserType } from '@app/enums/usertypes';
 
 const COLLECTION_NAME = DBModelName.USER;
 
@@ -86,6 +87,19 @@ export class UserService extends DBCollectionService {
         const user = new UserModel({
             name,
             email,
+            type: UserType.NORMAL,
+            createdOn: Date.now(),
+            chats: ChatUtils.getDefaultChat(0)
+        });
+        await user.save();
+        return user;
+    }
+
+    async createGuest() {
+        const user = new UserModel({
+            name: '',
+            email: '',
+            type: UserType.GUEST,
             createdOn: Date.now(),
             chats: ChatUtils.getDefaultChat(0)
         });

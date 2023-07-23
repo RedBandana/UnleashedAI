@@ -4,6 +4,7 @@ import { AddressInfo } from 'net';
 import { Service } from 'typedi';
 import { DatabaseService } from './services/database.service';
 import { SocketManager } from './services/socket-manager.service';
+import { startAgenda } from './agenda';
 
 @Service()
 export class Server {
@@ -13,7 +14,7 @@ export class Server {
     socketManager: SocketManager;
     private server: http.Server;
 
-    constructor(private readonly application: Application, private databaseService: DatabaseService) {}
+    constructor(private readonly application: Application, private databaseService: DatabaseService) { }
 
     private static normalizePort(val: number | string): number | string | boolean {
         const port: number = typeof val === 'string' ? parseInt(val, this.baseTen) : val;
@@ -38,6 +39,7 @@ export class Server {
         this.server.on('listening', () => this.onListening());
 
         await this.connectToDatabase();
+        await startAgenda();
     }
 
     private onError(error: NodeJS.ErrnoException) {

@@ -7,6 +7,7 @@ export abstract class UserProjection {
     "_id": true,
     "name": true,
     "email": true,
+    "type": true,
     "chatCount": {
       $size: {
         $filter: {

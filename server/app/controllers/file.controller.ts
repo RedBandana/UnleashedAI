@@ -5,6 +5,7 @@ import { Service } from 'typedi';
 import { v4 as uuidv4 } from 'uuid';
 import multer = require('multer');
 import { FileProjection, IFile } from '@app/db-models/file';
+import { verifyAdminSessionToken } from './authentication';
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -29,7 +30,7 @@ export class FileController {
     private configureRouter() {
         this.router = Router();
 
-        this.router.get('/', async (req: Request, res: Response) => {
+        this.router.get('/', verifyAdminSessionToken, async (req: Request, res: Response) => {
             try {
                 res.status(StatusCodes.OK).send('Server working');
             } catch (error) {
@@ -37,7 +38,7 @@ export class FileController {
             }
         });
 
-        this.router.get('/:id', async (req: Request, res: Response) => {
+        this.router.get('/:id', verifyAdminSessionToken, async (req: Request, res: Response) => {
             const id = decodeURIComponent(req.params.id);
 
             try {
@@ -50,7 +51,7 @@ export class FileController {
             }
         });
         
-        this.router.get('/download/:id', async (req: Request, res: Response) => {
+        this.router.get('/download/:id', verifyAdminSessionToken, async (req: Request, res: Response) => {
             const id = decodeURIComponent(req.params.id);
 
             try {
@@ -63,7 +64,7 @@ export class FileController {
             }
         });
 
-        this.router.post('/upload', upload.single('file'), async (req: Request, res: Response) => {
+        this.router.post('/upload', verifyAdminSessionToken, upload.single('file'), async (req: Request, res: Response) => {
             try {
                 const file = req.file;
                 if (!file) {
@@ -77,7 +78,7 @@ export class FileController {
             }
         });
 
-        this.router.delete('/delete/:id', async (req: Request, res: Response) => {
+        this.router.delete('/delete/:id', verifyAdminSessionToken, async (req: Request, res: Response) => {
             const id = req.params.id;
             try {
                 await this.fileService.deleteFile(id);

@@ -12,7 +12,6 @@ export class FileService extends DBCollectionService {
     constructor(databaseService: DatabaseService) {
         super(databaseService, COLLECTION_NAME);
         this.model = FileModel;
-        setInterval(() => this.deleteOldFiles(), 60000);
     }
 
     async uploadFile(file: Express.Multer.File): Promise<IFile> {
