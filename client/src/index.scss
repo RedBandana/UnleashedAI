@@ -6,47 +6,6 @@ body {
     background-color: var(--color-background);
 }
 
-.no-conversation-container {
-    margin-top: 150px;
-    width: 100%;
-    text-align: center;
-    font-size: 1.25rem;
-    position: fixed;
-    left: 0;
-    transition: left 0.25s ease-in-out;
-    color: var(--color-text-main);
-}
-
-.no-conversation-container[data-sidebar-is-open="true"] {
-    left: $sidebar-width;
-}
-
-.no-conversation-container[data-sidebar-is-open="true"][data-is-mobile="false"] {
-    width: calc(100vw - 300px);
-}
-
-.no-conversation-messages {
-    margin: 0 150px;
-}
-.no-conversation-options {
-    margin: 20px 0;
-    color: var(--color-accent-main);
-    width: 100%;
-    transition: width 0.25s ease-in-out;
-    font-weight: bold;
-}
-
-.no-conversation-options-child {
-    margin-top: 15px;
-    transition: transform 0.25s ease-in-out;
-}
-
-.no-conversation-options-child:hover,
-.no-conversation-options-child label:hover {
-    transform: translateY(-2px);
-    cursor: pointer;
-}
-
 .hide {
     display: none;
 }

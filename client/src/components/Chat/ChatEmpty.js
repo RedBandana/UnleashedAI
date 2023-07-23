@@ -2,6 +2,7 @@ import React from "react";
 import { Capacitor } from '@capacitor/core';
 import { getSidebarIsOpen } from "../../redux/selectors/uiSelectors";
 import { useSelector } from "react-redux";
+import './ChatEmpty.scss';
 
 function ChatEmpty(props) {
     const { onAdd } = props;

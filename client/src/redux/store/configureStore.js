@@ -3,9 +3,7 @@ import createSagaMiddleware from 'redux-saga';
 import { configureStore } from '@reduxjs/toolkit'
 import { all } from 'redux-saga/effects';
 import userReducer from '../reducers/userReducer';
-import authReducer from '../reducers/authReducer';
 import userSaga from '../sagas/userSaga';
-import authSaga from '../sagas/authSaga';
 import chatReducer from '../reducers/chatReducer';
 import messageReducer from '../reducers/messageReducer';
 import chatSaga from '../sagas/chatSaga';
@@ -15,7 +13,6 @@ import uiSaga from '../sagas/uiSaga';
 
 // Combine all reducers into a root reducer
 const rootReducer = combineReducers({
-  auth: authReducer,
   users: userReducer,
   chats: chatReducer,
   messages: messageReducer,
@@ -29,7 +26,6 @@ const middleware = [sagaMiddleware];
 // Create the root saga
 function* rootSaga() {
   yield all([
-    authSaga(),
     userSaga(),
     chatSaga(),
     messageSaga(),

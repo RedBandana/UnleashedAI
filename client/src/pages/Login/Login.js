@@ -5,7 +5,6 @@ import { createGuestFailure, createGuestSuccess } from '../../redux/actions/user
 import { useEffect, useState } from 'react';
 import { TOKEN_LIFESPAN } from '../../utils/constants';
 import { getCookie } from '../../utils/functions';
-import { createGuestError } from '../../redux/selectors/userSelectors';
 import { getThemeIsLight } from '../../redux/selectors/uiSelectors';
 import { setThemeIsLight } from '../../redux/actions/uiActions';
 import Loading from '../../components/Loading/Loading';
@@ -18,24 +17,19 @@ function LoginPage() {
   const navigate = useNavigate();
   const { state } = useLocation();
   const themeIsLight = useSelector(getThemeIsLight);
-  const error = useSelector(createGuestError);
 
   const [themeIsInitialized, setThemeIsInitialized] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    console.log('rendering');
-
     const savedThemeIsLight = localStorage.getItem("themeIsLight");
     dispatch(setThemeIsLight(savedThemeIsLight === "true"));
     setThemeIsInitialized(true);
 
-    const token = getCookie('sessionToken');
-    if (token) {
-      getUserSession();
-    }
-    else {
-      createGuestSession();
+    const shouldConnectAndRedirect = state?.path;
+    if (shouldConnectAndRedirect) {
+      handleSession();
     }
   }, []);
 
@@ -52,16 +46,27 @@ function LoginPage() {
     }
   }, [themeIsLight]);
 
+  function handleSession() {
+    const token = getCookie('sessionToken');
+    if (token) {
+      getUserSession();
+    }
+    else {
+      createGuestSession();
+    }
+  }
+
   function getUserSession() {
-    console.log('getUserSession');
     setLoading(true);
     getCurrentUser().then((user) => {
       onUserConnected(user);
     })
+      .catch((error) => {
+        onError(error);
+      });
   }
 
   function createGuestSession() {
-    console.log('createGuestSession');
     setLoading(true);
     createGuest().then((guest) => {
       if (!guest.sessionToken) {
@@ -72,12 +77,20 @@ function LoginPage() {
       createGuestSessionCookie(guest.sessionToken);
       onUserConnected(guest);
     })
+      .catch((error) => {
+        onError(error);
+      });
   };
 
   function onUserConnected(user) {
     delete user.sessionToken;
     dispatch(createGuestSuccess(user));
     navigate(state?.path || "/");
+  }
+
+  function onError(error) {
+    setError(error.message);
+    setLoading(false);
   }
 
   function createUserSessionCookie(token) {
@@ -97,24 +110,25 @@ function LoginPage() {
 
   return (
     <div className={`login ${themeIsLight ? 'theme-light' : 'theme-dark'}`}>
-      {error && (
-        <div className='login-error'>
-          Error: {error.message}
+      <div className='login-button-container'>
+        <button className='login-button' onClick={handleSession}>Try now</button>
+        <div className='login-button-text'>
+          Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries.
         </div>
-      )}
-      {false && (
-        <div className='login-button-container'>
-          <button className='login-button' onClick={createGuestSession}>Try Now</button>
-        </div>
-      )}
+      </div>
       {
         loading && (
           <div className='login-loading'>
-            Creating a guest session...
             <Loading />
+            Creating a guest session
           </div>
         )
       }
+      {error && (
+        <div className='login-error'>
+          {error}
+        </div>
+      )}
     </div>
   );
 }
