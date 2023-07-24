@@ -66,7 +66,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && uglifyjs build/static/js/*.js -o build/static/js/app.min.js",
+    "build": "react-scripts build --no-source-maps",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron:start": "electron .",

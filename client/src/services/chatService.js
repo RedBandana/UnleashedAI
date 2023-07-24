@@ -3,7 +3,7 @@ import { getHttpResponseConfig } from '../utils/functions';
 
 const API_URL = `${process.env.REACT_APP_API_URL}/users`;
 
-export const fetchChats = async (userId, page, count) => {
+export const fetchChats = async (page, count) => {
   try {
     const response = await axios.get(`${API_URL}/me/chats?page=${page}&count=${count}`, getHttpResponseConfig());
     return response.data;
@@ -12,7 +12,7 @@ export const fetchChats = async (userId, page, count) => {
   }
 };
 
-export const fetchChat = async (userId, chatId) => {
+export const fetchChat = async (chatId) => {
   try {
     const response = await axios.get(`${API_URL}/me/chats/${chatId}`, getHttpResponseConfig());
     return response.data;
@@ -21,7 +21,7 @@ export const fetchChat = async (userId, chatId) => {
   }
 };
 
-export const editChat = async (userId, chatId, chat) => {
+export const editChat = async (chatId, chat) => {
   try {
     const response = await axios.put(`${API_URL}/me/chats/${chatId}`, chat, getHttpResponseConfig());
     return response.data;
@@ -30,7 +30,7 @@ export const editChat = async (userId, chatId, chat) => {
   }
 };
 
-export const createChat = async (userId) => {
+export const createChat = async () => {
   try {
     const response = await axios.post(`${API_URL}/me/chats`, null, getHttpResponseConfig());
     return response.data;
@@ -39,7 +39,7 @@ export const createChat = async (userId) => {
   }
 };
 
-export const deleteChat = async (userId, chatId) => {
+export const deleteChat = async (chatId) => {
   try {
     await axios.delete(`${API_URL}/me/chats/${chatId}`, getHttpResponseConfig());
   } catch (error) {
@@ -47,7 +47,7 @@ export const deleteChat = async (userId, chatId) => {
   }
 };
 
-export const clearChats = async (userId) => {
+export const clearChats = async () => {
   try {
     await axios.delete(`${API_URL}/me/chats`, getHttpResponseConfig());
   } catch (error) {

@@ -142,7 +142,7 @@ const Message = ({ index, message, onDelete, onSelectChoice, onRender, shouldRen
             </div>
           )}
         </div>
-        <div className={`chat-message-icons-container ${message.id ? '' : 'chat-message-icons-container-disabled' }`} onClick={handleOptionsClick} ref={optionsRef}>
+        <div className={`chat-message-icons-container ${message.id != null ? '' : 'chat-message-icons-container-disabled' }`} onClick={handleOptionsClick} ref={optionsRef}>
           <i className="fa fa-ellipsis-v chat-message-options-icon"></i>
           {showOptions && (
             <div className="chat-message-options-container" ref={optionsRef}>

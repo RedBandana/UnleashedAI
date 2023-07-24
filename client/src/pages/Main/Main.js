@@ -14,7 +14,7 @@ import { setChatSelectedIndex, setSidebarIsOpen, setThemeIsLight, toggleTheme } 
 import { getChatSelectedIndex, getThemeIsLight } from '../../redux/selectors/uiSelectors';
 import { createChatValue, deleteChatValue, fetchChatValue, fetchChatsValue } from '../../redux/selectors/chatSelectors';
 
-import { COUNT_CHATS, COUNT_MESSAGES, USER_ID } from '../../utils/constants'
+import { COUNT_CHATS, COUNT_MESSAGES } from '../../utils/constants'
 import '@fortawesome/fontawesome-free/css/all.css';
 import '../../index.scss';
 import { fetchMessagesValue } from '../../redux/selectors/messageSelectors';
@@ -39,7 +39,7 @@ function Main() {
   const [messagesPage, setMessagesPage] = useState(1);
 
   useEffect(() => {
-    dispatch(fetchChatsRequest({ userId: USER_ID, page: 1, count: COUNT_CHATS }));
+    dispatch(fetchChatsRequest({ page: 1, count: COUNT_CHATS }));
 
     if (!Capacitor.isNativePlatform()) {
       dispatch(setSidebarIsOpen(true));
@@ -124,8 +124,8 @@ function Main() {
   }, [sidebarChanged]);
 
   function dispatchDisplayInfo(chatId, sidebarIndex) {
-    dispatch(fetchChatRequest({ userId: USER_ID, chatId: chatId }));
-    dispatch(fetchMessagesRequest({ userId: USER_ID, chatId: chatId, page: 1, count: COUNT_MESSAGES }));
+    dispatch(fetchChatRequest({ chatId: chatId }));
+    dispatch(fetchMessagesRequest({ chatId: chatId, page: 1, count: COUNT_MESSAGES }));
     dispatch(setChatSelectedIndex(sidebarIndex));
     setMessagesPage(1);
   }
@@ -139,12 +139,11 @@ function Main() {
   }
 
   function handleOnAddItem() {
-    dispatch(createChatRequest({ userId: USER_ID }));
+    dispatch(createChatRequest());
   }
 
   function handleOnEditItem(chatId, chatIndex, newTitle) {
     dispatch(editChatRequest({
-      userId: USER_ID,
       chatId: chatId,
       chatIndex: chatIndex,
       chat: {
@@ -155,7 +154,6 @@ function Main() {
 
   function handleOnEditSettings(chatId, settings) {
     dispatch(editChatRequest({
-      userId: USER_ID,
       chatId: chatId,
       chatIndex: chatSelectedIndex,
       chat: {
@@ -166,7 +164,6 @@ function Main() {
 
   function handleOnDeleteItem(chatId, chatIndex) {
     dispatch(deleteChatRequest({
-      userId: USER_ID,
       chatId: chatId,
       chatIndex: chatIndex,
     }));
@@ -174,13 +171,12 @@ function Main() {
   }
 
   function handleOnClearItems() {
-    dispatch(clearChatsRequest({ userId: USER_ID }));
+    dispatch(clearChatsRequest());
     dispatch(clearMessagesSuccess);
   }
 
   function handleOnSendMessage(chatId, message) {
     dispatch(createMessageRequest({
-      userId: USER_ID,
       chatId: chatId,
       message: message
     }));
@@ -188,7 +184,6 @@ function Main() {
 
   function handleOnDeleteMessage(chatId, messageId) {
     dispatch(deleteMessageRequest({
-      userId: USER_ID,
       chatId: chatId,
       messageId: messageId
     }));
@@ -196,7 +191,6 @@ function Main() {
 
   function handleOnSelectChoice(chatId, messageId, choiceIndex) {
     dispatch(fetchChoiceRequest({
-      userId: USER_ID,
       chatId: chatId,
       messageId: messageId,
       choiceIndex: choiceIndex
@@ -211,7 +205,7 @@ function Main() {
     }
 
     setMessagesPage(nextPage);
-    dispatch(fetchMessagesPageRequest({ userId: USER_ID, chatId: chatId, page: nextPage, count: COUNT_MESSAGES }));
+    dispatch(fetchMessagesPageRequest({ chatId: chatId, page: nextPage, count: COUNT_MESSAGES }));
   }
 
   function handleOnScrollBottomChats() {
@@ -223,7 +217,7 @@ function Main() {
     }
 
     setChatsPage(nextPage);
-    dispatch(fetchChatsPageRequest({ userId: USER_ID, page: nextPage, count: COUNT_CHATS }));
+    dispatch(fetchChatsPageRequest({ page: nextPage, count: COUNT_CHATS }));
   }
 
   const sidebarCrudEvents = {
