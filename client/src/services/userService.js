@@ -14,7 +14,6 @@ export const createUser = async (userData) => {
 
 export const createGuest = async () => {
   try {
-    console.log(`${API_URL}/guests`);
     const response = await axios.post(`${API_URL}/guests`);
     return response.data;
   } catch (error) {

@@ -144,7 +144,7 @@ export class ChatController {
                 await userService.updateChatForce(userId, chatNo, chatUpdate);
 
                 //bot socket emit
-                res.status(StatusCodes.OK).send(botMessage);
+                res.status(StatusCodes.OK).send([userMessage, botMessage]);
 
             } catch (error) {
                 res.status(StatusCodes.BAD_REQUEST).send(error.message);

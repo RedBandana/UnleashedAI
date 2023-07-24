@@ -39,6 +39,8 @@ function Chat(props) {
     const chatDeleted = useSelector(deleteChatValue);
     const choice = useSelector(fetchChoiceValue);
 
+    const { v4: uuidv4 } = require('uuid');
+
     useEffect(() => {
         setBaseMessagesRendered(false);
         document.addEventListener("mousedown", handleClickOutside);
@@ -76,7 +78,7 @@ function Chat(props) {
         const retrievedMessages = [];
         for (let i = 0; i < messagesPageReceived && i < messages.length; i++) {
             const message = messages[i];
-            const newMessageHtml = <Message key={message.id} index={i} id={message.id} message={message} shouldRender={true}
+            const newMessageHtml = <Message key={uuidv4()} index={i} message={message} shouldRender={true}
                 onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} onRender={handleMessageRendered} />;
             retrievedMessages.push(newMessageHtml);
         }
@@ -89,7 +91,8 @@ function Chat(props) {
         if (!messageReceived || messages.length === 0) {
             return;
         }
-        addMessageHtmlToDisplay(messages[messages.length - 1]);
+        const newMessages = messages.slice(-2);
+        handleMessageResponse(newMessages);
     }, [messageReceived]);
 
     useEffect(() => {
@@ -109,7 +112,7 @@ function Chat(props) {
             return;
         }
 
-        const updatedMessageHtml = <Message key={message.id} index={index} id={message.id} message={message} shouldRender={true}
+        const updatedMessageHtml = <Message key={uuidv4()} index={index} message={message} shouldRender={true}
             onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} onRender={handleMessageRendered} />
         const messagesToDisplay = [...messagesHtml];
         messagesToDisplay[index] = updatedMessageHtml;
@@ -136,7 +139,7 @@ function Chat(props) {
         }
     }, [shouldScroll])
 
-    useEffect(() => {   
+    useEffect(() => {
         chatBodyRef.current?.addEventListener('scroll', handleScroll);
         return () => {
             chatBodyRef.current?.removeEventListener('scroll', handleScroll);
@@ -153,7 +156,7 @@ function Chat(props) {
 
     function setMessagesHtmlToDisplay() {
         const htmlToDisplay = messages.map((message, index) => (
-            <Message key={message.id} index={index} id={message.id} message={message} shouldRender={false}
+            <Message key={uuidv4()} index={index} message={message} shouldRender={false}
                 onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} onRender={handleMessageRendered} />
         ));
         setMessagesHtml(htmlToDisplay);
@@ -161,9 +164,26 @@ function Chat(props) {
 
     function addMessageHtmlToDisplay(message) {
         const index = messagesHtml.length;
-        const newMessageHtml = <Message key={message.id} index={index} id={message.id} message={message} shouldRender={true}
+        const newMessageHtml = <Message key={uuidv4()} index={index} message={message} shouldRender={true}
             onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} onRender={handleMessageRendered} />;
         setMessagesHtml(prevMessages => [...prevMessages, newMessageHtml]);
+        setShouldScroll("smooth");
+    }
+
+    function handleMessageResponse(messages) {
+        const newMessagesHtml = [...messagesHtml];
+        newMessagesHtml.pop();
+
+        let index = messagesHtml.length;
+        for (let i = 0; i < messages.length; i++) {
+            const message = messages[i];
+            const newMessageHtml = <Message key={uuidv4()} index={index} message={message} shouldRender={true}
+                onDelete={handleOnDeleteMessage} onSelectChoice={handleOnSelectChoice} onRender={handleMessageRendered} />;
+            newMessagesHtml.push(newMessageHtml);
+            index++;
+        }
+
+        setMessagesHtml(newMessagesHtml);
         setShouldScroll("smooth");
     }
 
@@ -176,16 +196,15 @@ function Chat(props) {
 
     function handleAdd(inputValue) {
         const text = inputValue.trim();
-        const messageRequest = { content: text };
-        crudEvents.onCreate(id, messageRequest);
-
         const message = {
             content: text,
             isUser: true,
             createdOn: new Date(),
         }
-
         addMessageHtmlToDisplay(message);
+        
+        const messageRequest = { content: text };
+        crudEvents.onCreate(id, messageRequest);
     }
 
     function handleSettingsSave(settings) {

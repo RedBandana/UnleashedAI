@@ -34,7 +34,7 @@ import 'prismjs/components/prism-uri';
 import 'prismjs/components/prism-yaml';
 import { fixHtmlMarkdown } from "../../utils/functions";
 
-const Message = ({ index, id, message, onDelete, onSelectChoice, onRender, shouldRender }) => {
+const Message = ({ index, message, onDelete, onSelectChoice, onRender, shouldRender }) => {
 
   const [showOptions, setShowOptions] = useState(false);
   const messageClass = message.isUser ? "chat-message-user" : "chat-message-bot";
@@ -64,7 +64,11 @@ const Message = ({ index, id, message, onDelete, onSelectChoice, onRender, shoul
   };
 
   function handleDeleteClick() {
-    onDelete(id);
+    if (!message.id) {
+      return;
+    }
+
+    onDelete(message.id);
     setShowOptions(false);
     setHide(true);
   };
@@ -138,7 +142,7 @@ const Message = ({ index, id, message, onDelete, onSelectChoice, onRender, shoul
             </div>
           )}
         </div>
-        <div className="chat-message-icons-container" onClick={handleOptionsClick} ref={optionsRef}>
+        <div className={`chat-message-icons-container ${message.id ? '' : 'chat-message-icons-container-disabled' }`} onClick={handleOptionsClick} ref={optionsRef}>
           <i className="fa fa-ellipsis-v chat-message-options-icon"></i>
           {showOptions && (
             <div className="chat-message-options-container" ref={optionsRef}>

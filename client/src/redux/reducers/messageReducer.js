@@ -119,7 +119,7 @@ const messageReducer = handleActions(
     }),
     [action.createMessageSuccess]: (state, { payload }) => ({
       ...state,
-      messages: [...state.messages, payload],
+      messages: [...state.messages, ...payload],
       createMessageReceived: true,
       createMessageLoading: false,
       createMessageError: null,

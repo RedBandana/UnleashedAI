@@ -19,6 +19,11 @@
   width: 60%;
 }
 
+.chat-message-icons-container-disabled {
+  cursor: auto;
+  visibility: hidden;
+}
+
 .chat-message-icons-container {
   display: flex;
   justify-content: space-between;
