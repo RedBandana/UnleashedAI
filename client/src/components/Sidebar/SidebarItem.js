@@ -73,7 +73,7 @@ function SidebarItem(props) {
       ) : (
         <div className="sidebaritem-title">{getTitle()}</div>
       )}
-      <div className={`sidebaritem-buttons ${isSelected && !isNativePlatform || isNativePlatform ? '' : 'hide'}`}>
+      <div className={`sidebaritem-buttons ${(isSelected && !isNativePlatform) || isNativePlatform ? '' : 'hide'}`}>
         {crudEvents.onUpdate != null && (
           <button className="sidebaritem-button-edit" onClick={enableEdit}>
             <i className="fas fa-edit sidebar-no-move"></i>

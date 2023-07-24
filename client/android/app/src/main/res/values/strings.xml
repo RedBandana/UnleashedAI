@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">GPT Unleashed</string>
-    <string name="title_activity_main">GPT Unleashed</string>
-    <string name="package_name">com.diamondsoul.gptunleashed</string>
-    <string name="custom_url_scheme">com.diamondsoul.gptunleashed</string>
+    <string name="app_name">Unleashed AI Chat</string>
+    <string name="title_activity_main">Unleashed AI Chat</string>
+    <string name="package_name">org.unleashedai.chat</string>
+    <string name="custom_url_scheme">org.unleashedai.chat</string>
 </resources>

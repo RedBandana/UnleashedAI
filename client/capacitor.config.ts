@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.diamondsoul.gptunleashed',
-  appName: 'GPT Unleashed',
+  appId: 'org.unleashedai.chat',
+  appName: 'Unleashed AI Chat',
   webDir: 'build',
   server: {
     androidScheme: 'https'

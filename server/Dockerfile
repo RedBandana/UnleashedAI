@@ -20,12 +20,12 @@ CMD ["npm", "start"]
 
 # https://stackabuse.com/deploying-node-js-apps-to-aws-ec2-with-docker/
 
-# CMD to build the image: docker build -t gpt-unleashed-server .
+# CMD to build the image: docker build -t unleashed-ai-chat-server .
 
 # To push the img in docker hub (to access remotely)
 # $ docker login # Use your Docker Hub credentials here
-# $ docker tag gpt-unleashed-server <YOUR_DOCKER_USERNAME>/gpt-unleashed-server
-# $ docker push <YOUR_DOCKER_USERNAME>/gpt-unleashed-server
+# $ docker tag unleashed-ai-chat-server <YOUR_DOCKER_USERNAME>/unleashed-ai-chat-server
+# $ docker push <YOUR_DOCKER_USERNAME>/unleashed-ai-chat-server
 
 # Once pushed, to update the docker image in the virtual machine:
 # $ docker pull <YOUR_DOCKER_USERNAME>/rate-it-server
@@ -35,9 +35,9 @@ CMD ["npm", "start"]
 # $ docker container stop <CONTAINER_ID> (# stop the container)
 
 # to run on free ECS instance: 
-# $ docker run --memory="300mb" -p 3000:3000 <YOUR_DOCKER_USERNAME>/gpt-unleashed-server
+# $ docker run --memory="300mb" -p 3000:3000 <YOUR_DOCKER_USERNAME>/unleashed-ai-chat-server
 
 # to run headlessly (so continue to run even when the instance console is closed):
-# $ docker run --memory="300mb" -d -p 3000:3000 <YOUR_DOCKER_USERNAME>/gpt-unleashed-server
+# $ docker run --memory="300mb" -d -p 3000:3000 <YOUR_DOCKER_USERNAME>/unleashed-ai-chat-server
 
 # note --memory="300mb" is optional

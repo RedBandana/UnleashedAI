@@ -1,4 +1,4 @@
-package com.diamondsoul.gptunleashed;
+package org.unleashedai.chat;
 
 import android.content.Intent;
 import android.net.Uri;

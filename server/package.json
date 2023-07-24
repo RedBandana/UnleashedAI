@@ -1,7 +1,8 @@
 {
-    "name": "server",
-    "description": "Serveur de GPT Unleashed",
+    "name": "unleashed-ai-chat",
+    "description": "Unleashed AI Chat Server",
     "version": "1.0.0",
+    "author": "Unleashed AI",
     "private": true,
     "scripts": {
         "start": "nodemon",
