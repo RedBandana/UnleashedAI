@@ -100,12 +100,7 @@ function LoginPage() {
   }
 
   function createGuestSessionCookie(token) {
-    if (process.env.REACT_APP_NODE_ENV === 'development') {
-      createUserSessionCookie(token);
-    }
-    else {
-      document.cookie = `sessionToken=${token}; path=/; secure; SameSite=Strict; Expires=0;`;
-    }
+    document.cookie = `sessionToken=${token}; path=/; secure; SameSite=Strict; Expires=0;`;
   }
 
   return (
