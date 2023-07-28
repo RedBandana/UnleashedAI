@@ -1,5 +1,4 @@
 import { UserService } from '@app/services/user.service';
-import { IUser } from '@app/db-models/user';
 import { Router, Response, Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Service } from 'typedi';
@@ -10,6 +9,8 @@ import { UserProjection } from '@app/db-models/dto/user.dto';
 
 import { generateSessionToken, verifyAdminSessionToken, verifySessionToken } from './authentication';
 import { IRequest } from '@app/interfaces/request';
+
+import * as bcrypt from 'bcrypt';
 
 @Service()
 export class UserController {
@@ -29,6 +30,47 @@ export class UserController {
                 Controller.handleGetResponse(res, user);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
+            }
+        });
+
+        this.router.post("/register", async (req: Request, res: Response) => {
+            try {
+                const { email, password } = req.body;
+                const existingUser = await this.userService.getDocumentByEmail(email, UserProjection.userAuth);
+                if (existingUser) {
+                    res.status(400).json({ message: 'Email already exists' });
+                    return;
+                }
+
+                const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hash(password, salt);
+                const newUser: any = await this.userService.createUser(email, hashedPassword);
+                const sessionToken = generateSessionToken(newUser._id);
+                Controller.handlePostResponse(res, { id: newUser._id, sessionToken });
+            } catch (error) {
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
+            }
+        });
+
+        this.router.post("/login", async (req: Request, res: Response) => {
+            try {
+                const { email, password } = req.body;
+                const user: any = await this.userService.getDocumentByEmail(email, UserProjection.userAuth);
+                if (!user) {
+                    res.status(401).json({ message: 'Invalid email or password' });
+                    return;
+                }
+
+                const isPasswordValid = await bcrypt.compare(password, user.password);
+                if (!isPasswordValid) {
+                    res.status(401).json({ message: 'Invalid email or password' });
+                    return;
+                }
+
+                const sessionToken = generateSessionToken(user._id);
+                Controller.handleGetResponse(res, { id: user._id, sessionToken });
+            } catch (error) {
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
             }
         });
 
@@ -68,17 +110,6 @@ export class UserController {
                 Controller.handleGetResponse(res, user);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
-            }
-        });
-
-        this.router.post("/", verifyAdminSessionToken, async (req: Request, res: Response) => {
-            try {
-                const reqUser = req.body as IUser;
-                const user = await this.userService.createUser(reqUser.name, reqUser.email);
-                const userDto = Converter.objectToProjected(user, UserProjection.user);
-                Controller.handlePostResponse(res, userDto);
-            } catch (error) {
-                res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
             }
         });
     }

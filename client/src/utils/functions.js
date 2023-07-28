@@ -1,3 +1,4 @@
+import { TOKEN_LIFESPAN } from "./constants";
 
 export function getCookie(name) {
   const cookies = document.cookie.split(';');
@@ -8,6 +9,16 @@ export function getCookie(name) {
     }
   }
   return null;
+}
+
+export function setUserSessionCookie(token) {
+  const expiryDate = new Date();
+  expiryDate.setDate(expiryDate.getDate() + TOKEN_LIFESPAN);
+  document.cookie = `sessionToken=${token}; path=/; secure; SameSite=Strict; Expires=${expiryDate.toUTCString()};`;
+}
+
+export function setGuestSessionCookie(token) {
+  document.cookie = `sessionToken=${token}; path=/; secure; SameSite=Strict; Expires=0;`;
 }
 
 export function getHttpResponseConfig() {

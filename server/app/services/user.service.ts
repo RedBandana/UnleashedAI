@@ -83,10 +83,11 @@ export class UserService extends DBCollectionService {
         return user.choices;
     }
 
-    async createUser(name: string, email: string) {
+    async createUser(email: string, password: string) {
         const user = new UserModel({
-            name,
             email,
+            password,
+            name: '',
             type: UserType.NORMAL,
             createdOn: Date.now(),
             chats: ChatUtils.getDefaultChat(0)

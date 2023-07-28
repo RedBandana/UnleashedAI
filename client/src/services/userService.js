@@ -3,9 +3,18 @@ import { getHttpResponseConfig } from '../utils/functions';
 
 const API_URL = `${process.env.REACT_APP_API_URL}/users`;
 
-export const createUser = async (userData) => {
+export const registerUser = async (userData) => {
   try {
-    const response = await axios.post(API_URL, userData);
+    const response = await axios.post(`${API_URL}/register`, userData);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const loginUser = async (userData) => {
+  try {
+    const response = await axios.post(`${API_URL}/login`, userData);
     return response.data;
   } catch (error) {
     throw new Error(error.message);

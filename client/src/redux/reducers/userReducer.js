@@ -5,10 +5,6 @@ const initialState = {
   user: null,
   loading: false,
   error: null,
-  createUserLoading: false,
-  createUserError: null,
-  createGuestLoading: false,
-  createGuestError: null,
 };
 
 const userReducer = handleActions(
@@ -29,37 +25,53 @@ const userReducer = handleActions(
       loading: false,
       error: payload,
     }),
-    [action.createUserRequest]: (state) => ({
+    [action.registerUserRequest]: (state) => ({
       ...state,
-      createUserLoading: true,
-      createUserError: null,
+      loading: true,
+      error: null,
     }),
-    [action.createUserSuccess]: (state, { payload }) => ({
+    [action.registerUserSuccess]: (state, { payload }) => ({
       ...state,
       user: payload,
-      createUserLoading: false,
-      createUserError: null,
+      loading: false,
+      error: null,
     }),
-    [action.createUserFailure]: (state, { payload }) => ({
+    [action.registerUserFailure]: (state, { payload }) => ({
       ...state,
-      createUserLoading: false,
-      createUserError: payload,
+      loading: false,
+      error: payload,
+    }),
+    [action.loginUserRequest]: (state) => ({
+      ...state,
+      loading: true,
+      error: null,
+    }),
+    [action.loginUserSuccess]: (state, { payload }) => ({
+      ...state,
+      user: payload,
+      loading: false,
+      error: null,
+    }),
+    [action.loginUserFailure]: (state, { payload }) => ({
+      ...state,
+      loading: false,
+      error: payload,
     }),
     [action.createGuestRequest]: (state) => ({
       ...state,
-      createGuestLoading: true,
-      createGuestError: null,
+      loading: true,
+      error: null,
     }),
     [action.createGuestSuccess]: (state, { payload }) => ({
       ...state,
       user: payload,
-      createGuestLoading: false,
-      createGuestError: null,
+      loading: false,
+      error: null,
     }),
     [action.createGuestFailure]: (state, { payload }) => ({
       ...state,
-      createGuestLoading: false,
-      createGuestError: payload,
+      loading: false,
+      error: payload,
     }),
   },
   initialState

@@ -19,6 +19,13 @@ export abstract class UserProjection {
     },
   }
 
+  static userAuth: { [key: string]: any } = {
+    "_id": true,
+    "name": true,
+    "email": true,
+    "password": true,
+  }
+
   static allChatCount: { [key: string]: any } = {
     "_id": true,
     "chatCount": { $size: "$chats" },

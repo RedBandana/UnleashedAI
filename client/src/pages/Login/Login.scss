@@ -6,9 +6,20 @@
     margin-top: 150px;
 }
 
-.login-error {
-    color: var(--color-text-main);
-    margin-bottom: 10px;
+.login-error,
+.login-input-error {
+    background-color: var(--color-sidebar);
+    padding: 12px;
+    border-radius: var(--border-radius-second);
+    color: var(--color-text-sidebar);
+    font-size: 12px;
+}
+
+.login-input-error {
+    position: absolute;
+    top: 80%;
+    right: 10px;
+    z-index: 1;
 }
 
 .login-button-container {
@@ -87,8 +98,7 @@
 }
 
 .login-input {
-    padding: 10px;
-    padding-top: 26px;
+    padding: 15px 10px;
     border: none;
     border-radius: 5px;
     border: var(--border-main);
@@ -131,7 +141,6 @@
 .login-button-second {
     color: var(--color-text-main);
     padding: 5px;
-    margin-left: 5px;
     background-color: rgba(0, 0, 0, 0);
     color: var(--color-accent-main)
 }

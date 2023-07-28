@@ -1,76 +1,36 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { createGuest, getCurrentUser } from '../../services/userService';
-import { createGuestFailure, createGuestSuccess } from '../../redux/actions/userActions';
+import { createGuestRequest, createGuestSuccess, fetchUserRequest, loginUserRequest, registerUserRequest } from '../../redux/actions/userActions';
 import { useEffect, useState } from 'react';
-import { TOKEN_LIFESPAN } from '../../utils/constants';
 import { getCookie } from '../../utils/functions';
 import { getThemeIsLight } from '../../redux/selectors/uiSelectors';
 import { setThemeIsLight } from '../../redux/actions/uiActions';
 import Loading from '../../components/Loading/Loading';
 
 import './Login.scss';
+import { fetchUserError, fetchUserLoading, fetchUserValue } from '../../redux/selectors/userSelectors';
 
 
 function LoginPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { state } = useLocation();
+
   const themeIsLight = useSelector(getThemeIsLight);
+  const loading = useSelector(fetchUserLoading);
+  const error = useSelector(fetchUserError);
+  const user = useSelector(fetchUserValue);
 
   const [themeIsInitialized, setThemeIsInitialized] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
-
-  const handleConfirmPasswordChange = (event) => {
-    setConfirmPassword(event.target.value);
-  };
-
-  const handleToggleSignUp = () => {
-    setIsSignUp(!isSignUp);
-  };
-
-  const handleLogin = () => {
-    // Send email and password to server for login
-    console.log('Logging in with:', email, password);
-  };
-
-  const handleSignUp = () => {
-    // Send email, password, and confirmPassword to server for sign up
-    console.log('Signing up with:', email, password, confirmPassword);
-  };
-
-  const handleFocus = (event) => {
-    event.target.parentNode.classList.add('active');
-  };
-
-  const handleBlur = (event) => {
-    if (event.target.value === '') {
-      event.target.parentNode.classList.remove('active');
-    }
-  };
-
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleShowConfirmPassword = () => {
-    setShowConfirmPassword(!showConfirmPassword);
-  };
 
   useEffect(() => {
     const savedThemeIsLight = localStorage.getItem("themeIsLight");
@@ -79,7 +39,7 @@ function LoginPage() {
 
     const shouldConnectAndRedirect = state?.path;
     if (shouldConnectAndRedirect) {
-      handleSession();
+      // handleSession();
     }
   }, []);
 
@@ -96,61 +56,171 @@ function LoginPage() {
     }
   }, [themeIsLight]);
 
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    navigate(state?.path || "/");
+  }, [user])
+
+  function handleEmailChange(event) {
+    setEmail(event.target.value);
+  };
+
+  function handlePasswordChange(event) {
+    setPassword(event.target.value);
+  };
+
+  function handleConfirmPasswordChange(event) {
+    setConfirmPassword(event.target.value);
+  };
+
+  function handleToggleSignUp() {
+    setIsSignUp(!isSignUp);
+  };
+
+  function handleLogin() {
+    if (!validateFieldsOnSubmit()) {
+      return;
+    }
+
+    dispatch(loginUserRequest({ email, password }));
+  };
+
+  function handleSignUp() {
+    if (!validateFieldsOnSubmit()) {
+      return;
+    }
+
+    dispatch(registerUserRequest({ email, password }));
+  };
+
+  function handleUserSession() {
+    dispatch(fetchUserRequest());
+  }
+
+  function handleGuestSession() {
+    dispatch(createGuestRequest());
+  }
+
+  function handleFocus(event) {
+    event.target.parentNode.classList.add('active');
+  };
+
+  function handleBlur(event) {
+    validateFieldsOnChange();
+
+    if (event.target.value === '') {
+      event.target.parentNode.classList.remove('active');
+    }
+  };
+
+  function validateFieldsOnSubmit() {
+    let success = true;
+
+    if (!email) {
+      success = false;
+      setEmailError('Please fill out this field');
+    }
+    else if (!validateEmail(email)) {
+      success = false;
+      setEmailError('Email is not valid');
+    }
+    else {
+      setEmailError('');
+    }
+
+    if (!password) {
+      success = false;
+      setPasswordError('Please fill out this field');
+    }
+    else {
+      setPasswordError('');
+    }
+
+    if (isSignUp) {
+      if (!confirmPassword) {
+        success = false;
+        setConfirmPasswordError('Please fill out this field');
+      }
+      else if (password !== confirmPassword) {
+        success = false;
+        setConfirmPasswordError('Passwords do not match');
+      }
+      else {
+        setConfirmPasswordError('');
+      }
+    }
+
+    return success;
+  }
+
+  function validateFieldsOnChange() {
+    let success = true;
+
+    if (email && !validateEmail(email)) {
+      setEmailError('Email is not valid');
+      success = false;
+    }
+    else {
+      setEmailError('');
+    }
+
+    if (password) {
+      setPasswordError('');
+    }
+
+    if (isSignUp && password && confirmPassword &&
+      password != confirmPassword) {
+      success = false;
+      setConfirmPasswordError('Passwords do not match');
+    }
+    else {
+      setConfirmPasswordError('');
+    }
+
+    return success;
+  }
+
+  function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  function handleShowPassword() {
+    setShowPassword(!showPassword);
+  };
+
+  function handleShowConfirmPassword() {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
+
+  function handleKeyDown(event) {
+    if (event.key !== "Enter") {
+      return;
+    }
+
+    event.preventDefault();
+    
+    if (isSignUp) {
+      handleSignUp();
+    }
+    else {
+      handleLogin();
+    }
+  }
+
+
   function handleSession() {
     const token = getCookie('sessionToken');
     if (token) {
-      getUserSession();
+      handleUserSession();
     }
     else {
-      createGuestSession();
+      handleGuestSession();
     }
-  }
-
-  function getUserSession() {
-    setLoading(true);
-    getCurrentUser().then((user) => {
-      onUserConnected(user);
-    })
-      .catch((error) => {
-        onError(error);
-      });
-  }
-
-  function createGuestSession() {
-    setLoading(true);
-    createGuest().then((guest) => {
-      if (!guest.sessionToken) {
-        dispatch(createGuestFailure(guest));
-        return;
-      }
-
-      createGuestSessionCookie(guest.sessionToken);
-      onUserConnected(guest);
-    })
-      .catch((error) => {
-        onError(error);
-      });
-  };
-
-  function onUserConnected(user) {
-    delete user.sessionToken;
-    dispatch(createGuestSuccess(user));
-    navigate(state?.path || "/");
-  }
-
-  function onError(error) {
-    setError(error.message);
-    setLoading(false);
-  }
-
-  function createUserSessionCookie(token) {
-    const expiryDate = new Date();
-    expiryDate.setDate(expiryDate.getDate() + TOKEN_LIFESPAN);
-    document.cookie = `sessionToken=${token}; path=/; secure; SameSite=Strict; Expires=${expiryDate.toUTCString()};`;
-  }
-
-  function createGuestSessionCookie(token) {
-    document.cookie = `sessionToken=${token}; path=/; secure; SameSite=Strict; Expires=0;`;
   }
 
   return (
@@ -167,8 +237,10 @@ function LoginPage() {
                 onChange={handleEmailChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
+                onKeyDown={handleKeyDown}
               />
               <label className='login-label' htmlFor="email">Email address</label>
+              {emailError && <div className="login-input-error">{emailError}</div>}
             </div>
 
             <div className={`form-group ${password ? 'active' : ''}`}>
@@ -179,6 +251,7 @@ function LoginPage() {
                 onChange={handlePasswordChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
+                onKeyDown={handleKeyDown}
               />
               <label className='login-label' htmlFor="password">Password</label>
               <div className="password-toggle" onClick={handleShowPassword}>
@@ -188,11 +261,12 @@ function LoginPage() {
                   <i className="fas fa-eye"></i>
                 )}
               </div>
+              {passwordError && <div className="login-input-error">{passwordError}</div>}
             </div>
 
             {!isSignUp && (
               <div className='login-form login-links'>
-                <a>Forgot password?</a>
+                <div className='login-button-second'>Forgot password?</div>
               </div>
             )}
             {isSignUp && (
@@ -204,7 +278,8 @@ function LoginPage() {
                   onChange={handleConfirmPasswordChange}
                   onFocus={handleFocus}
                   onBlur={handleBlur}
-                />
+                  onKeyDown={handleKeyDown}
+                  />
                 <label className='login-label' htmlFor="confirmPassword">Confirm Password</label>
                 <div className="password-toggle" onClick={handleShowConfirmPassword}>
                   {showConfirmPassword ? (
@@ -213,9 +288,14 @@ function LoginPage() {
                     <i className="fas fa-eye"></i>
                   )}
                 </div>
+                {confirmPasswordError && <div className="login-input-error">{confirmPasswordError}</div>}
               </div>
             )}
-
+            {error && (
+              <div className='login-error'>
+                {error}
+              </div>
+            )}
             <button className='login-button' onClick={isSignUp ? handleSignUp : handleLogin}>
               {isSignUp ? 'Sign up' : 'Login'}
             </button>
@@ -230,7 +310,7 @@ function LoginPage() {
         </div>
       </div>
       <div className='login-button-container'>
-        <button className='login-button' onClick={handleSession}>Try as guest</button>
+        <button className='login-button' onClick={handleGuestSession}>Try as guest</button>
         <div className='login-button-text'>
           Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries.
         </div>
@@ -239,15 +319,9 @@ function LoginPage() {
         loading && (
           <div className='login-loading'>
             <Loading />
-            Creating a guest session
           </div>
         )
       }
-      {error && (
-        <div className='login-error'>
-          {error}
-        </div>
-      )}
       <footer class="login-footer">
         <div class="login-links">
           <a href="/policies/terms-of-use">Terms of use</a>
