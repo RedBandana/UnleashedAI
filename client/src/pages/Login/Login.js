@@ -21,6 +21,56 @@ function LoginPage() {
   const [themeIsInitialized, setThemeIsInitialized] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleConfirmPasswordChange = (event) => {
+    setConfirmPassword(event.target.value);
+  };
+
+  const handleToggleSignUp = () => {
+    setIsSignUp(!isSignUp);
+  };
+
+  const handleLogin = () => {
+    // Send email and password to server for login
+    console.log('Logging in with:', email, password);
+  };
+
+  const handleSignUp = () => {
+    // Send email, password, and confirmPassword to server for sign up
+    console.log('Signing up with:', email, password, confirmPassword);
+  };
+
+  const handleFocus = (event) => {
+    event.target.parentNode.classList.add('active');
+  };
+
+  const handleBlur = (event) => {
+    if (event.target.value === '') {
+      event.target.parentNode.classList.remove('active');
+    }
+  };
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleShowConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   useEffect(() => {
     const savedThemeIsLight = localStorage.getItem("themeIsLight");
@@ -105,8 +155,82 @@ function LoginPage() {
 
   return (
     <div className={`login ${themeIsLight ? 'theme-light' : 'theme-dark'}`}>
+      <div className="login-page">
+        <div className="login-container">
+          <h1 className='login-title'>Unleashed AI</h1>
+          <div className="form-container">
+            <div className={`form-group ${email ? 'active' : ''}`}>
+              <input className='login-input'
+                type="email"
+                id="email"
+                value={email}
+                onChange={handleEmailChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+              <label className='login-label' htmlFor="email">Email address</label>
+            </div>
+
+            <div className={`form-group ${password ? 'active' : ''}`}>
+              <input className='login-input'
+                type={showPassword ? "text" : "password"}
+                id="password"
+                value={password}
+                onChange={handlePasswordChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+              <label className='login-label' htmlFor="password">Password</label>
+              <div className="password-toggle" onClick={handleShowPassword}>
+                {showPassword ? (
+                  <i className="fas fa-eye-slash"></i>
+                ) : (
+                  <i className="fas fa-eye"></i>
+                )}
+              </div>
+            </div>
+
+            {!isSignUp && (
+              <div className='login-form login-links'>
+                <a>Forgot password?</a>
+              </div>
+            )}
+            {isSignUp && (
+              <div className={`form-group ${confirmPassword ? 'active' : ''}`}>
+                <input className='login-input'
+                  type={showConfirmPassword ? "text" : "password"}
+                  id="confirmPassword"
+                  value={confirmPassword}
+                  onChange={handleConfirmPasswordChange}
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
+                />
+                <label className='login-label' htmlFor="confirmPassword">Confirm Password</label>
+                <div className="password-toggle" onClick={handleShowConfirmPassword}>
+                  {showConfirmPassword ? (
+                    <i className="fas fa-eye-slash"></i>
+                  ) : (
+                    <i className="fas fa-eye"></i>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <button className='login-button' onClick={isSignUp ? handleSignUp : handleLogin}>
+              {isSignUp ? 'Sign up' : 'Login'}
+            </button>
+          </div>
+
+          <div className="toggle-container">
+            <div>{isSignUp ? 'Already have an account?' : "Don't have an account?"}</div>
+            <button className='login-button-second' onClick={handleToggleSignUp}>
+              {isSignUp ? 'Login' : 'Sign up'}
+            </button>
+          </div>
+        </div>
+      </div>
       <div className='login-button-container'>
-        <button className='login-button' onClick={handleSession}>Try now</button>
+        <button className='login-button' onClick={handleSession}>Try as guest</button>
         <div className='login-button-text'>
           Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries.
         </div>
@@ -124,6 +248,13 @@ function LoginPage() {
           {error}
         </div>
       )}
+      <footer class="login-footer">
+        <div class="login-links">
+          <a href="/policies/terms-of-use">Terms of use</a>
+          <span>|</span>
+          <a href="/policies/privacy-policy">Privacy policy</a>
+        </div>
+      </footer>
     </div>
   );
 }
