@@ -5,7 +5,7 @@ export class ChatUtils {
 
     static getDefaultChat = (index: number) => {
         const chat: IChat = {
-            title: `New chat`,
+            title: `new chat`,
             isActive: true,
             index: index,
             messages: [],

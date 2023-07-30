@@ -96,7 +96,7 @@ function TextInput(props) {
             <textarea
                 ref={textareaRef}
                 rows="1"
-                placeholder="Send a message"
+                placeholder="send a message"
                 value={inputValue}
                 onChange={handleOnInputChange}
                 onKeyDown={handleKeyDown}

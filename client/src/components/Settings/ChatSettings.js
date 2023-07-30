@@ -6,7 +6,7 @@ import { fetchChatValue } from "../../redux/selectors/chatSelectors";
 import { getSettings } from "../../redux/selectors/uiSelectors";
 
 import { parseToRightType } from "../../utils/functions";
-import "./Settings.scss";
+import "./ChatSettings.scss";
 
 const Settings = () => {
     const dispatch = useDispatch();
@@ -45,7 +45,7 @@ const Settings = () => {
                 <form>
                     <div className="setting-inputs">
                         <div className="setting-item">
-                            <label htmlFor="system">Role</label>
+                            <label htmlFor="system">role</label>
                             <div className="input-container">
                                 <textarea
                                     id="system"
@@ -56,7 +56,7 @@ const Settings = () => {
                             </div>
                         </div>
                         <div className="setting-item">
-                            <label htmlFor="model">Model</label>
+                            <label htmlFor="model">model</label>
                             <div className="input-container">
                                 <select
                                     id="model"
@@ -71,7 +71,7 @@ const Settings = () => {
                             </div>
                         </div>
                         <div className="setting-item">
-                            <label htmlFor="max_tokens">Max Words</label>
+                            <label htmlFor="max_tokens">max words</label>
                             <div className="input-container">
                                 <input
                                     type="number"
@@ -85,7 +85,7 @@ const Settings = () => {
                             </div>
                         </div>
                         <div className="setting-item">
-                            <label htmlFor="n">Answers</label>
+                            <label htmlFor="n">answers</label>
                             <div className="input-container">
                                 <input
                                     type="number"
@@ -100,7 +100,7 @@ const Settings = () => {
                             </div>
                         </div>
                         <div className="setting-item">
-                            <label htmlFor="temperature">Randomize</label>
+                            <label htmlFor="temperature">randomize</label>
                             <div className="input-container">
                                 <input
                                     type="number"
@@ -115,7 +115,7 @@ const Settings = () => {
                             </div>
                         </div>
                         <div className="setting-item">
-                            <label htmlFor="memory">Memorize</label>
+                            <label htmlFor="memory">memorize</label>
                             <div className="input-container">
                                 <input
                                     type="number"
@@ -130,7 +130,7 @@ const Settings = () => {
                             </div>
                         </div>
                         <div className="setting-item dev-options">
-                            <label htmlFor="devOptions">Show Developer Options</label>
+                            <label htmlFor="devOptions">show developer options</label>
                             <div className="input-container">
                                 <input
                                     type="checkbox"
@@ -146,7 +146,7 @@ const Settings = () => {
                                 <a href="https://platform.openai.com/docs/api-reference/chat" target="_blank" rel="noopener noreferrer">Documentation</a>
                             </div>
                             <div className="setting-item">
-                                <label htmlFor="top_p">Top P</label>
+                                <label htmlFor="top_p">top p</label>
                                 <div className="input-container">
                                     <input
                                         type="number"
@@ -161,7 +161,7 @@ const Settings = () => {
                                 </div>
                             </div>
                             <div className="setting-item hide">
-                                <label htmlFor="stream">Stream*</label>
+                                <label htmlFor="stream">stream*</label>
                                 <div className="input-container">
                                     <input
                                         type="checkbox"
@@ -173,7 +173,7 @@ const Settings = () => {
                                 </div>
                             </div>
                             <div className="setting-item">
-                                <label htmlFor="stop">Stop Sequences</label>
+                                <label htmlFor="stop">stop sequences</label>
                                 <div className="input-container">
                                     <input
                                         type="text"
@@ -185,7 +185,7 @@ const Settings = () => {
                                 </div>
                             </div>
                             <div className="setting-item">
-                                <label htmlFor="presence_penalty">Presence Penalty</label>
+                                <label htmlFor="presence_penalty">presence penalty</label>
                                 <div className="input-container">
                                     <input
                                         type="number"
@@ -200,7 +200,7 @@ const Settings = () => {
                                 </div>
                             </div>
                             <div className="setting-item">
-                                <label htmlFor="frequency_penalty">Frequency Penalty</label>
+                                <label htmlFor="frequency_penalty">frequency penalty</label>
                                 <div className="input-container">
                                     <input
                                         type="number"

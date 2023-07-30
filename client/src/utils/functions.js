@@ -21,6 +21,10 @@ export function setGuestSessionCookie(token) {
   document.cookie = `sessionToken=${token}; path=/; secure; SameSite=Strict; Expires=0;`;
 }
 
+export function removeSessionCookie() {
+  document.cookie = `sessionToken=; path=/; secure; SameSite=Strict; Expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+}
+
 export function getHttpResponseConfig() {
   const config = {
     headers: {

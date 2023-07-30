@@ -57,7 +57,7 @@ function LoginPage() {
   }, [themeIsLight]);
 
   useEffect(() => {
-    if (!user) {
+    if (!user || !getCookie("sessionToken")) {
       return;
     }
 
@@ -212,7 +212,6 @@ function LoginPage() {
     }
   }
 
-
   function handleSession() {
     const token = getCookie('sessionToken');
     if (token) {
@@ -322,8 +321,8 @@ function LoginPage() {
           </div>
         )
       }
-      <footer class="login-footer">
-        <div class="login-links">
+      <footer className="login-footer">
+        <div className="login-links">
           <a href="/policies/terms-of-use">Terms of use</a>
           <span>|</span>
           <a href="/policies/privacy-policy">Privacy policy</a>

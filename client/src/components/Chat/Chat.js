@@ -4,7 +4,7 @@ import { Capacitor } from '@capacitor/core';
 import Prism from 'prismjs';
 
 import Message from '../Message/Message';
-import Settings from '../Settings/Settings';
+import ChatSettings from '../Settings/ChatSettings';
 import TextInput from '../TextInput/TextInput';
 import TypingDots from '../TypingDots/TypingDots';
 
@@ -257,7 +257,7 @@ function Chat(props) {
                 </div>
                 {settingsIsOpen && (
                     <div className="chatbot-settings-container" ref={settingsRef}>
-                        <Settings />
+                        <ChatSettings />
                     </div>
                 )}
                 <div className="chatbot-footer">

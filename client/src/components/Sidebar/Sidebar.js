@@ -9,31 +9,43 @@ import SidebarItem from './SidebarItem';
 import './Sidebar.scss';
 import { fetchChatsLoading, fetchChatsPageReceived } from '../../redux/selectors/chatSelectors';
 import Loading from '../Loading/Loading';
+import { fetchUserValue } from '../../redux/selectors/userSelectors';
+import { SIDEBAR_TITLE_MAX_LENGTH } from '../../utils/constants';
+import { useNavigate } from 'react-router-dom';
+import { removeSessionCookie } from '../../utils/functions';
 
 function Sidebar(props) {
   const { items, crudEvents, fileEvents, uiEvents } = props;
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const sidebarIsOpen = useSelector(getSidebarIsOpen);
   const chatSelectedIndex = useSelector(getChatSelectedIndex);
   const isLoading = useSelector(fetchChatsLoading);
   const chatsPageReceived = useSelector(fetchChatsPageReceived);
-  
+  const user = useSelector(fetchUserValue);
+
   const sidebarRef = useRef(null);
   const sidebarListRef = useRef(null);
-  
+
   const isNativePlatform = Capacitor.isNativePlatform();
-  
+
+  const [displaySettings, setDisplaySettings] = useState(false);
+
   useEffect(() => {
-
     function handleClickOutside(event) {
-      if (!isNativePlatform) {
-        return;
-      }
-
       const isOutsideSideBar = sidebarRef.current && !sidebarRef.current.contains(event.target);
       const canMoveSidebar = event.target.className.includes("sidebar-no-move") === false &&
         (event.target.parentElement == null || event.target.parentElement.className.includes("sidebar-no-move-parent") === false);
+
+      if (canMoveSidebar) {
+        setDisplaySettings(false);
+      }
+
+      if (!isNativePlatform) {
+        return;
+      }
 
       if (isOutsideSideBar || canMoveSidebar) {
         dispatch(setSidebarIsOpen(false));
@@ -56,10 +68,10 @@ function Sidebar(props) {
   }, [chatsPageReceived])
 
   useEffect(() => {
-    sidebarListRef.current.addEventListener('scroll', handleScroll);
+    sidebarListRef.current?.addEventListener('scroll', handleScroll);
 
     return () => {
-      sidebarListRef.current.removeEventListener('scroll', handleScroll);
+      sidebarListRef.current?.removeEventListener('scroll', handleScroll);
     };
   }, [sidebarListRef, isLoading, handleScroll]);
 
@@ -109,6 +121,38 @@ function Sidebar(props) {
     uiEvents?.onToggleTheme();
   }
 
+  function handleDisplaySettings() {
+    setDisplaySettings(!displaySettings);
+  }
+
+  function handleOpenUserSettings() {
+    setDisplaySettings(false);
+  }
+
+  function handleLogOut() {
+    setDisplaySettings(false);
+    removeSessionCookie();
+    navigate('/login');
+  }
+
+  function handleOpenUpgradePlus() {
+
+  }
+
+  function getUserEmail() {
+    let userEmail = user?.email;
+    if (!userEmail) {
+      userEmail = 'guest session';
+    }
+
+    if (userEmail.length > SIDEBAR_TITLE_MAX_LENGTH) {
+      return userEmail.substr(0, SIDEBAR_TITLE_MAX_LENGTH) + '...';
+    }
+    else {
+      return userEmail;
+    }
+  }
+
   const sidebarItemsCrudEvents = {
     onRead: handleOnClickItem,
     onUpdate: handleOnEditItem,
@@ -118,8 +162,10 @@ function Sidebar(props) {
   return (
     <div className="sidebar" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={isNativePlatform} ref={sidebarRef}>
       <div className="sidebar-body">
-        <div className='sidebar-filestream-container sidebar-no-move-parent'>
-          <div className="sidebar-add-button" onClick={handleOnAddItem}>+ New chat</div>
+        <div className='sidebar-header sidebar-no-move-parent'>
+          <div className="sidebar-header-row" onClick={handleOnAddItem}>
+            <div className='sidebar-header-row-item'>+ new chat</div>
+          </div>
           {
             uiEvents?.save && (
               <div className='sidebar-filestream-options sidebar-filestream-save hide'>
@@ -147,6 +193,7 @@ function Sidebar(props) {
             )
           }
         </div>
+        <div className='bordered-top'></div>
         <div className="sidebar-list" ref={sidebarListRef}>
           {items.map((item, index) => (
             <SidebarItem
@@ -160,10 +207,39 @@ function Sidebar(props) {
           ))}
           {isLoading && (<Loading />)}
         </div>
-        <div className="sidebar-footer sidebar-no-move-parent">
-          <div className="sidebar-clear-button" onClick={handleOnClearItems}>Clear conversations</div>
-          <div className='sidebar-help-button sidebar-no-move-parent' onClick={handleOnToggleTheme}>
-            <div className="fas fa-moon"></div>
+        {displaySettings && (
+          <div className='sidebar-settings'>
+            <div className='sidebar-settings-row' onClick={handleOpenUserSettings}>
+              <div className='sidebar-settings-row-item'>
+                settings
+              </div>
+              <div className='sidebar-settings-row-icon'>
+                <div className="fas fa-cog"></div>
+              </div>
+            </div>
+            <div className='sidebar-settings-row' onClick={handleLogOut}>
+              <div className='sidebar-settings-row-item'>
+                {user?.type == 0 ? 'leave' : 'log out'}
+              </div>
+              <div className='sidebar-settings-row-icon'>
+                <div className="fas fa-sign-out-alt"></div>
+              </div>
+            </div>
+          </div>
+        )}
+        <div className='bordered-top'></div>
+        <div className="sidebar-footer">
+          <div className='sidebar-footer-row sidebar-no-move-parent' onClick={handleOpenUpgradePlus}>
+            <div className="sidebar-footer-row-item">upgrade to Plus</div>
+            <div className='sidebar-footer-row-icon accent-color' onClick={handleOpenUpgradePlus}>
+              <div className="fas fa-rocket"></div>
+            </div>
+          </div>
+          <div className='sidebar-footer-row sidebar-no-move-parent' onClick={handleDisplaySettings}>
+            <div className="sidebar-footer-row-item">{getUserEmail()}</div>
+            <div className='sidebar-footer-row-icon' onClick={handleDisplaySettings}>
+              <div className="fas fa-ellipsis-h"></div>
+            </div>
           </div>
         </div>
       </div>

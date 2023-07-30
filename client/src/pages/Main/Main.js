@@ -18,6 +18,7 @@ import { COUNT_CHATS, COUNT_MESSAGES } from '../../utils/constants'
 import '@fortawesome/fontawesome-free/css/all.css';
 import '../../index.scss';
 import { fetchMessagesValue } from '../../redux/selectors/messageSelectors';
+import { fetchUserRequest } from '../../redux/actions/userActions';
 
 function Main() {
   const dispatch = useDispatch();
@@ -49,6 +50,7 @@ function Main() {
     const savedThemeIsLight = localStorage.getItem("themeIsLight");
     dispatch(setThemeIsLight(savedThemeIsLight === "true"));
     setThemeIsInitialized(true);
+    dispatch(fetchUserRequest());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

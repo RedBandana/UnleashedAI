@@ -1,5 +1,5 @@
-$sidebar-width: 300px;
-$sidebar-width-adjust: 300px;
+$sidebar-width: 260px;
+$sidebar-width-adjust: 260px;
 
 body {
     --font-family-main: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -33,6 +33,7 @@ body {
     --color-sidebar: #2b2d31;
     --color-text-sidebar: #E4E6EB;
     --color-hover-sidebar: #3f4248;
+    --color-settings-sidebar: #131518;
     --color-options-sidebar: #666;
     --color-sidebar-item: rgba(0,0,0,0);
     --color-input-placeholder: #777;
@@ -42,7 +43,7 @@ body {
     --box-shadow-second: 0 0 2px darkgray;
     --box-shadow-third: 0 0 0 black;
     --box-shadow-sidebar-open: 0 0 0 gray;
-    --box-shadow-sidebar-open-mobile: 0px 0 300px #333;
+    --box-shadow-sidebar-open-mobile: 0px 0 260px #333;
 
     --border-main: 1px solid #ccc;
     --border-chat: 1px solid #dadada;
@@ -75,10 +76,10 @@ body {
     --box-shadow-second: 0 0 2px #111;
     --box-shadow-third: 0 0 0 #111;
     --box-shadow-sidebar-open: 0 0 0 #111;
-    --box-shadow-sidebar-open-mobile: 0px 0 300px #111;
+    --box-shadow-sidebar-open-mobile: 0px 0 260px #111;
 
     --border-main: 1px solid #454545;
-    --border-chat: none;
+    --border-chat: 1px solid rgba(0,0,0,0);
 }
 
 .native-platform {

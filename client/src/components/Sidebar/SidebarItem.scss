@@ -4,8 +4,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
+  padding: 10px;
   background-color: var(----color-sidebar-item);
+  margin: 8px;
+  border-radius: 5px;
+  max-height: 21px;
 }
 
 .sidebaritem:hover {
@@ -32,7 +35,7 @@
   font-size: var(--font-size-main);
   font-weight: 600;
   color: var(--color-text-main-default);
-  max-width: 170px;
+  max-width: 140px;
 }
 
 .sidebaritem-buttons {
