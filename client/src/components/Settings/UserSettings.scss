@@ -1,0 +1,96 @@
+
+.user-settings {
+    z-index: 999;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.user-settings-password,
+.user-settings-clear {
+    width: 100%;
+}
+
+.user-settings-password-button,
+.user-settings-clear-button {
+    background-color: transparent;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 8px;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.user-settings-password-button {
+    color: var(--color-text-main);
+}
+
+.user-settings-password-button:hover {
+    background-color: var(--color-hover-main);
+}
+
+.user-settings-clear-button {
+    color: var(--color-alert);
+}
+
+.user-settings-clear-button:hover {
+    background-color: var(--color-alert-hover)
+}
+
+.user-settings-theme {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.user-settings-theme-select {
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    color: var(--color-text-main);
+}
+
+.user-settings-theme-select:hover {
+    background-color: var(--color-hover-main);
+}
+
+.user-settings-theme-select option {
+    font-size: 14px;
+    border: none;
+}
+
+.user-settings-theme-select::-ms-expand {
+    display: none;
+}
+
+.user-settings-item {
+    width: 175px;
+    margin: 8px;
+}
+
+.input-container {
+    position: relative;
+}
+
+.user-settings-password {
+    padding: 5px;
+    border-radius: 4px;
+    border: var(--border-main);
+    font-size: 14px;
+    outline: none;
+    color: var(--color-text-main-default);
+}
+
+.user-settings-password::placeholder {
+    color: var(--color-input-placeholder);
+}
+
+.user-settings-password:focus {
+    border: var(--border-accent);
+}

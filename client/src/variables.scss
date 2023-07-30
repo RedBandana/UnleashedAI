@@ -29,14 +29,17 @@ body {
     --color-options-main-default: #bbb;
     --color-main-default: #fff;
     --color-second-default: #eee;
-
+    
+    --color-alert: rgb(194, 108, 108);
+    --color-alert-hover: rgb(194, 108, 108, 0.15);
     --color-sidebar: #2b2d31;
     --color-text-sidebar: #E4E6EB;
     --color-hover-sidebar: #3f4248;
     --color-settings-sidebar: #131518;
     --color-options-sidebar: #666;
     --color-sidebar-item: rgba(0,0,0,0);
-    --color-input-placeholder: #777;
+    --color-input-placeholder: #333;
+    --color-input-label: #777;
     --color-input-icon: #ccc;
 
     --box-shadow-main: 0 0 0 darkgray;
@@ -46,6 +49,7 @@ body {
     --box-shadow-sidebar-open-mobile: 0px 0 260px #333;
 
     --border-main: 1px solid #ccc;
+    --border-accent: 1px solid #2374E1;
     --border-chat: 1px solid #dadada;
     --border-none: none;
     --border-radius-main: 20px;
@@ -78,7 +82,7 @@ body {
     --box-shadow-sidebar-open: 0 0 0 #111;
     --box-shadow-sidebar-open-mobile: 0px 0 260px #111;
 
-    --border-main: 1px solid #454545;
+    --border-main: 1px solid #ccc;
     --border-chat: 1px solid rgba(0,0,0,0);
 }
 

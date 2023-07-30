@@ -4,6 +4,7 @@ import * as actions from '../actions/uiActions';
 const initialState = {
   sidebarIsOpen: false,
   settingsIsOpen: false,
+  userSettingsIsOpen: false,
   settings: null,
   themeIsLight: true,
   chatSelectedIndex: 0,
@@ -43,6 +44,10 @@ const uiReducer = handleActions(
     [actions.setChatSelectedIndex]: (state, { payload }) => ({
       ...state,
       chatSelectedIndex: payload,
+    }),
+    [actions.setUserSettingsIsOpen]: (state, { payload }) => ({
+      ...state,
+      userSettingsIsOpen: payload,
     }),
   },
   initialState

@@ -13,12 +13,14 @@ const AlertDialog = ({ text }) => {
   }
 
   return (
-    <div className="alert-dialog">
-      <div className="alert-dialog-content">
-        <div className="alert-dialog-text">{text}</div>
-        <button className="alert-dialog-button" onClick={handleClose}>
-          OK
-        </button>
+    <div className='alert-dialog'>
+      <div className="main-box">
+        <div className="main-box-container">
+          <div className="alert-dialog-text">{text}</div>
+          <button className="alert-dialog-button" onClick={handleClose}>
+            OK
+          </button>
+        </div>
       </div>
     </div>
   );

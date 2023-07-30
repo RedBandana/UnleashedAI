@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Capacitor } from '@capacitor/core';
 
 import { getChatSelectedIndex, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
-import { setSidebarIsOpen } from '../../redux/actions/uiActions';
+import { setSidebarIsOpen, setUserSettingsIsOpen } from '../../redux/actions/uiActions';
 
 import SidebarItem from './SidebarItem';
 import './Sidebar.scss';
@@ -127,6 +127,7 @@ function Sidebar(props) {
 
   function handleOpenUserSettings() {
     setDisplaySettings(false);
+    dispatch(setUserSettingsIsOpen(true));
   }
 
   function handleLogOut() {

@@ -19,6 +19,7 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import '../../index.scss';
 import { fetchMessagesValue } from '../../redux/selectors/messageSelectors';
 import { fetchUserRequest } from '../../redux/actions/userActions';
+import UserSettings from '../../components/Settings/UserSettings';
 
 function Main() {
   const dispatch = useDispatch();
@@ -250,6 +251,7 @@ function Main() {
         <AlertDialog
           text="Hello, Unleashed AI Chat is still in early stages. If you have any feedback, please contact us at contact@email.com"
         />
+        <UserSettings />
         {
           chats && (
             <Sidebar
