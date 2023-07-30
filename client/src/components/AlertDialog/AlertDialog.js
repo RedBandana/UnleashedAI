@@ -1,26 +1,71 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import './AlertDialog.scss';
 
-const AlertDialog = ({ text }) => {
-  const [showDialog, setShowDialog] = useState(false);
+const AlertDialog = ({ title, text, onYes, onNo, onOk, onClose }) => {
 
-  const handleClose = () => {
-    setShowDialog(false);
-  };
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (event.target.className === "main-box") {
+        onClose();
+      }
+    }
 
-  if (!showDialog) {
-    return null; // Return null to hide the component
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [])
+
+  function handleOnYes() {
+    onYes();
+    onClose();
+  }
+
+  function handleOnNo() {
+    onNo();
+    onClose();
+  }
+
+  function handleOnOk() {
+    onOk();
+    onClose();
   }
 
   return (
     <div className='alert-dialog'>
       <div className="main-box">
         <div className="main-box-container">
-          <div className="alert-dialog-text">{text}</div>
-          <button className="alert-dialog-button" onClick={handleClose}>
-            OK
-          </button>
+          {title && (
+            <div className='main-box-header'>
+              <div className='main-box-title'>{title}</div>
+            </div>
+          )}
+          {title && (
+            <div className='bordered-top'></div>
+          )}
+          <div className='main-box-body'>
+            <div className="main-box-body-row">{text}</div>
+            <div className='main-box-body-row main-box-body-buttons-list'>
+              {onYes && (
+                <button className="main-box-body-row-button" onClick={handleOnYes}>
+                  yes
+                </button>
+              )}
+              {onNo && (
+                <button className="main-box-body-row-button" onClick={handleOnNo}>
+                  no
+                </button>
+              )}
+              {onOk && (
+                <button className="main-box-body-row-button" onClick={handleOnOk}>
+                  ok
+                </button>
+              )}
+            </div>
+          </div>
         </div>
+
       </div>
     </div>
   );

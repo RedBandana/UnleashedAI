@@ -34,6 +34,7 @@ function Main() {
 
   const touchStartX = useRef(0);
   const touchIsDragging = useRef(false);
+  const [showAlertDialog, setShowAlertDialog] = useState(false);
   const [sidebarChanged, setSidebarChanged] = useState(false);
   const [isInitialized, setIsInitialize] = useState(false);
   const [themeIsInitialized, setThemeIsInitialized] = useState(false);
@@ -170,12 +171,12 @@ function Main() {
       chatId: chatId,
       chatIndex: chatIndex,
     }));
-    dispatch(clearMessagesSuccess);
+    dispatch(clearMessagesSuccess());
   }
 
   function handleOnClearItems() {
     dispatch(clearChatsRequest());
-    dispatch(clearMessagesSuccess);
+    dispatch(clearMessagesSuccess());
   }
 
   function handleOnSendMessage(chatId, message) {
@@ -248,9 +249,15 @@ function Main() {
     <div className={`chat ${themeIsLight ? 'theme-light' : 'theme-dark'}`}>
       <Navbar />
       <div className="main">
-        <AlertDialog
-          text="Hello, Unleashed AI Chat is still in early stages. If you have any feedback, please contact us at contact@email.com"
-        />
+        {
+          showAlertDialog && (
+            <AlertDialog
+              text="Hello, Unleashed AI Chat is still in early stages. If you have any feedback, please contact us at contact@email.com"
+              onOk={() => { setShowAlertDialog(false) }}
+            />
+          )
+        }
+
         <UserSettings />
         {
           chats && (

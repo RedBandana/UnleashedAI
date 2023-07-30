@@ -321,7 +321,7 @@ function LoginPage() {
           </div>
         )
       }
-      <footer className="login-footer">
+      <footer className="login-footer hide">
         <div className="login-links">
           <a href="/policies/terms-of-use">Terms of use</a>
           <span>|</span>

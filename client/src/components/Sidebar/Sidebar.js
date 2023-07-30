@@ -238,7 +238,7 @@ function Sidebar(props) {
           </div>
           <div className='sidebar-footer-row sidebar-no-move-parent' onClick={handleDisplaySettings}>
             <div className="sidebar-footer-row-item">{getUserEmail()}</div>
-            <div className='sidebar-footer-row-icon' onClick={handleDisplaySettings}>
+            <div className='sidebar-footer-row-icon'>
               <div className="fas fa-ellipsis-h"></div>
             </div>
           </div>
