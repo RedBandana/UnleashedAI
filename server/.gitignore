@@ -8,6 +8,7 @@ uploads/*
 *.js.map
 *.js
 .env
+.vs/
 
 package-lock.json
 npm-debug.log
