@@ -43,6 +43,7 @@ function Main() {
 
   useEffect(() => {
     dispatch(fetchChatsRequest({ page: 1, count: COUNT_CHATS }));
+    setShowAlertDialog(false);
 
     if (!Capacitor.isNativePlatform()) {
       dispatch(setSidebarIsOpen(true));
@@ -50,7 +51,14 @@ function Main() {
     }
 
     const savedThemeIsLight = localStorage.getItem("themeIsLight");
-    dispatch(setThemeIsLight(savedThemeIsLight === "true"));
+    if (savedThemeIsLight === null) {
+      dispatch(setThemeIsLight(true));
+      localStorage.setItem("themeIsLight", themeIsLight);
+    }
+    else {
+      dispatch(setThemeIsLight(savedThemeIsLight === "true"));
+    }
+    
     setThemeIsInitialized(true);
     dispatch(fetchUserRequest());
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -224,6 +232,10 @@ function Main() {
     dispatch(fetchChatsPageRequest({ page: nextPage, count: COUNT_CHATS }));
   }
 
+  function handleCloseAlertDialog() {
+    setShowAlertDialog(false);
+  }
+
   const sidebarCrudEvents = {
     onCreate: handleOnAddItem,
     onRead: handleOnClickItem,
@@ -253,7 +265,7 @@ function Main() {
           showAlertDialog && (
             <AlertDialog
               text="Hello, Unleashed AI Chat is still in early stages. If you have any feedback, please contact us at contact@email.com"
-              onOk={() => { setShowAlertDialog(false) }}
+              onOk={handleCloseAlertDialog} onClose={handleCloseAlertDialog}
             />
           )
         }

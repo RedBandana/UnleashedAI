@@ -16,7 +16,7 @@
 }
 
 .no-conversation-container[data-sidebar-is-open="true"][data-is-mobile="false"] {
-    width: calc(100vw - 260px);
+    width: calc(100vw - $sidebar-width);
 }
 
 .no-conversation-messages {
@@ -27,7 +27,6 @@
     margin: 20px 0;
     color: var(--color-accent-main);
     width: 100%;
-    transition: width 0.25s ease-in-out;
     font-weight: bold;
 }
 
@@ -39,4 +38,29 @@
 .no-conversation-options-child label:hover {
     transform: translateY(-2px);
     cursor: pointer;
+}
+
+.no-conversation-body {
+    position: fixed;
+    width: 100vw;
+    transition: width 0.25s ease-in-out;
+}
+
+
+.no-conversation-container[data-sidebar-is-open="true"] .no-conversation-body {
+    width: calc(100vw - $sidebar-width);
+}
+
+.no-conversation-footer {
+    padding: 10px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    font-size: 1rem;
+    width: 100vw;
+    transition: width 0.25s ease-in-out;
+}
+
+.no-conversation-container[data-sidebar-is-open="true"] .no-conversation-footer {
+    width: calc(100vw - $sidebar-width);
 }

@@ -230,15 +230,15 @@ function Sidebar(props) {
         )}
         <div className='bordered-top'></div>
         <div className="sidebar-footer">
-          <div className='sidebar-footer-row sidebar-no-move-parent' onClick={handleOpenUpgradePlus}>
+          <div className='sidebar-footer-row sidebar-no-move-parent hide' onClick={handleOpenUpgradePlus}>
             <div className="sidebar-footer-row-item">upgrade to Plus</div>
-            <div className='sidebar-footer-row-icon accent-color' onClick={handleOpenUpgradePlus}>
+            <div className='sidebar-footer-row-icon accent-color sidebar-no-move-parent' onClick={handleOpenUpgradePlus}>
               <div className="fas fa-rocket"></div>
             </div>
           </div>
           <div className='sidebar-footer-row sidebar-no-move-parent' onClick={handleDisplaySettings}>
             <div className="sidebar-footer-row-item">{getUserEmail()}</div>
-            <div className='sidebar-footer-row-icon'>
+            <div className='sidebar-footer-row-icon sidebar-no-move-parent'>
               <div className="fas fa-ellipsis-h"></div>
             </div>
           </div>

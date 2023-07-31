@@ -34,12 +34,18 @@ function LoginPage() {
 
   useEffect(() => {
     const savedThemeIsLight = localStorage.getItem("themeIsLight");
-    dispatch(setThemeIsLight(savedThemeIsLight === "true"));
+    if (savedThemeIsLight == null) {
+      dispatch(setThemeIsLight(true));
+      localStorage.setItem("themeIsLight", themeIsLight);
+    }
+    else {
+      dispatch(setThemeIsLight(savedThemeIsLight === "true"));
+    }
     setThemeIsInitialized(true);
 
     const shouldConnectAndRedirect = state?.path;
     if (shouldConnectAndRedirect) {
-      // handleSession();
+      handleSession();
     }
   }, []);
 

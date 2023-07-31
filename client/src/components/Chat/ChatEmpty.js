@@ -19,14 +19,23 @@ function ChatEmpty(props) {
             data-is-mobile={Capacitor.isNativePlatform()}
             className="no-conversation-container"
         >
-            <div className="no-conversation-options">
-                <div onClick={handleAdd} className="no-conversation-options-child no-conversation-new">
-                    + New chat
+            <div className="no-conversation-body">
+                <div className="no-conversation-options">
+                    <div onClick={handleAdd} className="no-conversation-options-child no-conversation-new">
+                        + New chat
+                    </div>
+                </div>
+                <div className="no-conversation-messages">
+                    Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries.
                 </div>
             </div>
-            <div className="no-conversation-messages">
-                Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries.
-            </div>
+            <footer className="no-conversation-footer hide">
+                <div className="login-links">
+                    <a href="/policies/terms-of-use">Terms of use</a>
+                    <span>|</span>
+                    <a href="/policies/privacy-policy">Privacy policy</a>
+                </div>
+            </footer>
         </div>
     )
 }

@@ -202,7 +202,7 @@ function Chat(props) {
             createdOn: new Date(),
         }
         addMessageHtmlToDisplay(message);
-        
+
         const messageRequest = { content: text };
         crudEvents.onCreate(id, messageRequest);
     }
@@ -241,27 +241,29 @@ function Chat(props) {
 
     return (
         <div className="chatbot" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={Capacitor.isNativePlatform()}>
-            <div className='chatbot-container'>
-                <div className="chatbot-body" ref={chatBodyRef}>
-                    {isLoading && (
-                        <Loading />
-                    )}
-                    <div className="chatbot-messages">
-                        {messages && (messagesHtml)}
+            <div className='chatbot-main-body'>
+                <div className='chatbot-container'>
+                    <div className="chatbot-body" ref={chatBodyRef}>
+                        {isLoading && (
+                            <Loading />
+                        )}
+                        <div className="chatbot-messages">
+                            {messages && (messagesHtml)}
+                        </div>
+                        {isWaitingAnswer && (
+                            <div className='chatbot-dots'>
+                                <TypingDots />
+                            </div>
+                        )}
                     </div>
-                    {isWaitingAnswer && (
-                        <div className='chatbot-dots'>
-                            <TypingDots />
+                    {settingsIsOpen && (
+                        <div className="chatbot-settings-container" ref={settingsRef}>
+                            <ChatSettings />
                         </div>
                     )}
-                </div>
-                {settingsIsOpen && (
-                    <div className="chatbot-settings-container" ref={settingsRef}>
-                        <ChatSettings />
+                    <div className="chatbot-footer">
+                        <TextInput onSubmit={handleAdd} canSubmit={handleCanAdd} />
                     </div>
-                )}
-                <div className="chatbot-footer">
-                    <TextInput onSubmit={handleAdd} canSubmit={handleCanAdd} />
                 </div>
             </div>
         </div>

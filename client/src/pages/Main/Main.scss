@@ -1,0 +1,16 @@
+@import '../../variables.scss';
+
+.main-footer {
+    position: fixed;
+    left: 0;
+    transition: left 0.25s ease-in-out;
+    width: 100%;
+}
+
+.main-footer[data-sidebar-is-open="true"] {
+    left: $sidebar-width;
+}
+
+.main-footer[data-sidebar-is-open="true"][data-is-mobile="false"] {
+    width: calc(100vw - $sidebar-width);
+}

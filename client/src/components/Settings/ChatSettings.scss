@@ -1,7 +1,7 @@
 @import '../../variables.scss';
 
 .chatbot[data-sidebar-is-open="true"][data-is-mobile="false"] .settings-dialog {
-  right: calc(20px + 260px);
+  right: calc(20px + $sidebar-width);
 }
 
 .settings-dialog {
@@ -10,7 +10,7 @@
   border-radius: var(--border-radius-main);
   box-shadow: var(--box-shadow-second);
   z-index: 1;
-  width: 260px;
+  width: $sidebar-width;
   position: absolute;
   right: 20px;
   bottom: 80px;

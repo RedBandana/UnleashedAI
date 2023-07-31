@@ -11,15 +11,20 @@
   left: $sidebar-width;
 }
 
-.chatbot[data-sidebar-is-open="true"][data-is-mobile="false"] .chatbot-container {
-  width: calc(100vw - 260px);
+.chatbot-main-body {
+  position: fixed;
+  width: 100vw;
+  transition: width 0.25s ease-in-out;
+}
+
+.chatbot[data-sidebar-is-open="true"][data-is-mobile="false"] .chatbot-main-body {
+  width: calc(100vw - $sidebar-width);
 }
 
 .chatbot-container {
   display: flex;
   flex-direction: column;
   height: 100vh; /* Set the chatbot to fill the entire viewport */
-  transition: width 0.25s ease-in-out;
 }
 
 .chatbot-header {
@@ -51,35 +56,6 @@
 .chatbot-messages {
   display: flex;
   flex-direction: column;
-}
-
-.chatbot-footer {
-  position: sticky;
-  bottom: 0; /* Stick the footer to the bottom of the viewport */
-  margin: 0 5%;
-  margin-bottom: 25px;
-  z-index: 99;
-}
-
-.chatbot-footer form {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.chatbot-footer button {
-  background-color: var(--color-accent-main);
-  color: var(--color-main);
-  border: var(--border-none);
-  border-radius: var(--border-radius-main);
-  padding: 7px 15px;
-  font-size: 1.5rem;
-  cursor: pointer;
-  box-shadow: var(--box-shadow-third);
-}
-
-.chatbot-footer .fas {
-  padding-top: 2px;
 }
 
 .chat-message {
@@ -130,6 +106,42 @@
 .chat-message-text code, .chat-message-text pre {
   font-size: var(--font-size-code);
 }
+
+.chatbot-footer {
+  position: sticky;
+  bottom: 0; 
+  margin-bottom: 25px;
+  z-index: 1;
+  width: 100vw;
+  transition: width 0.25s ease-in-out;
+}
+
+.chatbot[data-sidebar-is-open="true"] .chatbot-footer {
+  width: calc(100vw - $sidebar-width);
+}
+
+.chatbot-footer form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 15%;
+}
+
+.chatbot-footer button {
+  background-color: var(--color-accent-main);
+  color: var(--color-main);
+  border: var(--border-none);
+  border-radius: var(--border-radius-main);
+  padding: 7px 15px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: var(--box-shadow-third);
+}
+
+.chatbot-footer .fas {
+  padding-top: 2px;
+}
+
 
 .chatbot-footer textarea {
   width: 100%;
