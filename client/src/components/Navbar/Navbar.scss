@@ -11,7 +11,7 @@
   transition: left 0.25s ease-in-out;
   width: 100%;
   min-width: 375px;
-  height: var(--navbar-heigth);
+  height: $navbar-height;
 }
 
 .navbar[data-sidebar-is-open="true"] {

@@ -1,7 +1,7 @@
 @import '../../variables.scss';
 
 .no-conversation-container {
-    margin-top: 150px;
+    margin-top: $navbar-height;
     width: 100%;
     text-align: center;
     font-size: 1.25rem;
@@ -46,6 +46,9 @@
     transition: width 0.25s ease-in-out;
 }
 
+.no-conversation-container[data-sidebar-is-open="true"][data-is-mobile="true"] .no-conversation-body {
+    width: 100%
+}
 
 .no-conversation-container[data-sidebar-is-open="true"] .no-conversation-body {
     width: calc(100vw - $sidebar-width);

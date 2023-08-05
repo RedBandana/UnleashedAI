@@ -49,7 +49,7 @@
   flex-direction: column;
   flex-grow: 1;
   overflow-y: auto;
-  margin-top: var(--navbar-heigth);
+  margin-top: $navbar-height;
   padding-bottom: 35px;
 }
 
@@ -128,7 +128,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 15%;
+  margin: auto;
+  width: 80%;
 }
 
 .chatbot-footer button {
