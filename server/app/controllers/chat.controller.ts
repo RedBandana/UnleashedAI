@@ -27,7 +27,7 @@ export class ChatController {
             }
         });
 
-        userRouter.get('/me/chats/:chatIndex', verifySessionToken,async (req: IRequest, res: Response) => {
+        userRouter.get('/me/chats/:chatIndex', verifySessionToken, async (req: IRequest, res: Response) => {
             try {
                 const userId = req.user.userId;
                 const { chatIndex } = req.params;
@@ -139,9 +139,14 @@ export class ChatController {
                 const botChoices = await openAIService.sendChatCompletion(chatbotSettings);
                 const botMessage = await userService.createBotMessage(userId, chatNo, botChoices);
 
-                const chatUpdate: any = { };
+                const chatUpdate: any = {};
                 chatUpdate[`chats.${chatIndex}.latestMessageCreatedOn`] = botMessage.createdOn;
+                if (chat.messageCount === 0 && chat.title === 'new chat') {
+                    let words = userContent.content.trim().split(' ');
+                    chatUpdate[`chats.${chatIndex}.title`] = words.slice(0, 4).join(' ');
+                }
                 await userService.updateChatForce(userId, chatNo, chatUpdate);
+
 
                 //bot socket emit
                 res.status(StatusCodes.OK).send([userMessage, botMessage]);

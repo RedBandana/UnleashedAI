@@ -1,6 +1,5 @@
 import React from "react";
-import { Capacitor } from '@capacitor/core';
-import { getSidebarIsOpen } from "../../redux/selectors/uiSelectors";
+import { getIsMobile, getSidebarIsOpen } from "../../redux/selectors/uiSelectors";
 import { useSelector } from "react-redux";
 import './ChatEmpty.scss';
 
@@ -8,6 +7,7 @@ function ChatEmpty(props) {
     const { onAdd } = props;
 
     const sidebarIsOpen = useSelector(getSidebarIsOpen);
+    const isMobile = useSelector(getIsMobile);
 
     function handleAdd() {
         onAdd();
@@ -16,7 +16,7 @@ function ChatEmpty(props) {
     return (
         <div
             data-sidebar-is-open={sidebarIsOpen}
-            data-is-mobile={Capacitor.isNativePlatform()}
+            data-is-mobile={isMobile}
             className="no-conversation-container"
         >
             <div className="no-conversation-body">

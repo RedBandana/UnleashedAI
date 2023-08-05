@@ -116,8 +116,12 @@
   transition: width 0.25s ease-in-out;
 }
 
-.chatbot[data-sidebar-is-open="true"] .chatbot-footer {
+.chatbot[data-sidebar-is-open="true"][data-is-mobile="false"] .chatbot-footer {
   width: calc(100vw - $sidebar-width);
+}
+
+.chatbot[data-sidebar-is-open="true"][data-is-mobile="true"] .chatbot-footer {
+  width: auto;
 }
 
 .chatbot-footer form {

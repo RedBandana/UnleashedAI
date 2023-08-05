@@ -10,11 +10,11 @@ import ChatEmpty from '../../components/Chat/ChatEmpty';
 
 import { createChatRequest, deleteChatRequest, editChatRequest, fetchChatsRequest, fetchChatRequest, clearChatsRequest, fetchChatsPageRequest } from '../../redux/actions/chatActions';
 import { clearMessagesSuccess, createMessageRequest, deleteMessageRequest, fetchChoiceRequest, fetchMessagesPageRequest, fetchMessagesRequest } from '../../redux/actions/messageActions';
-import { setChatSelectedIndex, setSidebarIsOpen, setThemeIsLight, toggleTheme } from '../../redux/actions/uiActions';
+import { setChatSelectedIndex, setIsMobile, setSidebarIsOpen, setThemeIsLight, toggleTheme } from '../../redux/actions/uiActions';
 import { getChatSelectedIndex, getThemeIsLight } from '../../redux/selectors/uiSelectors';
 import { createChatValue, deleteChatValue, fetchChatValue, fetchChatsValue } from '../../redux/selectors/chatSelectors';
 
-import { COUNT_CHATS, COUNT_MESSAGES } from '../../utils/constants'
+import { COUNT_CHATS, COUNT_MESSAGES, MOBILE_DEVICE_PATTERNS } from '../../utils/constants'
 import '@fortawesome/fontawesome-free/css/all.css';
 import '../../index.scss';
 import { fetchMessagesValue } from '../../redux/selectors/messageSelectors';
@@ -42,10 +42,13 @@ function Main() {
   const [messagesPage, setMessagesPage] = useState(1);
 
   useEffect(() => {
+    const isMobile = Capacitor.isNativePlatform() || MOBILE_DEVICE_PATTERNS.test(navigator.userAgent);
+    dispatch(setIsMobile(isMobile));
+    
     dispatch(fetchChatsRequest({ page: 1, count: COUNT_CHATS }));
     setShowAlertDialog(false);
 
-    if (!Capacitor.isNativePlatform()) {
+    if (!isMobile) {
       dispatch(setSidebarIsOpen(true));
       document.body.classList.toggle("native-platform", false);
     }

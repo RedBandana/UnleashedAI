@@ -1,8 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Capacitor } from '@capacitor/core';
 
-import { getChatSelectedIndex, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
+import { getChatSelectedIndex, getIsMobile, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
 import { setSidebarIsOpen, setUserSettingsIsOpen } from '../../redux/actions/uiActions';
 
 import SidebarItem from './SidebarItem';
@@ -25,39 +24,39 @@ function Sidebar(props) {
   const isLoading = useSelector(fetchChatsLoading);
   const chatsPageReceived = useSelector(fetchChatsPageReceived);
   const user = useSelector(fetchUserValue);
+  const isMobile = useSelector(getIsMobile);
 
   const sidebarRef = useRef(null);
   const sidebarListRef = useRef(null);
 
-  const isNativePlatform = Capacitor.isNativePlatform();
-
   const [displaySettings, setDisplaySettings] = useState(false);
 
   useEffect(() => {
-    function handleClickOutside(event) {
-      const isOutsideSideBar = sidebarRef.current && !sidebarRef.current.contains(event.target);
-      const canMoveSidebar = event.target.className.includes("sidebar-no-move") === false &&
-        (event.target.parentElement == null || event.target.parentElement.className.includes("sidebar-no-move-parent") === false);
-
-      if (canMoveSidebar) {
-        setDisplaySettings(false);
-      }
-
-      if (!isNativePlatform) {
-        return;
-      }
-
-      if (isOutsideSideBar || canMoveSidebar) {
-        dispatch(setSidebarIsOpen(false));
-      }
-    }
-
     document.addEventListener('click', handleClickOutside);
 
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
-  }, []);
+  }, [handleClickOutside]);
+
+  function handleClickOutside(event) {
+    const isOutsideSideBar = sidebarRef.current && !sidebarRef.current.contains(event.target);
+    const canMoveSidebar = event.target.className.includes("sidebar-no-move") === false &&
+      (event.target.parentElement == null || event.target.parentElement.className.includes("sidebar-no-move-parent") === false);
+    const isNavBarToogle = event.target.parentElement?.className.includes("navbar-toggle");
+
+    if (canMoveSidebar) {
+      setDisplaySettings(false);
+    }
+
+    if (!isMobile) {
+      return;
+    }
+
+    if (!isNavBarToogle && (isOutsideSideBar || canMoveSidebar)) {
+      dispatch(setSidebarIsOpen(false));
+    }
+  }
 
   useEffect(() => {
     if (!chatsPageReceived) {
@@ -161,7 +160,7 @@ function Sidebar(props) {
   }
 
   return (
-    <div className="sidebar" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={isNativePlatform} ref={sidebarRef}>
+    <div className="sidebar" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={isMobile} ref={sidebarRef}>
       <div className="sidebar-body">
         <div className='sidebar-header sidebar-no-move-parent'>
           <div className="sidebar-header-row" onClick={handleOnAddItem}>

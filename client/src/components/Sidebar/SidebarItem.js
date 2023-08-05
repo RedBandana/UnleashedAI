@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './SidebarItem.scss';
 import { SIDEBAR_TITLE_MAX_LENGTH } from '../../utils/constants';
-import { Capacitor } from '@capacitor/core';
+import { useSelector } from 'react-redux';
+import { getIsMobile } from '../../redux/selectors/uiSelectors';
 
 function SidebarItem(props) {
   const { id, title, index, isSelected, crudEvents } = props;
   const [editing, setEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
 
-  const isNativePlatform = Capacitor.isNativePlatform();
+  const isMobile = useSelector(getIsMobile);
 
   useEffect(() => {
     setNewTitle(title);
@@ -21,8 +22,9 @@ function SidebarItem(props) {
     }
   }, [editing]);
 
-  function enableEdit() {
+  function enableEdit(event) {
     setEditing(true);
+    event.preventDefault();
   }
 
   function getTitle() {
@@ -38,7 +40,12 @@ function SidebarItem(props) {
     setNewTitle(event.target.value);
   }
 
-  function handleOnClick() {
+  function handleOnClick(event) {
+    if (event.target.className.includes('sidebaritem-button-edit') ||
+      event.target.className.includes('fas fa-edit sidebar-no-move')) {
+      return;
+    }
+
     crudEvents.onRead(id, index);
   }
 
@@ -73,7 +80,7 @@ function SidebarItem(props) {
       ) : (
         <div className="sidebaritem-title">{getTitle()}</div>
       )}
-      <div className={`sidebaritem-buttons ${(isSelected && !isNativePlatform) || isNativePlatform ? '' : 'hide'}`}>
+      <div className={`sidebaritem-buttons ${(isSelected && !isMobile) || isMobile ? '' : 'hide'}`}>
         {crudEvents.onUpdate != null && (
           <button className="sidebaritem-button-edit" onClick={enableEdit}>
             <i className="fas fa-edit sidebar-no-move"></i>

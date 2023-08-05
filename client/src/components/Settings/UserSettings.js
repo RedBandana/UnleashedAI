@@ -143,9 +143,8 @@ const UserSettings = ({ text }) => {
                                 </button>
                             </div>
                         </div>
-                        <div className='main-box-body-row'>
+                        <div className='main-box-body-row hide'>
                             <div className='main-box-body-row-item'>manage account</div>
-
                             <div className='main-box-body-row-item-action'>
                                 <button className="user-settings-account-button" onClick={handleSettings}>
                                     manage

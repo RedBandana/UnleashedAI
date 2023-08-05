@@ -1,14 +1,16 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { createGuestRequest, createGuestSuccess, fetchUserRequest, loginUserRequest, registerUserRequest } from '../../redux/actions/userActions';
+import { createGuestRequest, fetchUserRequest, loginUserRequest, registerUserRequest } from '../../redux/actions/userActions';
 import { useEffect, useState } from 'react';
 import { getCookie } from '../../utils/functions';
 import { getThemeIsLight } from '../../redux/selectors/uiSelectors';
-import { setThemeIsLight } from '../../redux/actions/uiActions';
+import { setIsMobile, setThemeIsLight } from '../../redux/actions/uiActions';
 import Loading from '../../components/Loading/Loading';
 
 import './Login.scss';
 import { fetchUserError, fetchUserLoading, fetchUserValue } from '../../redux/selectors/userSelectors';
+import { Capacitor } from '@capacitor/core';
+import { MOBILE_DEVICE_PATTERNS } from '../../utils/constants';
 
 
 function LoginPage() {
@@ -33,6 +35,9 @@ function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false);
 
   useEffect(() => {
+    const isMobile = Capacitor.isNativePlatform() || MOBILE_DEVICE_PATTERNS.test(navigator.userAgent);
+    dispatch(setIsMobile(isMobile));
+
     const savedThemeIsLight = localStorage.getItem("themeIsLight");
     if (savedThemeIsLight == null) {
       dispatch(setThemeIsLight(true));

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './TextInput.scss';
-import { Capacitor } from '@capacitor/core';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toggleSettings } from '../../redux/actions/uiActions';
+import { getIsMobile } from '../../redux/selectors/uiSelectors';
 
 function TextInput(props) {
     const { onSubmit, canSubmit } = props;
@@ -13,6 +13,7 @@ function TextInput(props) {
     const submitButtonRef = useRef(null);
     const settingsButtonRef = useRef(null);
 
+    const isMobile = useSelector(getIsMobile);
     const [inputValue, setInputValue] = useState('');
 
     useEffect(() => {
@@ -25,24 +26,23 @@ function TextInput(props) {
             return;
         }
 
-        const isNative = Capacitor.isNativePlatform();
-            const doLineBreak = (isNative && !event.shiftKey) || (!isNative && event.shiftKey);
+        const doLineBreak = (isMobile && !event.shiftKey) || (!isMobile && event.shiftKey);
 
-            if (doLineBreak) {
-                event.preventDefault(); // prevent form submission
-                const selectionStart = event.target.selectionStart;
-                const selectionEnd = event.target.selectionEnd;
-                const text = event.target.value;
-    
-                event.target.value = text.slice(0, selectionStart) + "\n" + text.slice(selectionStart);
-    
-                event.target.selectionStart = selectionStart + 1;
-                event.target.selectionEnd = selectionEnd + 1;
-                handleOnInputChange();
-            }
-            else {
-                handleSubmit(event);
-            }
+        if (doLineBreak) {
+            event.preventDefault(); // prevent form submission
+            const selectionStart = event.target.selectionStart;
+            const selectionEnd = event.target.selectionEnd;
+            const text = event.target.value;
+
+            event.target.value = text.slice(0, selectionStart) + "\n" + text.slice(selectionStart);
+
+            event.target.selectionStart = selectionStart + 1;
+            event.target.selectionEnd = selectionEnd + 1;
+            handleOnInputChange();
+        }
+        else {
+            handleSubmit(event);
+        }
     }
 
     function updateButtonDisplay() {
@@ -73,7 +73,7 @@ function TextInput(props) {
     function handleToggleSettings() {
         dispatch(toggleSettings());
     };
-    
+
     function resizeTextAreaHeight() {
         const textarea = textareaRef.current;
         textarea.style.height = "auto";

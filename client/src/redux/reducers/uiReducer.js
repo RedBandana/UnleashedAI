@@ -5,6 +5,7 @@ const initialState = {
   sidebarIsOpen: false,
   settingsIsOpen: false,
   userSettingsIsOpen: false,
+  isMobile: true,
   settings: null,
   themeIsLight: true,
   chatSelectedIndex: 0,
@@ -48,6 +49,10 @@ const uiReducer = handleActions(
     [actions.setUserSettingsIsOpen]: (state, { payload }) => ({
       ...state,
       userSettingsIsOpen: payload,
+    }),
+    [actions.setIsMobile]: (state, { payload }) => ({
+      ...state,
+      isMobile: payload,
     }),
   },
   initialState

@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Capacitor } from '@capacitor/core';
 
 import './Navbar.scss';
-import { getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
+import { getIsMobile, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
 import { fetchChatValue } from '../../redux/selectors/chatSelectors';
 import { toggleSidebar } from '../../redux/actions/uiActions';
 
@@ -12,6 +11,7 @@ function Navbar() {
 
   const sidebarIsOpen = useSelector(getSidebarIsOpen);
   const chat = useSelector(fetchChatValue);
+  const isMobile = useSelector(getIsMobile);
 
   const [navbarTitle, setNavbarTitle] = useState(false);
   
@@ -28,7 +28,7 @@ function Navbar() {
   }
 
   return (
-    <nav className="navbar" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={Capacitor.isNativePlatform()}>
+    <nav className="navbar" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={isMobile}>
       <div className='navbar-container'>
         <div className="navbar-left">
           <button className="navbar-toggle" onClick={handleToggleSidebar}>

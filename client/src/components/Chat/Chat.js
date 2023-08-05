@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Capacitor } from '@capacitor/core';
 import Prism from 'prismjs';
 
 import Message from '../Message/Message';
@@ -9,7 +8,7 @@ import TextInput from '../TextInput/TextInput';
 import TypingDots from '../TypingDots/TypingDots';
 
 import './Chat.scss';
-import { getSettings, getSettingsIsOpen, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
+import { getIsMobile, getSettings, getSettingsIsOpen, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
 import { createMessageLoading, createMessageReceived, fetchChoiceValue, fetchMessagesLoading, fetchMessagesPageReceived, fetchMessagesReceived } from '../../redux/selectors/messageSelectors';
 import { setSettingsIsOpen } from '../../redux/actions/uiActions';
 import { deleteChatValue } from '../../redux/selectors/chatSelectors';
@@ -38,6 +37,7 @@ function Chat(props) {
     const messageReceived = useSelector(createMessageReceived);
     const chatDeleted = useSelector(deleteChatValue);
     const choice = useSelector(fetchChoiceValue);
+    const isMobile = useSelector(getIsMobile);
 
     const { v4: uuidv4 } = require('uuid');
 
@@ -240,7 +240,7 @@ function Chat(props) {
     }
 
     return (
-        <div className="chatbot" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={Capacitor.isNativePlatform()}>
+        <div className="chatbot" data-sidebar-is-open={sidebarIsOpen} data-is-mobile={isMobile}>
             <div className='chatbot-main-body'>
                 <div className='chatbot-container'>
                     <div className="chatbot-body" ref={chatBodyRef}>

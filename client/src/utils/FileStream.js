@@ -1,7 +1,8 @@
+import { getIsMobile } from '../redux/selectors/uiSelectors';
 import { uploadFile } from '../services/fileService';
-import { Capacitor } from '@capacitor/core';
 
 const encryptionKey = process.env.REACT_APP_ENCRYPTION_KEY;
+const isMobile = useSelector(getIsMobile);
 
 export const saveJSONToFile = async (jsonObject, filename) => {
     const data = JSON.stringify(jsonObject);
@@ -11,7 +12,7 @@ export const saveJSONToFile = async (jsonObject, filename) => {
         const link = document.createElement('a');
         link.download = filename;
         
-        if (Capacitor.isNativePlatform()) {
+        if (isMobile) {
             const fileId = await uploadFile(blob, filename);
             link.href = `${process.env.REACT_APP_API_URL}/files/download/${fileId}`;
             triggerDownload(link);
