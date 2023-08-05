@@ -1,9 +1,5 @@
 @import '../../variables.scss';
 
-.chatbot[data-sidebar-is-open="true"][data-is-mobile="false"] .settings-dialog {
-  right: calc(20px + $sidebar-width);
-}
-
 .settings-dialog {
   background: var(--color-settings);
   padding: 10px;

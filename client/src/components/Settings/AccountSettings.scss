@@ -1,0 +1,80 @@
+.account-settings {
+    position: fixed;
+}
+
+.account-settings-item {
+    margin: 12px;
+}
+
+.user-settings-account {
+    padding: 8px;
+    border-radius: 4px;
+    border: var(--border-main);
+    font-size: 14px;
+    outline: none;
+    color: var(--color-text-main-default);
+}
+
+.user-settings-account::placeholder {
+    color: var(--color-input-placeholder);
+}
+
+.user-settings-account:focus {
+    border: var(--border-accent);
+}
+
+.user-settings-account-container {
+    position: fixed;
+    background-color: var(--color-settings-box);
+    box-shadow: var(--box-shadow-second);
+    border-radius: 5px;
+    width: 275px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.account-settings-error,
+.account-settings-input-error {
+    background-color: var(--color-sidebar);
+    padding: 12px;
+    border-radius: var(--border-radius-second);
+    color: var(--color-text-sidebar);
+    font-size: 12px;
+}
+
+.account-settings-input-error {
+    position: absolute;
+    top: 30%;
+    right: 10px;
+    z-index: 1;
+}
+
+.account-settings-error {
+    margin: 0 12px;
+}
+
+.account-settings-input:focus,
+.account-settings-form-group.active input {
+    outline: none;
+}
+
+.account-settings-input:focus+label,
+.account-settings-form-group.active label {
+    top: 0;
+    transform: translateY(-40%);
+    font-size: 13px;
+    background-color: white;
+    border-radius: 5px;
+    padding: 0 5px;
+}
+
+.account-settings-account-settings-label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition: 0.2s ease all;
+    color: var(--color-input-label);
+}

@@ -44,7 +44,6 @@ body {
     box-shadow: var(--box-shadow-second);
     max-width: 450px;
     color: var(--color-text-main);
-    padding-bottom: 8px;
 }
 
 .main-box-header {
@@ -86,6 +85,7 @@ body {
 .main-box-body-buttons-list {
     display: flex;
     justify-content: center;
+    margin-bottom: 8px;
 }
 
 .main-box-body-buttons-list button {

@@ -6,28 +6,32 @@ import { setThemeIsLight, setUserSettingsIsOpen } from '../../redux/actions/uiAc
 import { clearChatsRequest } from '../../redux/actions/chatActions';
 import { clearMessagesSuccess } from '../../redux/actions/messageActions';
 import AlertDialog from '../AlertDialog/AlertDialog';
-import PasswordSettings from './PasswordSettings';
+import AccountSettings from './AccountSettings';
 
 const UserSettings = ({ text }) => {
     const showDialog = useSelector(getUserSettingsIsOpen);
     const isLightTheme = useSelector(getThemeIsLight);
     const dispatch = useDispatch();
 
-    const [showPasswordSettings, setShowPasswordSettings] = useState(false);
+    const [showAccountSettings, setShowAccountSettings] = useState(false);
     const [showAlertDialog, setShowAlertDialog] = useState(false);
     const [settingsTheme, setSettingsTheme] = useState('')
 
 
     useEffect(() => {
         function handleClickOutside(event) {
-            if (event.target.className === "main-box") {
+            if (event.target.parentElement?.className.includes("alert-dialog")) {
                 setShowAlertDialog(false);
-                dispatch(setUserSettingsIsOpen(false));
             }
 
-            if (event.target.className.includes("user-settings-password") === false &&
-                event.target.parentElement?.className.includes("user-settings-password") === false) {
-                setShowPasswordSettings(false);
+            if (event.target.className.includes("user-settings-main-box")) {
+                dispatch(setUserSettingsIsOpen(false));
+            }
+            
+            if (!event.target.className.includes("user-settings-account") &&
+                !event.target.className.includes("user-settings-persist") &&
+                !event.target.parentElement?.className.includes("user-settings-account")) {
+                setShowAccountSettings(false);
             }
         }
 
@@ -80,7 +84,7 @@ const UserSettings = ({ text }) => {
     }
 
     function handleSettings() {
-        setShowPasswordSettings(true);
+        setShowAccountSettings(true);
     }
 
     return (
@@ -90,7 +94,7 @@ const UserSettings = ({ text }) => {
                     onClose={() => { setShowAlertDialog(false) }}
                     onYes={handleOnClearItems} onNo={handleAlertNo} />
             )}
-            <div className="main-box">
+            <div className="main-box user-settings-main-box">
                 <div className="main-box-container user-settings-container">
                     <div className='main-box-header'>
                         <div className='main-box-title'>settings</div>
@@ -126,7 +130,7 @@ const UserSettings = ({ text }) => {
                         <div className='main-box-body-row hide'>
                             <div className='main-box-body-row-item'>manage roles</div>
                             <div className='main-box-body-row-item-action'>
-                                <button className="user-settings-password-button" onClick={handleInputChange}>
+                                <button className="user-settings-account-button" onClick={handleInputChange}>
                                     manage
                                 </button>
                             </div>
@@ -134,23 +138,23 @@ const UserSettings = ({ text }) => {
                         <div className='main-box-body-row hide'>
                             <div className='main-box-body-row-item'>set default settings</div>
                             <div className='main-box-body-row-item-action'>
-                                <button className="user-settings-password-button" onClick={handleInputChange}>
+                                <button className="user-settings-account-button" onClick={handleInputChange}>
                                     set
                                 </button>
                             </div>
                         </div>
-                        <div className='main-box-body-row hide'>
-                            <div className='main-box-body-row-item'>change password</div>
+                        <div className='main-box-body-row'>
+                            <div className='main-box-body-row-item'>manage account</div>
 
                             <div className='main-box-body-row-item-action'>
-                                <button className="user-settings-password-button" onClick={handleSettings}>
-                                    change
+                                <button className="user-settings-account-button" onClick={handleSettings}>
+                                    manage
                                 </button>
                             </div>
                         </div>
                     </div>
-                    {showPasswordSettings && (
-                        <PasswordSettings />
+                    {showAccountSettings && (
+                        <AccountSettings />
                     )}
                 </div>
             </div>

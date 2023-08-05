@@ -28,9 +28,9 @@ function LoginPage() {
   const [passwordError, setPasswordError] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
-  const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   useEffect(() => {
     const savedThemeIsLight = localStorage.getItem("themeIsLight");
@@ -42,11 +42,6 @@ function LoginPage() {
       dispatch(setThemeIsLight(savedThemeIsLight === "true"));
     }
     setThemeIsInitialized(true);
-
-    const shouldConnectAndRedirect = state?.path;
-    if (shouldConnectAndRedirect) {
-      handleSession();
-    }
   }, []);
 
   useEffect(() => {

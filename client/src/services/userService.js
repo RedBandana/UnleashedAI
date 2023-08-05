@@ -42,3 +42,14 @@ export const getCurrentUser = async () => {
     throw new Error(message);
   }
 };
+
+export const changePassword = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/me`, getHttpResponseConfig());
+    return response.data;
+  } catch (error) {
+    const message = error.response.data.message ?? error.message;
+    throw new Error(message);
+  }
+};
+
