@@ -20,6 +20,9 @@ const AccountSettings = ({ text }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+    const [changePassword, setChangePassword] = useState(false);
+    const [canSave, setCanSave] = useState(false);
+
     const statusMessage = useSelector(fetchUserError);
     const loading = useSelector(fetchUserLoading);
     const user = useSelector(fetchUserValue);
@@ -56,6 +59,10 @@ const AccountSettings = ({ text }) => {
         setConfirmPassword(event.target.value);
     };
 
+    function handleCheckboxChange(event) {
+        setChangePassword(event.target.checked)
+    }
+
     function handleFocus(event) {
         event.target.parentNode.classList.add('active');
     };
@@ -79,9 +86,9 @@ const AccountSettings = ({ text }) => {
     return (
         <div className="account-settings">
             <div className='main-box main-box-body-row-item-action'>
-                <div className={`user-settings-account-container`}>
+                <div className='user-settings-account-container user-settings-persist'>
                     <div className='main-box-header'>
-                        <div className='main-box-title'>account</div>
+                        <div className='main-box-title user-settings-persist'>account</div>
                     </div>
                     <div className='bordered-top'></div>
                     <div className="account-settings-item">
@@ -90,7 +97,6 @@ const AccountSettings = ({ text }) => {
                                 type="email"
                                 id="email"
                                 className="account-settings-input user-settings-account"
-                                name="email"
                                 value={user?.email}
                                 onChange={handleEmailChange}
                                 onFocus={handleFocus}
@@ -105,16 +111,15 @@ const AccountSettings = ({ text }) => {
                         <div className={`input-container account-settings-form-group ${currentPassword ? 'active' : ''}`}>
                             <input
                                 type={showCurrentPassword ? "text" : "password"}
-                                id="current-password"
+                                id="password"
                                 className="account-settings-input user-settings-account"
-                                name="password"
                                 value={currentPassword}
                                 onChange={handleCurrentPasswordChange}
                                 onFocus={handleFocus}
                                 onBlur={handleBlur}
                                 onKeyDown={handleKeyDown}
                             />
-                            <label className='account-settings-account-settings-label' htmlFor="password">current password</label>
+                            <label className='account-settings-account-settings-label' htmlFor="password">password</label>
                             <div className="password-toggle" onClick={handleShowCurrentPassword}>
                                 {showCurrentPassword ? (
                                     <i className="fas fa-eye-slash user-settings-persist"></i>
@@ -125,54 +130,69 @@ const AccountSettings = ({ text }) => {
                             {currentPasswordError && <div className="account-settings-input-error">{passwordError}</div>}
                         </div>
                     </div>
-                    <div className="account-settings-item">
-                        <div className={`input-container account-settings-form-group ${password ? 'active' : ''}`}>
+                    <div className="account-settings-item account-settings-change-password">
+                        <div className='user-settings-persist'>
                             <input
-                                type={showPassword ? "text" : "password"}
-                                id="new-password"
-                                className="account-settings-input user-settings-account"
-                                name="password"
-                                value={password}
-                                onChange={handlePasswordChange}
-                                onFocus={handleFocus}
-                                onBlur={handleBlur}
-                                onKeyDown={handleKeyDown}
+                                type="checkbox"
+                                id="change-password"
+                                className='user-settings-persist'
+                                checked={changePassword}
+                                onChange={handleCheckboxChange}
                             />
-                            <label className='account-settings-account-settings-label' htmlFor="password">new password</label>
-                            <div className="password-toggle" onClick={handleShowPassword}>
-                                {showPassword ? (
-                                    <i className="fas fa-eye-slash user-settings-persist"></i>
-                                ) : (
-                                    <i className="fas fa-eye user-settings-persist"></i>
-                                )}
-                            </div>
-                            {passwordError && <div className="account-settings-input-error">{passwordError}</div>}
                         </div>
+                        <label className='user-settings-persist account-settings-change-password-label' htmlFor="change-password">change password</label>
                     </div>
-                    <div className="account-settings-item">
-                        <div className={`input-container account-settings-form-group ${confirmPassword ? 'active' : ''}`}>
-                            <input
-                                type={showConfirmPassword ? "text" : "password"}
-                                id="confirm-password"
-                                className="account-settings-input user-settings-account"
-                                name="password"
-                                value={confirmPassword}
-                                onChange={handleConfirmPasswordChange}
-                                onFocus={handleFocus}
-                                onBlur={handleBlur}
-                                onKeyDown={handleKeyDown}
-                            />
-                            <label className='account-settings-account-settings-label' htmlFor="confirmPassword">confirm new password</label>
-                            <div className="password-toggle" onClick={handleShowConfirmPassword}>
-                                {showConfirmPassword ? (
-                                    <i className="fas fa-eye-slash user-settings-persist"></i>
-                                ) : (
-                                    <i className="fas fa-eye user-settings-persist"></i>
-                                )}
+                    {changePassword && (
+                        <div className="account-settings-item">
+                            <div className={`input-container account-settings-form-group ${password ? 'active' : ''}`}>
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    id="new-password"
+                                    className="account-settings-input user-settings-account"
+                                    value={password}
+                                    onChange={handlePasswordChange}
+                                    onFocus={handleFocus}
+                                    onBlur={handleBlur}
+                                    onKeyDown={handleKeyDown}
+                                />
+                                <label className='account-settings-account-settings-label' htmlFor="new-password">new password</label>
+                                <div className="password-toggle" onClick={handleShowPassword}>
+                                    {showPassword ? (
+                                        <i className="fas fa-eye-slash user-settings-persist"></i>
+                                    ) : (
+                                        <i className="fas fa-eye user-settings-persist"></i>
+                                    )}
+                                </div>
+                                {passwordError && <div className="account-settings-input-error">{passwordError}</div>}
                             </div>
-                            {confirmPasswordError && <div className="account-settings-input-error">{confirmPasswordError}</div>}
                         </div>
-                    </div>
+                    )}
+                    {changePassword && (
+                        <div className="account-settings-item">
+                            <div className={`input-container account-settings-form-group ${confirmPassword ? 'active' : ''}`}>
+                                <input
+                                    type={showConfirmPassword ? "text" : "password"}
+                                    id="confirm-password"
+                                    className="account-settings-input user-settings-account"
+                                    value={confirmPassword}
+                                    onChange={handleConfirmPasswordChange}
+                                    onFocus={handleFocus}
+                                    onBlur={handleBlur}
+                                    onKeyDown={handleKeyDown}
+                                />
+                                <label className='account-settings-account-settings-label' htmlFor="confirm-password">confirm new password</label>
+                                <div className="password-toggle" onClick={handleShowConfirmPassword}>
+                                    {showConfirmPassword ? (
+                                        <i className="fas fa-eye-slash user-settings-persist"></i>
+                                    ) : (
+                                        <i className="fas fa-eye user-settings-persist"></i>
+                                    )}
+                                </div>
+                                {confirmPasswordError && <div className="account-settings-input-error">{confirmPasswordError}</div>}
+                            </div>
+                        </div>
+                    )}
+
                     {statusMessage && (
                         <div className='account-settings-error'>
                             {statusMessage}
@@ -186,7 +206,7 @@ const AccountSettings = ({ text }) => {
                         )
                     }
                     <div className='main-box-body-row main-box-body-buttons-list'>
-                        <button className="main-box-body-row-button user-settings-persist" onClick={handleInputChange}>
+                        <button className={`main-box-body-row-button ${canSave ? '' : 'account-settings-inactive'} user-settings-persist`} onClick={handleInputChange}>
                             save
                         </button>
                         <button className="main-box-body-row-button" onClick={handleInputChange}>

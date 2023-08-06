@@ -2,6 +2,15 @@
     position: fixed;
 }
 
+.account-settings-inactive {
+    color: var(--color-options-main) !important;
+}
+
+.account-settings-inactive:hover {
+    transform: translateY(0) !important;
+    cursor: default;
+}
+
 .account-settings-item {
     margin: 12px;
 }
@@ -52,6 +61,15 @@
 
 .account-settings-error {
     margin: 0 12px;
+}
+
+.account-settings-change-password {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.account-settings-change-password-label {
+    padding-left: 8px;
 }
 
 .account-settings-input:focus,

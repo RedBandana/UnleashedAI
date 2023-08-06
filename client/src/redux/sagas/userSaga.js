@@ -1,7 +1,6 @@
 import { takeLatest, select, call, put } from 'redux-saga/effects';
 import * as userActions from '../actions/userActions';
 import * as userService from '../../services/userService';
-import * as selectors from '../selectors/userSelectors';
 import { setGuestSessionCookie, setUserSessionCookie } from '../../utils/functions';
 
 function* fetchUserSaga() {

@@ -143,7 +143,7 @@ export class ChatController {
                 chatUpdate[`chats.${chatIndex}.latestMessageCreatedOn`] = botMessage.createdOn;
                 if (chat.messageCount === 1 && chat.title === 'new chat') {
                     let words = userContent.content.trim().split(' ');
-                    chatUpdate[`chats.${chatIndex}.title`] = words.slice(0, 4).join(' ');
+                    chatUpdate[`chats.${chatIndex}.title`] = words.slice(0, 5).join(' ');
                 }
                 await userService.updateChatForce(userId, chatNo, chatUpdate);
 

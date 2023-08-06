@@ -27,7 +27,7 @@ const UserSettings = ({ text }) => {
             if (event.target.className.includes("user-settings-main-box")) {
                 dispatch(setUserSettingsIsOpen(false));
             }
-            
+
             if (!event.target.className.includes("user-settings-account") &&
                 !event.target.className.includes("user-settings-persist") &&
                 !event.target.parentElement?.className.includes("user-settings-account")) {
@@ -117,16 +117,6 @@ const UserSettings = ({ text }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className='main-box-body-row'>
-                            <div className='main-box-body-row-item'>clear all chats</div>
-                            <div className='main-box-body-row-item-action'>
-                                <div className='user-settings-clear'>
-                                    <button className="user-settings-clear-button" onClick={tryHandleOnClear}>
-                                        clear
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
                         <div className='main-box-body-row hide'>
                             <div className='main-box-body-row-item'>manage roles</div>
                             <div className='main-box-body-row-item-action'>
@@ -143,12 +133,22 @@ const UserSettings = ({ text }) => {
                                 </button>
                             </div>
                         </div>
-                        <div className='main-box-body-row hide'>
+                        <div className='main-box-body-row'>
                             <div className='main-box-body-row-item'>manage account</div>
                             <div className='main-box-body-row-item-action'>
                                 <button className="user-settings-account-button" onClick={handleSettings}>
                                     manage
                                 </button>
+                            </div>
+                        </div>
+                        <div className='main-box-body-row'>
+                            <div className='main-box-body-row-item'>clear all chats</div>
+                            <div className='main-box-body-row-item-action'>
+                                <div className='user-settings-clear'>
+                                    <button className="user-settings-clear-button" onClick={tryHandleOnClear}>
+                                        clear
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

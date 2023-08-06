@@ -178,7 +178,7 @@ function LoginPage() {
     }
 
     if (isSignUp && password && confirmPassword &&
-      password != confirmPassword) {
+      password !== confirmPassword) {
       success = false;
       setConfirmPasswordError('Passwords do not match');
     }
