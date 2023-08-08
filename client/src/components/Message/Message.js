@@ -64,7 +64,7 @@ const Message = ({ index, message, onDelete, onSelectChoice, onRender, shouldRen
   };
 
   function handleDeleteClick() {
-    if (!message.id) {
+    if (message.id == null) {
       return;
     }
 
