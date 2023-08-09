@@ -24,7 +24,7 @@
 .chatbot-container {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Set the chatbot to fill the entire viewport */
+  height: 100vh;
 }
 
 .chatbot-header {
@@ -44,7 +44,7 @@
 }
 
 .chatbot-body {
-  flex: 1; /* Set the chat history to take up all available space */
+  flex: 1;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -109,6 +109,7 @@
 
 .chatbot-footer {
   position: sticky;
+  background-color: var(--color-background);
   bottom: 0; 
   margin-bottom: 25px;
   z-index: 1;

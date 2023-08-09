@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './SidebarItem.scss';
 import { SIDEBAR_TITLE_MAX_LENGTH } from '../../utils/constants';
-import { useSelector } from 'react-redux';
-import { getIsMobile } from '../../redux/selectors/uiSelectors';
 
 function SidebarItem(props) {
   const { id, title, index, isSelected, crudEvents } = props;
   const [editing, setEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
-
-  const isMobile = useSelector(getIsMobile);
 
   useEffect(() => {
     setNewTitle(title);
@@ -80,7 +76,7 @@ function SidebarItem(props) {
       ) : (
         <div className="sidebaritem-title">{getTitle()}</div>
       )}
-      <div className={`sidebaritem-buttons ${(isSelected && !isMobile) || isMobile ? '' : 'hide'}`}>
+      <div className={`sidebaritem-buttons ${isSelected ? '' : 'hide'}`}>
         {crudEvents.onUpdate != null && (
           <button className="sidebaritem-button-edit" onClick={enableEdit}>
             <i className="fas fa-edit sidebar-no-move"></i>
