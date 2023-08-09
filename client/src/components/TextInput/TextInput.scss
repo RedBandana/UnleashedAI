@@ -1,39 +1,49 @@
 @import "../../variables.scss";
 
+
 .text-input {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: auto;
+  width: 70%;
+  position: relative;
 }
 
-.text-input textarea {
+@media (max-width:810px) {
+  .text-input {
+    width: 90%;
+  }
+}
+
+.text-input button {
+  background-color: transparent;
+  color: var(--color-options-main-default);
+  border: var(--border-none);
+  padding: 10px 10px;
+  font-size: 1.25rem;
+  cursor: pointer;
+  position: absolute;
+  right: 1px;
+  bottom: 1px;
+}
+
+.text-input button:hover {
+  color: var(--color-accent-main);
+}
+
+.text-input-textarea {
   width: 100%;
-  max-width: 700px;
   resize: vertical;
   padding: 5px;
   font-size: var(--font-size-main);
   border-radius: var(--border-radius-second);
   border: var(--border-main);
-  margin-right: 10px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   max-height: 140px;
   box-shadow: var(--box-shadow-second);
   color: var(--color-text-main);
-}
-
-.text-input button {
-  background-color: var(--color-accent-second);
-  color: var(--color-main);
-  border: var(--border-none);
-  border-radius: var(--border-radius-main);
-  padding: 10px 15px;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: var(--box-shadow-third);
-}
-
-.text-input button.chatbot-settings-button {
-  margin-left: 5px;
+  padding-right: 40px;
 }
 
 .chatbot-send-icon {
@@ -41,13 +51,14 @@
   left: -1px;
 }
 
-.text-input button i {
-  font-size: 1.2rem;
+.text-input .fas {
+  padding-top: 2px;
 }
 
-.text-input .chatbot-dots {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-bottom: 10px;
+.theme-dark .text-input-textarea {
+  color: var(--color-text-main-default);
+}
+
+.theme-dark .text-input button {
+  color: var(--color-main-default);
 }

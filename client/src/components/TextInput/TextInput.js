@@ -92,8 +92,9 @@ function TextInput(props) {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className='text-input'>
             <textarea
+                className='text-input-textarea'
                 ref={textareaRef}
                 rows="1"
                 placeholder="send a message"
