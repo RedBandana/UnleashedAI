@@ -317,7 +317,7 @@ function LoginPage() {
       <div className='login-button-container'>
         <button className='login-button' onClick={handleGuestSession}>Try as guest</button>
         <div className='login-button-text'>
-          Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries.
+          Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries with Unleashed AI.
         </div>
       </div>
       {

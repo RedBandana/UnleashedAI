@@ -34,7 +34,7 @@ function Main() {
 
   const touchStartX = useRef(0);
   const touchIsDragging = useRef(false);
-  const [showAlertDialog, setShowAlertDialog] = useState(false);
+  const [showAlertDialog, setShowAlertDialog] = useState(true);
   const [sidebarChanged, setSidebarChanged] = useState(false);
   const [isInitialized, setIsInitialize] = useState(false);
   const [themeIsInitialized, setThemeIsInitialized] = useState(false);
@@ -44,9 +44,7 @@ function Main() {
   useEffect(() => {
     const isMobile = Capacitor.isNativePlatform() || MOBILE_DEVICE_PATTERNS.test(navigator.userAgent);
     dispatch(setIsMobile(isMobile));
-    
     dispatch(fetchChatsRequest({ page: 1, count: COUNT_CHATS }));
-    setShowAlertDialog(false);
 
     if (!isMobile) {
       dispatch(setSidebarIsOpen(true));
@@ -61,7 +59,7 @@ function Main() {
     else {
       dispatch(setThemeIsLight(savedThemeIsLight === "true"));
     }
-    
+
     setThemeIsInitialized(true);
     dispatch(fetchUserRequest());
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -267,7 +265,8 @@ function Main() {
         {
           showAlertDialog && (
             <AlertDialog
-              text="Hello, Unleashed AI Chat is still in early stages. If you have any feedback, please contact us at contact@email.com"
+              title="Unleashed AI"
+              text="Hello, Unleashed AI is presently in its initial phase. Expect further enhancements and updates soon."
               onOk={handleCloseAlertDialog} onClose={handleCloseAlertDialog}
             />
           )
