@@ -43,7 +43,7 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   max-height: 140px;
   box-shadow: var(--box-shadow-second);
-  color: var(--color-text-main);
+  color: var(--color-text-main-default);
   padding-right: 40px;
 }
 
@@ -54,12 +54,4 @@
 
 .text-input .fas {
   padding-top: 2px;
-}
-
-.theme-dark .text-input-textarea {
-  color: var(--color-text-main-default);
-}
-
-.theme-dark .text-input button {
-  color: var(--color-main-default);
 }
