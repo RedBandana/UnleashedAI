@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+    xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
+    xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+
+    <url>
+        <loc>https://unleashedai.org/</loc>
+        <lastmod>2023-08-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>1.0</priority>
+
+        <image:image>
+            <image:loc>https://unleashedai.org/icon.png</image:loc>
+            <image:caption>Unleashed AI icon</image:caption>
+        </image:image>
+
+        <image:image>
+            <image:loc>https://unleashedai.org/logo192.png</image:loc>
+            <image:caption>Unleashed AI small logo</image:caption>
+        </image:image>
+
+        <image:image>
+            <image:loc>https://unleashedai.org/logo512.png</image:loc>
+            <image:caption>Unleashed AI logo</image:caption>
+        </image:image>
+    </url>
+
+    <url>
+        <loc>https://unleashedai.org/login</loc>
+        <lastmod>2023-08-10</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+</urlset>
