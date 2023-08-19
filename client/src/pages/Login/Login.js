@@ -2,10 +2,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { createGuestRequest, fetchUserRequest, loginUserRequest, registerUserRequest } from '../../redux/actions/userActions';
 import { useEffect, useState } from 'react';
-import { getCookie } from '../../utils/functions';
+import { getCookie, validateEmail } from '../../utils/functions';
 import { getThemeIsLight } from '../../redux/selectors/uiSelectors';
 import { setIsMobile, setThemeIsLight } from '../../redux/actions/uiActions';
 import Loading from '../../components/Loading/Loading';
+import { Helmet } from "react-helmet";
 
 import './Login.scss';
 import { fetchUserError, fetchUserLoading, fetchUserValue } from '../../redux/selectors/userSelectors';
@@ -127,11 +128,11 @@ function LoginPage() {
 
     if (!email) {
       success = false;
-      setEmailError('Please fill out this field');
+      setEmailError('Please fill out this field.');
     }
     else if (!validateEmail(email)) {
       success = false;
-      setEmailError('Email is not valid');
+      setEmailError('Email is not valid.');
     }
     else {
       setEmailError('');
@@ -139,7 +140,7 @@ function LoginPage() {
 
     if (!password) {
       success = false;
-      setPasswordError('Please fill out this field');
+      setPasswordError('Please fill out this field.');
     }
     else {
       setPasswordError('');
@@ -148,11 +149,11 @@ function LoginPage() {
     if (isSignUp) {
       if (!confirmPassword) {
         success = false;
-        setConfirmPasswordError('Please fill out this field');
+        setConfirmPasswordError('Please fill out this field.');
       }
       else if (password !== confirmPassword) {
         success = false;
-        setConfirmPasswordError('Passwords do not match');
+        setConfirmPasswordError('Passwords do not match.');
       }
       else {
         setConfirmPasswordError('');
@@ -166,7 +167,7 @@ function LoginPage() {
     let success = true;
 
     if (email && !validateEmail(email)) {
-      setEmailError('Email is not valid');
+      setEmailError('Email is not valid.');
       success = false;
     }
     else {
@@ -180,7 +181,7 @@ function LoginPage() {
     if (isSignUp && password && confirmPassword &&
       password !== confirmPassword) {
       success = false;
-      setConfirmPasswordError('Passwords do not match');
+      setConfirmPasswordError('Passwords do not match.');
     }
     else {
       setConfirmPasswordError('');
@@ -188,11 +189,6 @@ function LoginPage() {
 
     return success;
   }
-
-  function validateEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
 
   function handleShowPassword() {
     setShowPassword(!showPassword);
@@ -209,7 +205,7 @@ function LoginPage() {
     }
 
     event.preventDefault();
-    
+
     if (isSignUp) {
       handleSignUp();
     }
@@ -230,6 +226,11 @@ function LoginPage() {
 
   return (
     <div className={`login ${themeIsLight ? 'theme-light' : 'theme-dark'}`}>
+      <Helmet>
+        <title>Unleashed AI Chat Login</title>
+        <meta name="description" content="Login or sign up now to Unleashed AI. Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries with Unleashed AI." />
+        <meta name="keywords" content="unleashed,ai,chat,chatbot,login,signup,register,signin" />
+      </Helmet>
       <div className="login-page">
         <div className="login-container">
           <h1 className='login-title'>Unleashed AI</h1>
@@ -271,7 +272,7 @@ function LoginPage() {
 
             {!isSignUp && (
               <div className='login-form login-links'>
-                <div className='login-button-second'>Forgot password?</div>
+                <div className='login-button-second hide'>Forgot password?</div>
               </div>
             )}
             {isSignUp && (
@@ -284,7 +285,7 @@ function LoginPage() {
                   onFocus={handleFocus}
                   onBlur={handleBlur}
                   onKeyDown={handleKeyDown}
-                  />
+                />
                 <label className='login-label' htmlFor="confirmPassword">Confirm Password</label>
                 <div className="password-toggle" onClick={handleShowConfirmPassword}>
                   {showConfirmPassword ? (
@@ -316,9 +317,9 @@ function LoginPage() {
       </div>
       <div className='login-button-container'>
         <button className='login-button' onClick={handleGuestSession}>Try as guest</button>
-        <div className='login-button-text'>
+        <h2 className='login-button-text'>
           Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries with Unleashed AI.
-        </div>
+        </h2>
       </div>
       {
         loading && (

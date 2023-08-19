@@ -24,7 +24,6 @@
   font-size: 1.25rem;
   cursor: pointer;
   position: absolute;
-  right: 1px;
   bottom: 1px;
 }
 
@@ -42,8 +41,7 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   max-height: 140px;
   box-shadow: var(--box-shadow-second);
-  color: var(--color-text-main-default);
-  padding-right: 40px;
+  padding-right: 58px;
 }
 
 .chatbot-send-icon {
@@ -53,4 +51,25 @@
 
 .text-input .fas {
   padding-top: 2px;
+}
+
+.chatbot-settings-button {
+  color: var(--color-text-main-default);
+  right: 1px;
+}
+
+.chatbot-send-button {
+  transition: right 0.25s ease-in-out, opacity 0.25s ease-in-out;
+  right: 25px;
+  color: var(--color-text-main-default);
+  opacity: 1;
+}
+
+.chatbot-send-button.fade:hover {
+  cursor: default;
+}
+
+.chatbot-send-button.fade {
+  right: 10px;
+  opacity: 0;
 }

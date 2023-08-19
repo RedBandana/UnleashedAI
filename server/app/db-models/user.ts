@@ -13,6 +13,12 @@ export interface IUser extends Document {
   chats: IChat[];
 }
 
+export interface IUserRequest {
+  password: string;
+  newEmail: string;
+  newPassword: string;
+}
+
 const UserSchema = new Schema<IUser>({
   name: { type: String },
   email: { type: String },

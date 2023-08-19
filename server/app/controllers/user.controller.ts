@@ -11,6 +11,8 @@ import { generateSessionToken, verifyAdminSessionToken, verifySessionToken } fro
 import { IRequest } from '@app/interfaces/request';
 
 import * as bcrypt from 'bcrypt';
+import { IUserRequest } from '@app/db-models/user';
+import { createHashedPassword, validateEmail } from '@app/utils/functions';
 
 @Service()
 export class UserController {
@@ -33,17 +35,49 @@ export class UserController {
             }
         });
 
-        this.router.post("/register", async (req: Request, res: Response) => {
+        this.router.put('/me', verifySessionToken, async (req: IRequest, res: Response) => {
             try {
-                const { email, password } = req.body;
-                const existingUser = await this.userService.getDocumentByEmail(email, UserProjection.userAuth);
-                if (existingUser) {
-                    res.status(400).json({ message: 'Email already exists' });
+                const userId = req.user.userId;
+                const user: any = await this.userService.getDocumentById(userId, UserProjection.userAuth);
+                if (!user) {
+                    res.status(400).json({ message: 'Something went wrong. Please try again later.' });
                     return;
                 }
 
-                const salt = await bcrypt.genSalt(10);
-                const hashedPassword = await bcrypt.hash(password, salt);
+                const userEdit = req.body as IUserRequest;
+                const isPasswordValid = await bcrypt.compare(userEdit.password, user.password);
+                if (!isPasswordValid) {
+                    res.status(401).json({ message: 'Invalid password.' });
+                    return;
+                }
+
+                if (userEdit.newEmail && !validateEmail(userEdit.newEmail)) {
+                    res.status(400).json({ message: 'Invalid email.' });
+                    return;
+                }
+
+                const finalUser = await this.userService.updateUser(userId, userEdit);
+                Controller.handlePutResponse(res, finalUser);
+            } catch (error) {
+                res.status(StatusCodes.NOT_FOUND).send(error.message);
+            }
+        });
+
+        this.router.post("/register", async (req: Request, res: Response) => {
+            try {
+                const { email, password } = req.body;
+                if (!validateEmail(email)) {
+                    res.status(400).json({ message: 'Invalid email.' });
+                    return;
+                }
+
+                const existingUser = await this.userService.getDocumentByEmail(email, UserProjection.userAuth);
+                if (existingUser) {
+                    res.status(400).json({ message: 'Email already exists.' });
+                    return;
+                }
+
+                const hashedPassword = await createHashedPassword(password);
                 const newUser: any = await this.userService.createUser(email, hashedPassword);
                 const sessionToken = generateSessionToken(newUser._id);
                 Controller.handlePostResponse(res, { id: newUser._id, sessionToken });
@@ -57,13 +91,13 @@ export class UserController {
                 const { email, password } = req.body;
                 const user: any = await this.userService.getDocumentByEmail(email, UserProjection.userAuth);
                 if (!user) {
-                    res.status(401).json({ message: 'Invalid email or password' });
+                    res.status(401).json({ message: 'Invalid email or password.' });
                     return;
                 }
 
                 const isPasswordValid = await bcrypt.compare(password, user.password);
                 if (!isPasswordValid) {
-                    res.status(401).json({ message: 'Invalid email or password' });
+                    res.status(401).json({ message: 'Invalid email or password.' });
                     return;
                 }
 
@@ -87,7 +121,7 @@ export class UserController {
 
         this.router.get('/', verifyAdminSessionToken, async (req: Request, res: Response) => {
             try {
-                res.status(StatusCodes.OK).send('Server working');
+                res.status(StatusCodes.OK).send('Server working.');
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }

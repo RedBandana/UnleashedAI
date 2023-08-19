@@ -48,12 +48,10 @@ function TextInput(props) {
     function updateButtonDisplay() {
         const text = textareaRef.current.value;
         if (text.length > 0) {
-            submitButtonRef.current.classList.remove("hide");
-            settingsButtonRef.current.classList.add("hide");
+            submitButtonRef.current.classList.remove("fade");
         }
         else {
-            submitButtonRef.current.classList.add("hide");
-            settingsButtonRef.current.classList.remove("hide");
+            submitButtonRef.current.classList.add("fade");
         }
     }
 
@@ -102,15 +100,17 @@ function TextInput(props) {
                 onChange={handleOnInputChange}
                 onKeyDown={handleKeyDown}
             />
-            <button type="submit" className='chatbot-send-button' ref={submitButtonRef}>
-                <i className="fas fa-paper-plane chatbot-send-icon"></i>
-            </button>
-            <button className="chatbot-settings-button" ref={settingsButtonRef} onClick={(event) => {
-                event.preventDefault();
-                handleToggleSettings();
-            }}>
-                <i className="fas fa-cog"></i>
-            </button>
+            <div className='text-input-buttons'>
+                <button type="submit" className='chatbot-send-button' ref={submitButtonRef}>
+                    <i className="fas fa-paper-plane chatbot-send-icon"></i>
+                </button>
+                <button className="chatbot-settings-button" ref={settingsButtonRef} onClick={(event) => {
+                    event.preventDefault();
+                    handleToggleSettings();
+                }}>
+                    <i className="fas fa-cog"></i>
+                </button>
+            </div>
         </form>
     );
 }

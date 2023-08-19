@@ -1,4 +1,4 @@
-import { takeLatest, select, call, put } from 'redux-saga/effects';
+import { takeLatest, call, put } from 'redux-saga/effects';
 import * as userActions from '../actions/userActions';
 import * as userService from '../../services/userService';
 import { setGuestSessionCookie, setUserSessionCookie } from '../../utils/functions';
@@ -28,9 +28,18 @@ function* loginUserSaga(action) {
     const newUser = yield call(userService.loginUser, action.payload);
     setUserSessionCookie(newUser.sessionToken);
     delete newUser.sessionToken;
-    yield put(userActions.registerUserSuccess(newUser));
+    yield put(userActions.loginUserSuccess(newUser));
   } catch (error) {
-    yield put(userActions.registerUserFailure(error.message));
+    yield put(userActions.loginUserFailure(error.message));
+  }
+}
+
+function* updateUserSaga(action) {
+  try {
+    const newUser = yield call(userService.updateUser, action.payload);
+    yield put(userActions.updateUserSuccess(newUser));
+  } catch (error) {
+    yield put(userActions.updateUserFailure(error.message));
   }
 }
 
@@ -49,6 +58,7 @@ function* userSaga() {
   yield takeLatest(userActions.fetchUserRequest().type, fetchUserSaga);
   yield takeLatest(userActions.registerUserRequest().type, registerUserSaga);
   yield takeLatest(userActions.loginUserRequest().type, loginUserSaga);
+  yield takeLatest(userActions.updateUserRequest().type, updateUserSaga);
   yield takeLatest(userActions.createGuestRequest().type, createGuestSaga);
 }
 

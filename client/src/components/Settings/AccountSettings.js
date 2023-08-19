@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './AccountSettings.scss';
-import { fetchUserError, fetchUserLoading, fetchUserValue } from '../../redux/selectors/userSelectors';
+import { fetchUserError, fetchUserLoading, fetchUserUpdateDone, fetchUserValue } from '../../redux/selectors/userSelectors';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../Loading/Loading';
+import { validateEmail } from '../../utils/functions';
+import { updateUserRequest } from '../../redux/actions/userActions';
 
 
 const AccountSettings = ({ text }) => {
@@ -19,16 +21,24 @@ const AccountSettings = ({ text }) => {
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [requestDone, setRequestDone] = useState(false);
 
     const [changePassword, setChangePassword] = useState(false);
     const [canSave, setCanSave] = useState(false);
 
     const statusMessage = useSelector(fetchUserError);
+    const statusSuccess = useSelector(fetchUserUpdateDone);
     const loading = useSelector(fetchUserLoading);
     const user = useSelector(fetchUserValue);
 
-    function handleInputChange(event) {
-    };
+    useEffect(() => {
+        setEmail(user.email);
+        validateCanChange();
+    }, [user]);
+
+    useEffect(() => {
+        validateCanChange();
+    }, [email, currentPassword, password, confirmPassword, changePassword]);
 
     function handleShowCurrentPassword() {
         setShowCurrentPassword(!showCurrentPassword);
@@ -45,22 +55,26 @@ const AccountSettings = ({ text }) => {
 
     function handleEmailChange(event) {
         setEmail(event.target.value);
+        setEmailError('');
     };
 
     function handleCurrentPasswordChange(event) {
         setCurrentPassword(event.target.value);
+        setCurrentPasswordError('');
     };
 
     function handlePasswordChange(event) {
         setPassword(event.target.value);
+        setPasswordError('');
     };
 
     function handleConfirmPasswordChange(event) {
         setConfirmPassword(event.target.value);
+        setConfirmPasswordError('');
     };
 
     function handleCheckboxChange(event) {
-        setChangePassword(event.target.checked)
+        setChangePassword(event.target.checked);
     }
 
     function handleFocus(event) {
@@ -83,6 +97,86 @@ const AccountSettings = ({ text }) => {
         event.preventDefault();
     }
 
+    function validateCanChange() {
+        const canSaveFormBasis = email && currentPassword;
+        if (changePassword) {
+            const canSaveForm = canSaveFormBasis && password && confirmPassword;
+            setCanSave(canSaveForm);
+        }
+        else {
+            const canSaveForm = canSaveFormBasis && email !== user.email;
+            setCanSave(canSaveForm);
+        }
+    }
+
+    function validateCanSendRequest() {
+        let noError = true;
+
+        const emailIsOk = validateEmail(email);
+        if (!emailIsOk) {
+            setEmailError('Email is not valid.');
+            noError = false;
+        }
+        else {
+            setEmailError('');
+        }
+
+        if (!currentPassword) {
+            setCurrentPasswordError('Please fill out this field.');
+            noError = false;
+        }
+        else {
+            setCurrentPasswordError('');
+        }
+
+        if (changePassword) {
+            if (!password) {
+                setPasswordError('Please fill out this field.');
+                noError = false;
+            }
+            else {
+                setPasswordError('');
+                if (password !== confirmPassword) {
+                    setConfirmPasswordError('Passwords do not match.');
+                    noError = false;
+                }
+            }
+        }
+        else {
+            setPasswordError('');
+            setConfirmPasswordError('');
+        }
+
+        return noError;
+    }
+
+    function tryChangeAccount() {
+        if (!canSave) {
+            return;
+        }
+
+        setRequestDone(false);
+        
+        const canSendRequest = validateCanSendRequest();
+        if (!canSendRequest) {
+            return;
+        }
+
+        const updateRequest = {};
+        updateRequest["password"] = currentPassword;
+
+        if (email !== user.email) {
+            updateRequest["newEmail"] = email;
+        }
+
+        if (changePassword) {
+            updateRequest["newPassword"] = password;
+        }
+
+        dispatch(updateUserRequest(updateRequest));
+        setRequestDone(true);
+    }
+
     return (
         <div className="account-settings">
             <div className='main-box main-box-body-row-item-action'>
@@ -97,7 +191,7 @@ const AccountSettings = ({ text }) => {
                                 type="email"
                                 id="email"
                                 className="account-settings-input user-settings-account"
-                                value={user?.email}
+                                value={email}
                                 onChange={handleEmailChange}
                                 onFocus={handleFocus}
                                 onBlur={handleBlur}
@@ -198,6 +292,11 @@ const AccountSettings = ({ text }) => {
                             {statusMessage}
                         </div>
                     )}
+                    {statusSuccess && requestDone && (
+                        <div className='account-settings-error'>
+                            {'Update done.'}
+                        </div>
+                    )}
                     {
                         loading && (
                             <div className='login-loading'>
@@ -206,10 +305,11 @@ const AccountSettings = ({ text }) => {
                         )
                     }
                     <div className='main-box-body-row main-box-body-buttons-list'>
-                        <button className={`main-box-body-row-button ${canSave ? '' : 'account-settings-inactive'} user-settings-persist`} onClick={handleInputChange}>
+                        <button className={`main-box-body-row-button ${canSave ? '' : 'account-settings-inactive'} user-settings-persist`}
+                            onClick={tryChangeAccount}>
                             save
                         </button>
-                        <button className="main-box-body-row-button" onClick={handleInputChange}>
+                        <button className="main-box-body-row-button">
                             cancel
                         </button>
                     </div>

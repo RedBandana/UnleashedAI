@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Capacitor } from '@capacitor/core';
+import { Helmet } from "react-helmet";
 
 import Chat from '../../components/Chat/Chat';
 import Sidebar from '../../components/Sidebar/Sidebar';
@@ -260,6 +261,11 @@ function Main() {
 
   return (
     <div className={`chat ${themeIsLight ? 'theme-light' : 'theme-dark'}`}>
+      <Helmet>
+        <title>Unleashed AI Chat</title>
+        <meta name="description" content="Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries with Unleashed AI." />
+        <meta name="keywords" content="unleashed,ai,chat,chatbot" />
+      </Helmet>
       <Navbar />
       <div className="main">
         {
@@ -271,7 +277,6 @@ function Main() {
             />
           )
         }
-
         <UserSettings />
         {
           chats && (

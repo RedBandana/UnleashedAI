@@ -2,12 +2,13 @@ import { Service } from 'typedi';
 import { DatabaseService } from './database.service';
 import { DBCollectionService } from './db-collection.service';
 import { DBModelName } from "@app/enums/db-model-name";
-import { UserModel } from '@app/db-models/user';
+import { IUserRequest, UserModel } from '@app/db-models/user';
 import { IChat, IChatDto, IChatRequest, IMessage, IMessageDto } from '@app/db-models/chat';
 import { ChatUtils } from '@app/utils/chat.utils';
 import { UserPipeline, UserProjection } from '@app/db-models/dto/user.dto';
 import { Converter } from '@app/utils/converter';
 import { UserType } from '@app/enums/usertypes';
+import { createHashedPassword } from '@app/utils/functions';
 
 const COLLECTION_NAME = DBModelName.USER;
 
@@ -105,6 +106,26 @@ export class UserService extends DBCollectionService {
         });
         await user.save();
         return user;
+    }
+
+    async updateUser(userId: string, user: IUserRequest): Promise<any> {
+        const updateOperations: any = {};
+
+        if (user.newPassword) {
+            updateOperations['password'] = await createHashedPassword(user.newPassword);
+        }
+
+        if (user.newEmail) {
+            updateOperations['email'] = user.newEmail;
+        }
+
+        this.query = this.model.updateOne(
+            { _id: userId },
+            { $set: updateOperations }
+        );
+        await this.query.lean().exec();
+        const newUser = await this.getDocumentByIdLean(userId, UserProjection.user);
+        return newUser;
     }
 
     async createChat(userId: string): Promise<IChatDto> {

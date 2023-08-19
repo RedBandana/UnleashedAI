@@ -5,6 +5,7 @@ const initialState = {
   user: null,
   loading: false,
   error: null,
+  updateDone: false,
 };
 
 const userReducer = handleActions(
@@ -56,6 +57,25 @@ const userReducer = handleActions(
       ...state,
       loading: false,
       error: payload,
+    }),
+    [action.updateUserRequest]: (state) => ({
+      ...state,
+      loading: true,
+      error: null,
+      updateDone: false,
+    }),
+    [action.updateUserSuccess]: (state, { payload }) => ({
+      ...state,
+      user: payload,
+      loading: false,
+      error: null,
+      updateDone: true,
+    }),
+    [action.updateUserFailure]: (state, { payload }) => ({
+      ...state,
+      loading: false,
+      error: payload,
+      updateDone: false,
     }),
     [action.createGuestRequest]: (state) => ({
       ...state,
