@@ -67,14 +67,13 @@
 .login-container {
     width: 350px;
     padding: 20px;
-    border-radius: 5px;
+    border-radius: var(--border-radius-second);
     font-size: 1rem;
     color: var(--color-text-main);
 }
 
 .login-title {
     text-align: center;
-    margin-bottom: 20px;
 }
 
 .form-container {
@@ -101,7 +100,7 @@
 .login-input {
     padding: 15px 10px;
     border: none;
-    border-radius: 5px;
+    border-radius: var(--border-radius-second);
     border: var(--border-main);
     transition: 0.2s ease all;
     width: 330px;
@@ -121,7 +120,7 @@
     font-size: 1rem;
     color: var(--color-accent-main);
     background-color: white;
-    border-radius: 5px;
+    border-radius: var(--border-radius-second);
     padding: 0 5px;
 }
 
@@ -129,7 +128,7 @@
 .login-button-second {
     font-size: 1rem;
     border: none;
-    border-radius: 5px;
+    border-radius: var(--border-radius-second);
     cursor: pointer;
 }
 
@@ -169,25 +168,6 @@
     color: var(--color-accent-main);
 }
 
-.login-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 10px;
-    text-align: center;
-}
-
 .login-form {
     transform: translateY(-12px);
-}
-
-.login-links a {
-    color: var(--color-accent-main);
-    text-decoration: none;
-}
-
-.login-links span {
-    color: var(--color-accent-main);
-    margin: 0 10px;
 }

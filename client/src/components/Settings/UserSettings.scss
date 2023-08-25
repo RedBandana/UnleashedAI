@@ -23,7 +23,7 @@
     cursor: pointer;
     padding: 8px;
     width: 100%;
-    border-radius: 5px;
+    border-radius: var(--border-radius-second);
 }
 
 .user-settings-account-button {
@@ -50,7 +50,7 @@
 
 .user-settings-theme-select {
     padding: 8px;
-    border-radius: 5px;
+    border-radius: var(--border-radius-second);
     border: none;
     font-size: 1rem;
     outline: none;

@@ -223,6 +223,7 @@ function Main() {
         <title>Unleashed AI Chat</title>
         <meta name="description" content="Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries with Unleashed AI." />
         <meta name="keywords" content="unleashed,ai,chat,chatbot" />
+        <link rel="canonical" href="https://unleashedai.org/" />
       </Helmet>
       <Navbar />
       <div className="main">
@@ -230,7 +231,7 @@ function Main() {
           showAlertDialog && (
             <AlertDialog
               title="Unleashed AI"
-              text="Hello, Unleashed AI is presently in its initial phase. Expect further enhancements and updates soon."
+              text="Hello, Unleashed AI is presently in its initial phase. Expect further enhancements and updates soon. Contact us at info@unleashedai.com"
               onOk={handleCloseAlertDialog} onClose={handleCloseAlertDialog}
             />
           )

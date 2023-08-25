@@ -13,6 +13,7 @@ import { fetchUserError, fetchUserLoading, fetchUserValue } from '../../redux/se
 import { Capacitor } from '@capacitor/core';
 import { MOBILE_DEVICE_PATTERNS } from '../../utils/constants';
 import { clearChatsSuccess } from '../../redux/actions/chatActions';
+import Footer from '../../components/Footer/Footer';
 
 
 function LoginPage() {
@@ -233,6 +234,7 @@ function LoginPage() {
         <title>Unleashed AI Chat Login</title>
         <meta name="description" content="Login or sign up now to Unleashed AI. Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries with Unleashed AI." />
         <meta name="keywords" content="unleashed,ai,chat,chatbot,login,signup,register,signin" />
+        <link rel="canonical" href="https://unleashedai.org/login" />
       </Helmet>
       <div className="login-page">
         <div className="login-container">
@@ -274,7 +276,7 @@ function LoginPage() {
             </div>
 
             {!isSignUp && (
-              <div className='login-form login-links'>
+              <div className='login-form links-main'>
                 <div className='login-button-second hide'>Forgot password?</div>
               </div>
             )}
@@ -331,13 +333,7 @@ function LoginPage() {
           </div>
         )
       }
-      <footer className="login-footer hide">
-        <div className="login-links">
-          <a href="/policies/terms-of-use">Terms of use</a>
-          <span>|</span>
-          <a href="/policies/privacy-policy">Privacy policy</a>
-        </div>
-      </footer>
+      <Footer fixed={true} />
     </div>
   );
 }

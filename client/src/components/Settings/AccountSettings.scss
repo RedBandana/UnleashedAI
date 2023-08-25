@@ -36,7 +36,7 @@
     position: fixed;
     background-color: var(--color-settings-box);
     box-shadow: var(--box-shadow-second);
-    border-radius: 5px;
+    border-radius: var(--border-radius-second);
     width: 275px;
     top: 50%;
     left: 50%;
@@ -83,7 +83,7 @@
     transform: translateY(-40%);
     font-size: 13px;
     background-color: white;
-    border-radius: 5px;
+    border-radius: var(--border-radius-second);
     padding: 0 5px;
 }
 

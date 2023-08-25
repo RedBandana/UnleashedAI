@@ -103,3 +103,52 @@ body {
 .main-box-body-buttons-list button:hover {
     transform: translateY(-2px);
 }
+
+.container-default-parent {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.container-small {
+    color: var(--color-text-main);
+    width: 350px;
+    padding: 20px;
+    font-size: 1rem;
+    border-radius: var(--border-radius-second);
+}
+
+.container-main {
+    color: var(--color-text-main);
+    max-width: 810px;
+    padding: 20px;
+    font-size: 1rem;
+    border-radius: var(--border-radius-second);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.links-main a {
+    color: var(--color-accent-main);
+    text-decoration: none;
+}
+
+.links-main span {
+    color: var(--color-accent-main);
+    margin: 0 10px;
+}
+
+.footer-main {
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+}
+
+.fixed {
+    position: fixed;
+}

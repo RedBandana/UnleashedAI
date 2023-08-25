@@ -55,7 +55,7 @@
 }
 
 .sidebar-settings {
-  border-radius: 5px;
+  border-radius: var(--border-radius-second);
   margin: 8px;
   z-index: 1;
   position: fixed;
@@ -78,12 +78,12 @@
 .sidebar-settings-row:hover {
   cursor: pointer;
   background-color: var(--color-hover-sidebar);
-  border-radius: 5px;
+  border-radius: var(--border-radius-second);
 }
 
 .sidebar-footer,
 .sidebar-header {
-  border-radius: 5px;
+  border-radius: var(--border-radius-second);
   margin: 8px;
   background-color: var(--color-sidebar-item);
   display: flex;
@@ -95,7 +95,7 @@
 .sidebar-header-row:hover {
   cursor: pointer;
   background-color: var(--color-hover-sidebar);
-  border-radius: 5px;
+  border-radius: var(--border-radius-second);
 }
 
 .sidebar-settings-row,
