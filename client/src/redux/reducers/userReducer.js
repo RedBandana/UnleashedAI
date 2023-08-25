@@ -93,6 +93,13 @@ const userReducer = handleActions(
       loading: false,
       error: payload,
     }),
+    [action.logoutUserSuccess]: (state) => ({
+      ...state,
+      user: null,
+      loading: false,
+      error: null,
+      updateDone: false,
+    }),
   },
   initialState
 );

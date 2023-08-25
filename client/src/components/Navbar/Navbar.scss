@@ -32,19 +32,19 @@
 
 .navbar-left {
   float: left;
-  width: 65px;
+  width: 30px;
 }
 
 .navbar-right {
   float: right;
-  width: 65px;
+  width: 50px;
 }
 
 .navbar-center {
   font-size: var(--font-size-main);
   font-weight: bold;
   color: var(--color-text-main);
-  text-overflow: ellipsis;
+  text-overflow: var(--text-overflow);
   white-space: nowrap;
   overflow: hidden;
 }

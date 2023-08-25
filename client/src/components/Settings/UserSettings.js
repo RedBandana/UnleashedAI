@@ -7,6 +7,7 @@ import { clearChatsRequest } from '../../redux/actions/chatActions';
 import { clearMessagesSuccess } from '../../redux/actions/messageActions';
 import AlertDialog from '../AlertDialog/AlertDialog';
 import AccountSettings from './AccountSettings';
+import { fetchUserValue } from '../../redux/selectors/userSelectors';
 
 const UserSettings = ({ text }) => {
     const showDialog = useSelector(getUserSettingsIsOpen);
@@ -17,6 +18,7 @@ const UserSettings = ({ text }) => {
     const [showAlertDialog, setShowAlertDialog] = useState(false);
     const [settingsTheme, setSettingsTheme] = useState('')
 
+    const user = useSelector(fetchUserValue);
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -133,14 +135,16 @@ const UserSettings = ({ text }) => {
                                 </button>
                             </div>
                         </div>
-                        <div className='main-box-body-row'>
-                            <div className='main-box-body-row-item'>manage account</div>
-                            <div className='main-box-body-row-item-action'>
-                                <button className="user-settings-account-button" onClick={handleSettings}>
-                                    manage
-                                </button>
+                        {user?.type !== 0 && (
+                            <div className='main-box-body-row'>
+                                <div className='main-box-body-row-item'>manage account</div>
+                                <div className='main-box-body-row-item-action'>
+                                    <button className="user-settings-account-button" onClick={handleSettings}>
+                                        manage
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        )}
                         <div className='main-box-body-row'>
                             <div className='main-box-body-row-item'>clear all chats</div>
                             <div className='main-box-body-row-item-action'>

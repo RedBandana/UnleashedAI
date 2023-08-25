@@ -33,10 +33,7 @@ function Main() {
   const chatSelectedIndex = useSelector(getChatSelectedIndex);
   const themeIsLight = useSelector(getThemeIsLight);
 
-  const touchStartX = useRef(0);
-  const touchIsDragging = useRef(false);
   const [showAlertDialog, setShowAlertDialog] = useState(true);
-  const [sidebarChanged, setSidebarChanged] = useState(false);
   const [isInitialized, setIsInitialize] = useState(false);
   const [themeIsInitialized, setThemeIsInitialized] = useState(false);
   const [chatsPage, setChatsPage] = useState(1);
@@ -97,45 +94,6 @@ function Main() {
       localStorage.setItem("themeIsLight", themeIsLight);
     }
   }, [themeIsLight]);
-
-  useEffect(() => {
-    function handleStart(event) {
-      touchIsDragging.current = true;
-      touchStartX.current = event.touches[0].pageX;
-      setSidebarChanged(false);
-    }
-
-    function handleMove(event) {
-      if (touchIsDragging.current) {
-        const distance = event.touches[0].pageX - touchStartX.current;
-
-        if (distance > 50) {
-          dispatch(setSidebarIsOpen(true));
-          touchIsDragging.current = false;
-          setSidebarChanged(true);
-        }
-        else if (distance < -50) {
-          dispatch(setSidebarIsOpen(false));
-          touchIsDragging.current = false;
-          setSidebarChanged(true);
-        }
-      }
-    }
-
-    function handleEnd() {
-      touchIsDragging.current = false;
-    }
-
-    document.addEventListener('touchstart', handleStart);
-    document.addEventListener('touchmove', handleMove);
-    document.addEventListener('touchend', handleEnd);
-
-    return () => {
-      document.removeEventListener('touchstart', handleStart);
-      document.removeEventListener('touchmove', handleMove);
-      document.removeEventListener('touchend', handleEnd);
-    };
-  }, [sidebarChanged]);
 
   function dispatchDisplayInfo(chatId, sidebarIndex) {
     dispatch(fetchChatRequest({ chatId: chatId }));

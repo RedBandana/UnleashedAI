@@ -114,7 +114,7 @@ const AccountSettings = ({ text }) => {
 
         const emailIsOk = validateEmail(email);
         if (!emailIsOk) {
-            setEmailError('Email is not valid.');
+            setEmailError('Email is not valid');
             noError = false;
         }
         else {
@@ -122,7 +122,7 @@ const AccountSettings = ({ text }) => {
         }
 
         if (!currentPassword) {
-            setCurrentPasswordError('Please fill out this field.');
+            setCurrentPasswordError('Please fill out this field');
             noError = false;
         }
         else {
@@ -131,13 +131,13 @@ const AccountSettings = ({ text }) => {
 
         if (changePassword) {
             if (!password) {
-                setPasswordError('Please fill out this field.');
+                setPasswordError('Please fill out this field');
                 noError = false;
             }
             else {
                 setPasswordError('');
                 if (password !== confirmPassword) {
-                    setConfirmPasswordError('Passwords do not match.');
+                    setConfirmPasswordError('Passwords do not match');
                     noError = false;
                 }
             }

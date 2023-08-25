@@ -19,3 +19,5 @@ export const updateUserFailure = createAction('UPDATE_USER_FAILURE');
 export const createGuestRequest = createAction('CREATE_GUEST_REQUEST');
 export const createGuestSuccess = createAction('CREATE_GUEST_SUCCESS');
 export const createGuestFailure = createAction('CREATE_GUEST_FAILURE');
+
+export const logoutUserSuccess = createAction('LOGOUT_USER_SUCCESS');

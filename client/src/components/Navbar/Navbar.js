@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import './Navbar.scss';
@@ -13,16 +13,6 @@ function Navbar() {
   const chat = useSelector(fetchChatValue);
   const isMobile = useSelector(getIsMobile);
 
-  const [navbarTitle, setNavbarTitle] = useState(false);
-  
-  useEffect(() => {
-    if (!chat) {
-      setNavbarTitle('');
-      return;
-    }
-    setNavbarTitle(chat.title);
-  }, [chat]);
-
   function handleToggleSidebar() {
     dispatch(toggleSidebar());
   }
@@ -36,7 +26,7 @@ function Navbar() {
           </button>
         </div>
         <div className='navbar-center'>
-          <div className='navbar-item'>{navbarTitle}</div>
+          {chat?.title}
         </div>
         <div className="navbar-right">
           <div className="navbar-brand hide">Unleashed AI</div>

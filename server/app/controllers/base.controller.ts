@@ -6,7 +6,7 @@ export class Controller {
         if (itemToGet) {
             res.status(StatusCodes.OK).send(itemToGet);
         } else {
-            res.status(StatusCodes.NOT_FOUND).send('Failed to get.');
+            res.status(StatusCodes.NOT_FOUND).send('Failed to get');
         }
     }
 
@@ -14,7 +14,7 @@ export class Controller {
         if (itemToPost) {
             res.status(StatusCodes.CREATED).send(itemToPost);
         } else {
-            res.status(StatusCodes.BAD_REQUEST).send('Failed to post.');
+            res.status(StatusCodes.BAD_REQUEST).send('Failed to post');
         }
     }
 
@@ -22,7 +22,7 @@ export class Controller {
         if (itemToPut) {
             res.status(StatusCodes.OK).send(itemToPut);
         } else {
-            res.status(StatusCodes.NOT_MODIFIED).send('Failed to put.');
+            res.status(StatusCodes.NOT_MODIFIED).send('Failed to put');
         }
     }
 

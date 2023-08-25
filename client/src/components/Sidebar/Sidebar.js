@@ -9,9 +9,10 @@ import './Sidebar.scss';
 import { fetchChatsLoading, fetchChatsPageReceived } from '../../redux/selectors/chatSelectors';
 import Loading from '../Loading/Loading';
 import { fetchUserValue } from '../../redux/selectors/userSelectors';
-import { SIDEBAR_TITLE_MAX_LENGTH } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import { removeSessionCookie } from '../../utils/functions';
+import { clearChatsSuccess, deleteChatSuccess } from '../../redux/actions/chatActions';
+import { logoutUserSuccess } from '../../redux/actions/userActions';
 
 function Sidebar(props) {
   const { items, crudEvents, fileEvents, uiEvents } = props;
@@ -100,10 +101,6 @@ function Sidebar(props) {
     crudEvents.onDelete(id, index);
   }
 
-  function handleOnClearItems() {
-    crudEvents.onClear();
-  }
-
   function handleOnOpen(event) {
     fileEvents?.onRead(event.target.files[0])
   }
@@ -114,10 +111,6 @@ function Sidebar(props) {
 
   function handleOnSaveAs() {
     fileEvents?.onSaveAs();
-  }
-
-  function handleOnToggleTheme() {
-    uiEvents?.onToggleTheme();
   }
 
   function handleDisplaySettings() {
@@ -145,12 +138,7 @@ function Sidebar(props) {
       userEmail = 'guest session';
     }
 
-    if (userEmail.length > SIDEBAR_TITLE_MAX_LENGTH) {
-      return userEmail.substr(0, SIDEBAR_TITLE_MAX_LENGTH) + '...';
-    }
-    else {
-      return userEmail;
-    }
+    return userEmail;
   }
 
   const sidebarItemsCrudEvents = {

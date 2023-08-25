@@ -112,6 +112,9 @@
   text-align: left;
   width: 200px;
   color: var(--color-text-sidebar);
+  text-overflow: var(--text-overflow);
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .sidebar-settings-row-icon {

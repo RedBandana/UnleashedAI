@@ -47,12 +47,12 @@ export class UserController {
                 const userEdit = req.body as IUserRequest;
                 const isPasswordValid = await bcrypt.compare(userEdit.password, user.password);
                 if (!isPasswordValid) {
-                    res.status(401).json({ message: 'Invalid password.' });
+                    res.status(401).json({ message: 'Invalid password' });
                     return;
                 }
 
                 if (userEdit.newEmail && !validateEmail(userEdit.newEmail)) {
-                    res.status(400).json({ message: 'Invalid email.' });
+                    res.status(400).json({ message: 'Invalid email' });
                     return;
                 }
 
@@ -67,13 +67,13 @@ export class UserController {
             try {
                 const { email, password } = req.body;
                 if (!validateEmail(email)) {
-                    res.status(400).json({ message: 'Invalid email.' });
+                    res.status(400).json({ message: 'Invalid email' });
                     return;
                 }
 
                 const existingUser = await this.userService.getDocumentByEmail(email, UserProjection.userAuth);
                 if (existingUser) {
-                    res.status(400).json({ message: 'Email already exists.' });
+                    res.status(400).json({ message: 'Email already exists' });
                     return;
                 }
 
@@ -91,13 +91,13 @@ export class UserController {
                 const { email, password } = req.body;
                 const user: any = await this.userService.getDocumentByEmail(email, UserProjection.userAuth);
                 if (!user) {
-                    res.status(401).json({ message: 'Invalid email or password.' });
+                    res.status(401).json({ message: 'Invalid email or password' });
                     return;
                 }
 
                 const isPasswordValid = await bcrypt.compare(password, user.password);
                 if (!isPasswordValid) {
-                    res.status(401).json({ message: 'Invalid email or password.' });
+                    res.status(401).json({ message: 'Invalid email or password' });
                     return;
                 }
 
@@ -121,7 +121,7 @@ export class UserController {
 
         this.router.get('/', verifyAdminSessionToken, async (req: Request, res: Response) => {
             try {
-                res.status(StatusCodes.OK).send('Server working.');
+                res.status(StatusCodes.OK).send('Server working');
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
             }

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './SidebarItem.scss';
-import { SIDEBAR_TITLE_MAX_LENGTH } from '../../utils/constants';
 
 function SidebarItem(props) {
   const { id, title, index, isSelected, crudEvents } = props;
@@ -24,12 +23,7 @@ function SidebarItem(props) {
   }
 
   function getTitle() {
-    if (newTitle.length > SIDEBAR_TITLE_MAX_LENGTH) {
-      return newTitle.substr(0, SIDEBAR_TITLE_MAX_LENGTH) + '...';
-    }
-    else {
-      return newTitle;
-    }
+    return newTitle;
   }
 
   function handleTitleChange(event) {
@@ -56,26 +50,28 @@ function SidebarItem(props) {
 
   return (
     <div className="sidebaritem" data-is-selected={isSelected} onClick={handleOnClick}>
-      {editing ? (
-        <div className="sidebaritem-title">
-          <input
-            className="sidebar-no-move"
-            id="sidebarItemTitle"
-            type="text"
-            value={newTitle}
-            onChange={handleTitleChange}
-            onBlur={handleTitleSubmit}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                handleTitleSubmit();
-              }
-            }}
-            autoFocus
-          />
-        </div>
-      ) : (
-        <div className="sidebaritem-title">{getTitle()}</div>
-      )}
+      <div className='sidebaritem-title-container'>
+        {editing ? (
+          <div className="sidebaritem-title">
+            <input
+              className="sidebaritem-title-edit sidebar-no-move"
+              id="sidebarItemTitle"
+              type="text"
+              value={newTitle}
+              onChange={handleTitleChange}
+              onBlur={handleTitleSubmit}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  handleTitleSubmit();
+                }
+              }}
+              autoFocus
+            />
+          </div>
+        ) : (
+          <div className="sidebaritem-title">{getTitle()}</div>
+        )}
+      </div>
       <div className={`sidebaritem-buttons ${isSelected ? '' : 'hide'}`}>
         {crudEvents.onUpdate != null && (
           <button className="sidebaritem-button-edit" onClick={enableEdit}>

@@ -128,11 +128,11 @@ function LoginPage() {
 
     if (!email) {
       success = false;
-      setEmailError('Please fill out this field.');
+      setEmailError('Please fill out this field');
     }
     else if (!validateEmail(email)) {
       success = false;
-      setEmailError('Email is not valid.');
+      setEmailError('Email is not valid');
     }
     else {
       setEmailError('');
@@ -140,7 +140,7 @@ function LoginPage() {
 
     if (!password) {
       success = false;
-      setPasswordError('Please fill out this field.');
+      setPasswordError('Please fill out this field');
     }
     else {
       setPasswordError('');
@@ -149,11 +149,11 @@ function LoginPage() {
     if (isSignUp) {
       if (!confirmPassword) {
         success = false;
-        setConfirmPasswordError('Please fill out this field.');
+        setConfirmPasswordError('Please fill out this field');
       }
       else if (password !== confirmPassword) {
         success = false;
-        setConfirmPasswordError('Passwords do not match.');
+        setConfirmPasswordError('Passwords do not match');
       }
       else {
         setConfirmPasswordError('');
@@ -167,7 +167,7 @@ function LoginPage() {
     let success = true;
 
     if (email && !validateEmail(email)) {
-      setEmailError('Email is not valid.');
+      setEmailError('Email is not valid');
       success = false;
     }
     else {
@@ -181,7 +181,7 @@ function LoginPage() {
     if (isSignUp && password && confirmPassword &&
       password !== confirmPassword) {
       success = false;
-      setConfirmPasswordError('Passwords do not match.');
+      setConfirmPasswordError('Passwords do not match');
     }
     else {
       setConfirmPasswordError('');

@@ -5,7 +5,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  background-color: var(----color-sidebar-item);
+  background-color: var(--color-sidebar-item);
   margin: 8px;
   border-radius: 5px;
   max-height: 21px;
@@ -25,17 +25,23 @@
 }
 
 .sidebaritem-title {
+  text-overflow: var(--text-overflow);
+  white-space: nowrap;
+  overflow: hidden;
   font-size: var(--font-size-main);
   color: var(--color-text-sidebar);
-  max-width: 190px;
+  width: 176px;
+  border-radius: var(--border-radius-second);
 }
 
-.sidebaritem-title input {
+.sidebaritem-title-edit {
+  width: 168px;
+  border-radius: var(--border-radius-second);
+  border-color: transparent;
   font-family: var(--font-family-main);
   font-size: var(--font-size-main);
   font-weight: 600;
   color: var(--color-text-main-default);
-  max-width: 140px;
 }
 
 .sidebaritem-buttons {
@@ -50,7 +56,6 @@
   align-items: center;
   background-color: var(--color-none);
   border: var(--border-none);
-  margin-left: 10px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
@@ -62,10 +67,12 @@
 
 .sidebaritem-button-edit {
   color: var(--color-options-sidebar);
+  margin-left: 2px;
 }
 
 .sidebaritem-button-trash {
   color: var(--color-options-sidebar);
+  margin-left: 2px;
 }
 
 .theme-dark .sidebaritem-title input {
