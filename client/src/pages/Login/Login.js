@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { createGuestRequest, fetchUserRequest, loginUserRequest, registerUserRequest } from '../../redux/actions/userActions';
+import { createGuestRequest, fetchUserRequest, loginUserRequest, logoutUserSuccess, registerUserRequest } from '../../redux/actions/userActions';
 import { useEffect, useState } from 'react';
 import { getCookie, validateEmail } from '../../utils/functions';
 import { getThemeIsLight } from '../../redux/selectors/uiSelectors';
@@ -12,6 +12,7 @@ import './Login.scss';
 import { fetchUserError, fetchUserLoading, fetchUserValue } from '../../redux/selectors/userSelectors';
 import { Capacitor } from '@capacitor/core';
 import { MOBILE_DEVICE_PATTERNS } from '../../utils/constants';
+import { clearChatsSuccess } from '../../redux/actions/chatActions';
 
 
 function LoginPage() {
@@ -38,6 +39,8 @@ function LoginPage() {
   useEffect(() => {
     const isMobile = Capacitor.isNativePlatform() || MOBILE_DEVICE_PATTERNS.test(navigator.userAgent);
     dispatch(setIsMobile(isMobile));
+    dispatch(logoutUserSuccess());
+    dispatch(clearChatsSuccess());
 
     const savedThemeIsLight = localStorage.getItem("themeIsLight");
     if (savedThemeIsLight == null) {

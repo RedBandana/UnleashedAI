@@ -51,6 +51,7 @@ export class UserController {
                     return;
                 }
 
+                userEdit.newEmail = userEdit.newEmail?.toLowerCase();
                 if (userEdit.newEmail && !validateEmail(userEdit.newEmail)) {
                     res.status(400).json({ message: 'Invalid email' });
                     return;
@@ -66,19 +67,20 @@ export class UserController {
         this.router.post("/register", async (req: Request, res: Response) => {
             try {
                 const { email, password } = req.body;
-                if (!validateEmail(email)) {
+                const formattedEmail = email?.toLowerCase();
+                if (!validateEmail(formattedEmail)) {
                     res.status(400).json({ message: 'Invalid email' });
                     return;
                 }
 
-                const existingUser = await this.userService.getDocumentByEmail(email, UserProjection.userAuth);
+                const existingUser = await this.userService.getDocumentByEmail(formattedEmail, UserProjection.userAuth);
                 if (existingUser) {
                     res.status(400).json({ message: 'Email already exists' });
                     return;
                 }
 
                 const hashedPassword = await createHashedPassword(password);
-                const newUser: any = await this.userService.createUser(email, hashedPassword);
+                const newUser: any = await this.userService.createUser(formattedEmail, hashedPassword);
                 const sessionToken = generateSessionToken(newUser._id);
                 Controller.handlePostResponse(res, { id: newUser._id, sessionToken });
             } catch (error) {
@@ -89,7 +91,13 @@ export class UserController {
         this.router.post("/login", async (req: Request, res: Response) => {
             try {
                 const { email, password } = req.body;
-                const user: any = await this.userService.getDocumentByEmail(email, UserProjection.userAuth);
+                const formattedEmail = email?.toLowerCase();
+                if (!validateEmail(formattedEmail)) {
+                    res.status(400).json({ message: 'Invalid email or password' });
+                    return;
+                }
+
+                const user: any = await this.userService.getDocumentByEmail(formattedEmail, UserProjection.userAuth);
                 if (!user) {
                     res.status(401).json({ message: 'Invalid email or password' });
                     return;
@@ -138,7 +146,7 @@ export class UserController {
         });
 
         this.router.get('/email/:email', verifyAdminSessionToken, async (req: Request, res: Response) => {
-            const email = decodeURIComponent(req.params.email);
+            const email = decodeURIComponent(req.params.email)?.toLowerCase();
             try {
                 const user = await this.userService.getDocumentByEmail(email, UserProjection.user);
                 Controller.handleGetResponse(res, user);

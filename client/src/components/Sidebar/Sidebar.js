@@ -11,7 +11,7 @@ import Loading from '../Loading/Loading';
 import { fetchUserValue } from '../../redux/selectors/userSelectors';
 import { useNavigate } from 'react-router-dom';
 import { removeSessionCookie } from '../../utils/functions';
-import { clearChatsSuccess, deleteChatSuccess } from '../../redux/actions/chatActions';
+import { clearChatsSuccess } from '../../redux/actions/chatActions';
 import { logoutUserSuccess } from '../../redux/actions/userActions';
 
 function Sidebar(props) {
@@ -123,6 +123,8 @@ function Sidebar(props) {
   }
 
   function handleLogOut() {
+    dispatch(logoutUserSuccess());
+    dispatch(clearChatsSuccess());
     setDisplaySettings(false);
     removeSessionCookie();
     navigate('/login');

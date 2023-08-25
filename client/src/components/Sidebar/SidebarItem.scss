@@ -30,12 +30,12 @@
   overflow: hidden;
   font-size: var(--font-size-main);
   color: var(--color-text-sidebar);
-  width: 176px;
   border-radius: var(--border-radius-second);
+  max-width: 155px;
 }
 
 .sidebaritem-title-edit {
-  width: 168px;
+  max-width: 145px;
   border-radius: var(--border-radius-second);
   border-color: transparent;
   font-family: var(--font-family-main);
@@ -67,12 +67,10 @@
 
 .sidebaritem-button-edit {
   color: var(--color-options-sidebar);
-  margin-left: 2px;
 }
 
 .sidebaritem-button-trash {
   color: var(--color-options-sidebar);
-  margin-left: 2px;
 }
 
 .theme-dark .sidebaritem-title input {
