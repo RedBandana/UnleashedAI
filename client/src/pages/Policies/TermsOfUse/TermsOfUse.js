@@ -13,7 +13,7 @@ function TermsOfUse() {
                 <title>Terms  Policy | Unleashed AI Chat</title>
                 <meta name="description" content="Welcome to Unleashed AI's Terms of Use. By accessing Unleashed AI, you agree to comply with these terms, all applicable laws and regulations." />
                 <meta name="keywords" content="unleashed,ai,chat,chatbot,policies,terms,terms of use" />
-                <link rel="canonical" href="https://unleashedai.org/policies/terms-of-use" />
+                <link rel="canonical" href="https://unleashedai.org/terms-of-use" />
             </Helmet>
             <div className='terms-of-use-container container-main'>
                 <div className="terms-of-use-text">

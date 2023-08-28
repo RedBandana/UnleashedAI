@@ -13,7 +13,7 @@ function PrivacyPolicy() {
                 <title>Privacy Policy | Unleashed AI Chat</title>
                 <meta name="description" content="Welcome to Unleashed AI's Privacy Policy. We respect and protect the privacy of all visitors, users, and others who access our website." />
                 <meta name="keywords" content="unleashed,ai,chat,chatbot,policies,privacy,policy,privacy policy,data protection" />
-                <link rel="canonical" href="https://unleashedai.org/policies/privacy-policy" />
+                <link rel="canonical" href="https://unleashedai.org/privacy-policy" />
             </Helmet>
             <div className='privacy-policy-container container-main'>
                 <div className="privacy-policy-text">
