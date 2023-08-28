@@ -5,9 +5,9 @@ function Footer({ fixed }) {
         <div className='footer hide'>
             <footer className={`footer-main ${fixed ? 'fixed' : ''}`}>
                 <div className="links-main">
-                    <a href="/policies/terms-of-use">Terms of use</a>
+                    <a href="/policies/terms-of-use" target='_blank'>Terms of use</a>
                     <span>|</span>
-                    <a href="/policies/privacy-policy">Privacy policy</a>
+                    <a href="/policies/privacy-policy" target='_blank'>Privacy policy</a>
                 </div>
             </footer>
         </div>

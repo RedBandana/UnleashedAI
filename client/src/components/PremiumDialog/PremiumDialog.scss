@@ -1,0 +1,22 @@
+.premium-dialog-header {
+    background: linear-gradient(200deg, #43b9dd, rgba(255, 255, 255, 0)), linear-gradient(30deg, #1157b3, rgba(255, 255, 255, 0));
+    background-color: var(--color-accent-main);
+    margin: 10px;
+    border-radius: var(--border-radius-second);
+    color: white;
+}
+
+.premium-dialog-header:hover {
+    cursor: pointer;
+}
+
+.premium-dialog-title {
+    padding-bottom: 0;
+}
+
+.premium-dialog-subtitle {
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    padding-bottom: 15px;
+}

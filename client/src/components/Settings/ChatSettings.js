@@ -130,7 +130,7 @@ const Settings = () => {
                             </div>
                         </div>
                         <div className="setting-item dev-options">
-                            <label htmlFor="devOptions">show developer options</label>
+                            <label htmlFor="devOptions">show advanced options</label>
                             <div className="input-container">
                                 <input
                                     type="checkbox"
@@ -142,8 +142,8 @@ const Settings = () => {
                             </div>
                         </div>
                         <div className="dev-options-container" data-show-dev-options={formSettings.devOptions}>
-                            <div className="settings-documentation">
-                                <a href="https://platform.openai.com/docs/api-reference/chat" target="_blank" rel="noopener noreferrer">Documentation</a>
+                            <div className="settings-documentation links-main">
+                                Documentation
                             </div>
                             <div className="setting-item">
                                 <label htmlFor="top_p">top p</label>

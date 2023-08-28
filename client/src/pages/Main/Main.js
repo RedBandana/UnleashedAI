@@ -21,6 +21,7 @@ import '../../index.scss';
 import { fetchMessagesValue } from '../../redux/selectors/messageSelectors';
 import { fetchUserRequest } from '../../redux/actions/userActions';
 import UserSettings from '../../components/Settings/UserSettings';
+import PremiumDialog from '../../components/PremiumDialog/PremiumDialog';
 
 function Main() {
   const dispatch = useDispatch();
@@ -231,11 +232,12 @@ function Main() {
           showAlertDialog && (
             <AlertDialog
               title="Unleashed AI"
-              text="Hello, Unleashed AI is presently in its initial phase. Expect further enhancements and updates soon. Contact us at info@unleashedai.com"
+              text="Hello, Unleashed AI is presently in its initial phase. Expect further enhancements and updates soon. You can contact us at info@unleashedai.com"
               onOk={handleCloseAlertDialog} onClose={handleCloseAlertDialog}
             />
           )
         }
+        <PremiumDialog />
         <UserSettings />
         {
           chats && (

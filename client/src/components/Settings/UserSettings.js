@@ -9,7 +9,7 @@ import AlertDialog from '../AlertDialog/AlertDialog';
 import AccountSettings from './AccountSettings';
 import { fetchUserValue } from '../../redux/selectors/userSelectors';
 
-const UserSettings = ({ text }) => {
+const UserSettings = () => {
     const showDialog = useSelector(getUserSettingsIsOpen);
     const isLightTheme = useSelector(getThemeIsLight);
     const dispatch = useDispatch();
@@ -90,14 +90,14 @@ const UserSettings = ({ text }) => {
     }
 
     return (
-        <div className='user-settings'>
+        <div className='user-settings dialog'>
             {showAlertDialog && (
                 <AlertDialog text='Are you sure you want to clear all chats?'
                     onClose={() => { setShowAlertDialog(false) }}
                     onYes={handleOnClearItems} onNo={handleAlertNo} />
             )}
             <div className="main-box user-settings-main-box">
-                <div className="main-box-container user-settings-container">
+                <div className="main-box-container dialog-container">
                     <div className='main-box-header'>
                         <div className='main-box-title'>settings</div>
                     </div>

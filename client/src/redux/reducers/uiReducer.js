@@ -5,6 +5,7 @@ const initialState = {
   sidebarIsOpen: false,
   settingsIsOpen: false,
   userSettingsIsOpen: false,
+  premiumDialogIsOpen: false,
   isMobile: true,
   settings: null,
   themeIsLight: true,
@@ -53,6 +54,10 @@ const uiReducer = handleActions(
     [actions.setIsMobile]: (state, { payload }) => ({
       ...state,
       isMobile: payload,
+    }),
+    [actions.setPremiumDialogIsOpen]: (state, { payload }) => ({
+      ...state,
+      premiumDialogIsOpen: payload,
     }),
   },
   initialState

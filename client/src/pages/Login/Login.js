@@ -231,7 +231,7 @@ function LoginPage() {
   return (
     <div className={`login ${themeIsLight ? 'theme-light' : 'theme-dark'}`}>
       <Helmet>
-        <title>Unleashed AI Chat Login</title>
+        <title>Login | Unleashed AI Chat</title>
         <meta name="description" content="Login or sign up now to Unleashed AI. Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries with Unleashed AI." />
         <meta name="keywords" content="unleashed,ai,chat,chatbot,login,signup,register,signin" />
         <link rel="canonical" href="https://unleashedai.org/login" />

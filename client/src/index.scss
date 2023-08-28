@@ -131,6 +131,11 @@ body {
     text-align: center;
 }
 
+.links-main {
+    color: var(--color-accent-main);
+    cursor: pointer;
+}
+
 .links-main a {
     color: var(--color-accent-main);
     text-decoration: none;
@@ -151,4 +156,24 @@ body {
 
 .fixed {
     position: fixed;
+}
+
+.column-direction {
+    flex-direction: column;
+}
+
+.subtext {
+    font-size: 0.95rem;
+    color: var(--color-options-sidebar);
+}
+
+.dialog {
+    z-index: 999;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.dialog-container {
+    width: 350px;
 }

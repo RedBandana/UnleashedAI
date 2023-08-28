@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getChatSelectedIndex, getIsMobile, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
-import { setSidebarIsOpen, setUserSettingsIsOpen } from '../../redux/actions/uiActions';
+import { setPremiumDialogIsOpen, setSidebarIsOpen, setUserSettingsIsOpen } from '../../redux/actions/uiActions';
 
 import SidebarItem from './SidebarItem';
 import './Sidebar.scss';
@@ -131,7 +131,8 @@ function Sidebar(props) {
   }
 
   function handleOpenUpgradePlus() {
-
+    setDisplaySettings(false);
+    dispatch(setPremiumDialogIsOpen(true));
   }
 
   function getUserEmail() {
