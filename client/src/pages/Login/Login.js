@@ -333,7 +333,7 @@ function LoginPage() {
           </div>
         )
       }
-      <Footer fixed={true} />
+      <Footer />
     </div>
   );
 }

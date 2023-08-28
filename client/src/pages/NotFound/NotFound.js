@@ -22,7 +22,7 @@ function NotFound() {
                     <a href="/">Go home</a>
                 </div>
             </div>
-           <Footer fixed={true} />
+           <Footer />
         </div>
     );
 }
