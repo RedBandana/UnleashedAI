@@ -29,13 +29,6 @@ function ChatEmpty(props) {
                     Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries with Unleashed AI.
                 </div>
             </div>
-            <footer className="no-conversation-footer">
-                <div className="links-main">
-                    <a href="/terms-of-use">Terms of use</a>
-                    <span>|</span>
-                    <a href="/privacy-policy">Privacy policy</a>
-                </div>
-            </footer>
         </div>
     )
 }

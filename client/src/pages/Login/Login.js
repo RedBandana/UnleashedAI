@@ -326,6 +326,7 @@ function LoginPage() {
           Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries with Unleashed AI.
         </h2>
       </div>
+      <Footer />
       {
         loading && (
           <div className='login-loading'>
@@ -333,7 +334,6 @@ function LoginPage() {
           </div>
         )
       }
-      <Footer />
     </div>
   );
 }

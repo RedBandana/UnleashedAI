@@ -47,6 +47,35 @@ export function parseToRightType(obj, property, value) {
   }
 }
 
+export function getModelMaxTokens(model) {
+  if (model === 'gpt-4') {
+      return 8192;
+  }
+  else if (model === 'gpt-4-32k') {
+      return 32768;
+  }
+  else if (model === 'gpt-3.5-turbo') {
+      return 4096;
+  }
+  else if (model === 'code-davinci-002') {
+      return 80001;
+  }
+  else if (model === 'gpt-3.5-turbo-16k') {
+      return 16384;
+  }
+  else {
+      return 4096;
+  }
+}
+
+export function isValidNumber(value) {
+  if (value === null || value === "" || isNaN(value)) {
+    return false;
+  }
+
+  return true;
+}
+
 export function fixHtmlMarkdown(prism, htmlElements) {
   prism.highlightAll();
   for (let i = 0; i < htmlElements.length; i++) {

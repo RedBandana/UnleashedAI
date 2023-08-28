@@ -32,14 +32,6 @@
   cursor: pointer;
 }
 
-.chat-message-timestamp {
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--color-third);
-  align-self: center;
-  margin-left: 4px;
-}
-
 .chat-message-options-icon {
   cursor: pointer;
   color: var(--color-options-main);
@@ -48,7 +40,7 @@
 .chat-message-options-container {
   position: absolute;
   bottom: 0px;
-  transform: translateX(-85px);
+  transform: translateX(-70px);
   background-color: var(--color-main);
   box-shadow: var(--box-shadow-second);
   z-index: 1;
@@ -56,22 +48,24 @@
   border-radius: var(--border-radius-main);
   display: flex;
   justify-content: space-between;
-  width: 85px;
 }
 
-.chat-message-options-container button {
-  background: none;
-  border: var(--border-none);
-  outline: none;
+.chat-message-options-item {
   cursor: pointer;
   display: flex;
   align-items: center;
-  font-size: 14px;
+  padding: 3px 3px;
   color: var(--color-third);
 }
 
-.chat-message-options-container button i {
-  font-size: 16px;
+.chat-message-options-item i {
+  font-size: 1rem;
+}
+
+.chat-message-timestamp {
+  cursor: default;
+  font-size: 12px;
+  max-width: 20px;
 }
 
 .chat-message-container {

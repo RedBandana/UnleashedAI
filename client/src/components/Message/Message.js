@@ -142,17 +142,19 @@ const Message = ({ index, message, onDelete, onSelectChoice, onRender, shouldRen
             </div>
           )}
         </div>
-        <div className={`chat-message-icons-container ${message.id != null ? '' : 'chat-message-icons-container-disabled' }`} onClick={handleOptionsClick} ref={optionsRef}>
+        <div className={`chat-message-icons-container ${message.id != null ? '' : 'chat-message-icons-container-disabled'}`} onClick={handleOptionsClick} ref={optionsRef}>
           <i className="fa fa-ellipsis-v chat-message-options-icon"></i>
           {showOptions && (
             <div className="chat-message-options-container" ref={optionsRef}>
-              <button onClick={handleDeleteClick}>
+              <div className="chat-message-options-item" onClick={handleDeleteClick}>
                 <i className="fa fa-trash"></i>
-              </button>
-              <button onClick={handleCopyClick}>
+              </div>
+              <div className="chat-message-options-item" onClick={handleCopyClick}>
                 <i className="fa fas fa-clipboard"></i>
-              </button>
-              <div className="chat-message-timestamp">{timestamp}</div>
+              </div>
+              <div className="chat-message-options-item chat-message-timestamp">
+                <div>{timestamp}</div>
+              </div>
             </div>
           )}
         </div>

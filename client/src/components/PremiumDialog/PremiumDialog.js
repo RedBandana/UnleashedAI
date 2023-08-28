@@ -35,7 +35,6 @@ const PremiumDialog = () => {
     if (!showDialog) {
         return null;
     }
-
     
     function handleCloseAlertDialog() {
         setShowAlertDialog(false);
@@ -99,7 +98,8 @@ const PremiumDialog = () => {
                                 billing help
                             </div>
                         </div>
-                        <div className='main-box-body-row'>
+                        <div className='premium-dialog-header'>
+                            <div className='main-box-title premium-dialog-cta'>upgrade now</div>
                         </div>
                     </div>
                 </div>

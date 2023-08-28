@@ -53,17 +53,3 @@
 .no-conversation-container[data-sidebar-is-open="true"] .no-conversation-body {
     width: calc(100vw - $sidebar-width);
 }
-
-.no-conversation-footer {
-    padding: 10px;
-    text-align: center;
-    position: fixed;
-    bottom: 0;
-    font-size: 1rem;
-    width: 100vw;
-    transition: width 0.25s ease-in-out;
-}
-
-.no-conversation-container[data-sidebar-is-open="true"] .no-conversation-footer {
-    width: calc(100vw - $sidebar-width);
-}

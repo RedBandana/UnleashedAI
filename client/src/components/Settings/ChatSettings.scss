@@ -22,7 +22,7 @@
   position: relative;
   float: right;
   right: 7%;
-  bottom: 320px;
+  bottom: 345px;
 }
 
 .settings-dialog label {
@@ -58,7 +58,7 @@
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  height: 278px;
+  height: 310px;
   padding-right: 10px;
   padding-top: 5px;
 }
@@ -98,6 +98,13 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   max-height: 140px;
   color: var(--color-text-main);
+}
+
+.input-range-value {
+  color: var(--color-text-main);
+  margin: auto;
+  min-width: 30px;
+  text-align: center;
 }
 
 .settings-documentation {

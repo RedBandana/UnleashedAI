@@ -1,26 +1,64 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { setSettings } from "../../redux/actions/uiActions";
 import { fetchChatValue } from "../../redux/selectors/chatSelectors";
 import { getSettings } from "../../redux/selectors/uiSelectors";
 
-import { parseToRightType } from "../../utils/functions";
+import { getModelMaxTokens, isValidNumber, parseToRightType } from "../../utils/functions";
 import "./ChatSettings.scss";
+import { fetchUserValue } from "../../redux/selectors/userSelectors";
 
 const Settings = () => {
     const dispatch = useDispatch();
     const chat = useSelector(fetchChatValue);
     const formSettings = useSelector(getSettings);
+    const user = useSelector(fetchUserValue);
 
     const [isInitialized, setIsInitialize] = useState(false);
+    const settingInputsRef = useRef(null);
+
+    const minTokens = 0;
+    const [maxTokens, setMaxTokens] = useState(0);
+    const minAnswers = 1;
+    const maxAnswers = 10;
+    const minMemory = 1;
+    const [maxMemory, setMaxMemory] = useState(100);
+    const defaultTemperature = 1;
+    const minTemperature = 0.1;
+    const maxTemperature = 2;
+    const defaultTopP = 1;
+    const minTopP = 0.1;
+    const maxTopP = 1;
+    const defaultPresencePenalty = 1;
+    const minPresencePenalty = -2;
+    const maxPresencePenalty = 2;
+    const defaultFrequencePenalty = 1;
+    const minFrequencePenalty = -2;
+    const maxFrequencePenalty = 2;
 
     useEffect(() => {
         if (!isInitialized && chat) {
             dispatch(setSettings(chat.settings));
+            setMaxTokens(getModelMaxTokens(chat.settings.model));
+            validateNull();
             setIsInitialize(true);
         }
     }, [chat]);
+
+    useEffect(() => {
+        validateMaxTokens();
+    }, [maxTokens]);
+
+    useEffect(() => {
+        if (!formSettings) {
+            return;
+        }
+
+        if (isInitialized && formSettings.devOptions) {
+            scrollToBottom();
+        }
+    }, [formSettings?.devOptions])
 
     function handleInputChange(event) {
         const { name, value } = event.target;
@@ -35,6 +73,225 @@ const Settings = () => {
         dispatch(setSettings(finalSettings));
     }
 
+    function handleModelChange(event) {
+        setMaxTokens(getModelMaxTokens(event.target.value));
+        handleInputChange(event);
+    }
+
+    function handleMaxTokenChange(event) {
+        if (!validateMaxTokens(event.target.value)) {
+            return;
+        }
+        handleInputChange(event);
+    }
+
+    function handleAnswersChange(event) {
+        if (!validateAnswers(event.target.value)) {
+            return;
+        }
+        handleInputChange(event);
+    }
+
+    function handleMemoryChange(event) {
+        if (!validateMemory(event.target.value)) {
+            return;
+        }
+        handleInputChange(event);
+    }
+
+    function handleTemperatureChange(event) {
+        if (!validateTemperature(event.target.value)) {
+            return;
+        }
+        handleInputChange(event);
+    }
+    
+    function handleDevOptionsChange(event) {
+        handleCheckboxChange(event);
+    }
+    
+    function scrollToBottom() {
+        settingInputsRef.current.scrollTo({
+            top: settingInputsRef.current.scrollHeight,
+            behavior: "smooth",
+        });
+    }
+    
+    function handleTopPChange(event) {
+        if (!validateTopP(event.target.value)) {
+            return;
+        }
+        handleInputChange(event);
+    }
+
+    function handlePresencePenaltyChange(event) {
+        if (!validatePresencePenalty(event.target.value)) {
+            return;
+        }
+        handleInputChange(event);
+    }
+
+    function handleFrequencePenaltyChange(event) {
+        if (!validateFrequencePenalty(event.target.value)) {
+            return;
+        }
+        handleInputChange(event);
+    }
+
+    function validateMaxTokens(value) {
+        if (value < minTokens) {
+            const finalSettings = { ...formSettings, ['max_tokens']: minTokens }
+            dispatch(setSettings(finalSettings));
+            return false;
+        }
+        else if (maxTokens != 0 && value > maxTokens) {
+            const finalSettings = { ...formSettings, ['max_tokens']: maxTokens }
+            dispatch(setSettings(finalSettings));
+            return false;
+        }
+
+        return true;
+    }
+
+    function validateAnswers(value) {
+        if (value < minAnswers) {
+            const finalSettings = { ...formSettings, ['n']: minAnswers }
+            dispatch(setSettings(finalSettings));
+            return false;
+        }
+        else if (maxAnswers != 0 && value > maxAnswers) {
+            const finalSettings = { ...formSettings, ['n']: maxAnswers }
+            dispatch(setSettings(finalSettings));
+            return false;
+        }
+
+        return true;
+    }
+
+    function validateMemory(value) {
+        if (value < minMemory) {
+            const finalSettings = { ...formSettings, ['memory']: minMemory }
+            dispatch(setSettings(finalSettings));
+            return false;
+        }
+        else if (maxMemory != 0 && value > maxMemory) {
+            const finalSettings = { ...formSettings, ['memory']: maxMemory }
+            dispatch(setSettings(finalSettings));
+            return false;
+        }
+
+        return true;
+    }
+
+    function validateTopP(value) {
+        if (value < minTopP) {
+            const finalSettings = { ...formSettings, ['top_p']: minTopP }
+            dispatch(setSettings(finalSettings));
+            return false;
+        }
+        else if (maxTopP != 0 && value > maxTopP) {
+            const finalSettings = { ...formSettings, ['top_p']: maxTopP }
+            dispatch(setSettings(finalSettings));
+            return false;
+        }
+
+        return true;
+    }
+
+    function validatePresencePenalty(value) {
+        if (value < minPresencePenalty) {
+            const finalSettings = { ...formSettings, ['presence_penalty']: minPresencePenalty }
+            dispatch(setSettings(finalSettings));
+            return false;
+        }
+        else if (maxPresencePenalty != 0 && value > maxPresencePenalty) {
+            const finalSettings = { ...formSettings, ['presence_penalty']: maxPresencePenalty }
+            dispatch(setSettings(finalSettings));
+            return false;
+        }
+
+        return true;
+    }
+
+    function validateFrequencePenalty(value) {
+        if (value < minFrequencePenalty) {
+            const finalSettings = { ...formSettings, ['frequency_penalty']: minFrequencePenalty }
+            dispatch(setSettings(finalSettings));
+            return false;
+        }
+        else if (maxFrequencePenalty != 0 && value > maxFrequencePenalty) {
+            const finalSettings = { ...formSettings, ['frequency_penalty']: maxFrequencePenalty }
+            dispatch(setSettings(finalSettings));
+            return false;
+        }
+
+        return true;
+    }
+
+    function validateTemperature(value) {
+        if (value < minTemperature) {
+            const finalSettings = { ...formSettings, ['temperature']: minTemperature }
+            dispatch(setSettings(finalSettings));
+            return false;
+        }
+        else if (maxTemperature != 0 && value > maxTemperature) {
+            const finalSettings = { ...formSettings, ['temperature']: maxTemperature }
+            dispatch(setSettings(finalSettings));
+            return false;
+        }
+
+        return true;
+    }
+
+    function validateNull() {
+        if (!formSettings) {
+            return;
+        }
+
+        if (!isValidNumber(formSettings.max_tokens)) {
+            const finalSettings = { ...formSettings, ['max_tokens']: minTokens }
+            dispatch(setSettings(finalSettings));
+        }
+
+        if (!isValidNumber(formSettings.n)) {
+            const finalSettings = { ...formSettings, ['n']: minAnswers }
+            dispatch(setSettings(finalSettings));
+        }
+
+        if (!isValidNumber(formSettings.memory)) {
+            const finalSettings = { ...formSettings, ['memory']: minMemory }
+            dispatch(setSettings(finalSettings));
+        }
+
+        if (!isValidNumber(formSettings.temperature)) {
+            const finalSettings = { ...formSettings, ['temperature']: defaultTemperature }
+            dispatch(setSettings(finalSettings));
+        }
+
+        if (!isValidNumber(formSettings.top_p)) {
+            const finalSettings = { ...formSettings, ['top_p']: defaultTopP }
+            dispatch(setSettings(finalSettings));
+        }
+
+        if (!isValidNumber(formSettings.presence_penalty)) {
+            const finalSettings = { ...formSettings, ['presence_penalty']: defaultPresencePenalty }
+            dispatch(setSettings(finalSettings));
+        }
+
+        if (!isValidNumber(formSettings.frequency_penalty)) {
+            const finalSettings = { ...formSettings, ['frequency_penalty']: defaultFrequencePenalty }
+            dispatch(setSettings(finalSettings));
+        }
+    }
+
+    function getTemperaturePercent() {
+        if (!formSettings) {
+            return;
+        }
+        const value = formSettings.temperature * 10 * 5;
+        return value;
+    }
+
     if (!formSettings) {
         return;
     }
@@ -43,7 +300,7 @@ const Settings = () => {
         <div className="settings-dialog">
             <div className="settings-body">
                 <form>
-                    <div className="setting-inputs">
+                    <div className="setting-inputs" ref={settingInputsRef} >
                         <div className="setting-item">
                             <label htmlFor="system">role</label>
                             <div className="input-container">
@@ -62,7 +319,7 @@ const Settings = () => {
                                     id="model"
                                     name="model"
                                     value={formSettings.model}
-                                    onChange={handleInputChange}>
+                                    onChange={handleModelChange}>
                                     <option value="gpt-4">gpt-4</option>
                                     <option value="gpt-4-32k">gpt-4-32k</option>
                                     <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
@@ -77,10 +334,11 @@ const Settings = () => {
                                     type="number"
                                     id="max_tokens"
                                     name="max_tokens"
-                                    min="0"
-                                    max="4096"
+                                    step="1"
+                                    min={`${minTokens}`}
+                                    max={`${maxTokens}`}
                                     value={formSettings.max_tokens}
-                                    onChange={handleInputChange}
+                                    onChange={handleMaxTokenChange}
                                 />
                             </div>
                         </div>
@@ -92,25 +350,10 @@ const Settings = () => {
                                     id="n"
                                     name="n"
                                     step="1"
-                                    min="1"
-                                    max="10"
+                                    min={`${minAnswers}`}
+                                    max={`${maxAnswers}`}
                                     value={formSettings.n}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                        </div>
-                        <div className="setting-item">
-                            <label htmlFor="temperature">randomize</label>
-                            <div className="input-container">
-                                <input
-                                    type="number"
-                                    id="temperature"
-                                    name="temperature"
-                                    step="0.1"
-                                    min="0.1"
-                                    max="2.0"
-                                    value={formSettings.temperature}
-                                    onChange={handleInputChange}
+                                    onChange={handleAnswersChange}
                                 />
                             </div>
                         </div>
@@ -122,10 +365,28 @@ const Settings = () => {
                                     id="memory"
                                     name="memory"
                                     step="1"
-                                    min="1"
-                                    max="100"
+                                    min={`${minMemory}`}
+                                    max={`${maxMemory}`}
                                     value={formSettings.memory}
-                                    onChange={handleInputChange}
+                                    onChange={handleMemoryChange}
+                                />
+                            </div>
+                        </div>
+                        <div className="setting-item">
+                            <label htmlFor="temperature">randomize</label>
+                            <div className="input-container">
+                                <div className="input-range-value">
+                                    {getTemperaturePercent()}
+                                </div>
+                                <input
+                                    type="range"
+                                    id="temperature"
+                                    name="temperature"
+                                    step="0.1"
+                                    min={`${minTemperature}`}
+                                    max={`${maxTemperature}`}
+                                    value={formSettings.temperature}
+                                    onChange={handleTemperatureChange}
                                 />
                             </div>
                         </div>
@@ -137,40 +398,13 @@ const Settings = () => {
                                     id="devOptions"
                                     name="devOptions"
                                     checked={formSettings.devOptions}
-                                    onChange={handleCheckboxChange}
+                                    onChange={handleDevOptionsChange}
                                 />
                             </div>
                         </div>
                         <div className="dev-options-container" data-show-dev-options={formSettings.devOptions}>
                             <div className="settings-documentation links-main">
                                 Documentation
-                            </div>
-                            <div className="setting-item">
-                                <label htmlFor="top_p">top p</label>
-                                <div className="input-container">
-                                    <input
-                                        type="number"
-                                        id="top_p"
-                                        name="top_p"
-                                        step="0.1"
-                                        min="0.1"
-                                        max="1.0"
-                                        value={formSettings.top_p}
-                                        onChange={handleInputChange}
-                                    />
-                                </div>
-                            </div>
-                            <div className="setting-item hide">
-                                <label htmlFor="stream">stream*</label>
-                                <div className="input-container">
-                                    <input
-                                        type="checkbox"
-                                        id="stream"
-                                        name="stream"
-                                        checked={formSettings.stream}
-                                        onChange={handleCheckboxChange}
-                                    />
-                                </div>
                             </div>
                             <div className="setting-item">
                                 <label htmlFor="stop">stop sequences</label>
@@ -185,6 +419,21 @@ const Settings = () => {
                                 </div>
                             </div>
                             <div className="setting-item">
+                                <label htmlFor="top_p">top p</label>
+                                <div className="input-container">
+                                    <input
+                                        type="number"
+                                        id="top_p"
+                                        name="top_p"
+                                        step="0.1"
+                                        min={`${minTopP}`}
+                                        max={`${maxTopP}`}
+                                        value={formSettings.top_p}
+                                        onChange={handleTopPChange}
+                                    />
+                                </div>
+                            </div>
+                            <div className="setting-item">
                                 <label htmlFor="presence_penalty">presence penalty</label>
                                 <div className="input-container">
                                     <input
@@ -192,10 +441,10 @@ const Settings = () => {
                                         id="presence_penalty"
                                         name="presence_penalty"
                                         step="0.1"
-                                        min="-2.0"
-                                        max="2.0"
+                                        min={`${minPresencePenalty}`}
+                                        max={`${maxPresencePenalty}`}
                                         value={formSettings.presence_penalty}
-                                        onChange={handleInputChange}
+                                        onChange={handlePresencePenaltyChange}
                                     />
                                 </div>
                             </div>
@@ -207,10 +456,22 @@ const Settings = () => {
                                         id="frequency_penalty"
                                         name="frequency_penalty"
                                         step="0.1"
-                                        min="-2.0"
-                                        max="2.0"
+                                        min={`${minFrequencePenalty}`}
+                                        max={`${maxFrequencePenalty}`}
                                         value={formSettings.frequency_penalty}
-                                        onChange={handleInputChange}
+                                        onChange={handleFrequencePenaltyChange}
+                                    />
+                                </div>
+                            </div>
+                            <div className="setting-item hide">
+                                <label htmlFor="stream">stream*</label>
+                                <div className="input-container">
+                                    <input
+                                        type="checkbox"
+                                        id="stream"
+                                        name="stream"
+                                        checked={formSettings.stream}
+                                        onChange={handleCheckboxChange}
                                     />
                                 </div>
                             </div>
