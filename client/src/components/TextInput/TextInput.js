@@ -3,11 +3,13 @@ import './TextInput.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleSettings } from '../../redux/actions/uiActions';
 import { getIsMobile } from '../../redux/selectors/uiSelectors';
+import { editChatLoading } from '../../redux/selectors/chatSelectors';
 
 function TextInput(props) {
     const { onSubmit, canSubmit } = props;
 
     const dispatch = useDispatch();
+    const isChatEditLoading = useSelector(editChatLoading);
 
     const textareaRef = useRef(null);
     const submitButtonRef = useRef(null);
@@ -69,6 +71,10 @@ function TextInput(props) {
     }
 
     function handleToggleSettings() {
+        if (isChatEditLoading) {
+            return;
+        }
+
         dispatch(toggleSettings());
     };
 
@@ -108,7 +114,7 @@ function TextInput(props) {
                     event.preventDefault();
                     handleToggleSettings();
                 }}>
-                    <i className="fas fa-cog"></i>
+                    <i className={`fas fa-cog text-input-settings-icon ${isChatEditLoading ? 'rotate-loading': ''}`}></i>
                 </button>
             </div>
         </form>
