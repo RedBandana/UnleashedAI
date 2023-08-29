@@ -1,11 +1,40 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from "react-helmet";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getThemeIsLight } from '../../../redux/selectors/uiSelectors';
 import Footer from '../../../components/Footer/Footer';
+import { setThemeIsLight } from '../../../redux/actions/uiActions';
 
 function PrivacyPolicy() {
+    const dispatch = useDispatch();
     const themeIsLight = useSelector(getThemeIsLight);
+    const [themeIsInitialized, setThemeIsInitialized] = useState(false);
+
+    useEffect(() => {
+        const savedThemeIsLight = localStorage.getItem("themeIsLight");
+        if (savedThemeIsLight == null) {
+            dispatch(setThemeIsLight(true));
+            localStorage.setItem("themeIsLight", themeIsLight);
+        }
+        else {
+            dispatch(setThemeIsLight(savedThemeIsLight === "true"));
+        }
+        setThemeIsInitialized(true);
+    }, []);
+
+    useEffect(() => {
+        if (themeIsLight) {
+            document.body.classList.remove("theme-dark");
+        }
+        else {
+            document.body.classList.add("theme-dark");
+        }
+
+        if (themeIsInitialized) {
+            localStorage.setItem("themeIsLight", themeIsLight);
+        }
+    }, [themeIsLight]);
+
 
     return (
         <div className={`privacy-policy container-default-parent ${themeIsLight ? 'theme-light' : 'theme-dark'}`}>
@@ -55,10 +84,9 @@ function PrivacyPolicy() {
                     </section>
                 </div>
             </div>
-            <div className="links-main">
+            <div className="links-main mb-main">
                 <a href="/">Go home</a>
             </div>
-            <Footer />
         </div>
     );
 }
