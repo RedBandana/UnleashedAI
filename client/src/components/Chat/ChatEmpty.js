@@ -26,7 +26,7 @@ function ChatEmpty(props) {
                     </div>
                 </div>
                 <div className="no-conversation-messages">
-                    Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries with Unleashed AI.
+                    Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized prompts with Unleashed AI.
                 </div>
             </div>
         </div>

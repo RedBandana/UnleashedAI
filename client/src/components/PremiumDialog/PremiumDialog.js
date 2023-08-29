@@ -76,9 +76,6 @@ const PremiumDialog = () => {
                             <div className='main-box-body-row-item subtext'>most capable and performant model</div>
                         </div>
                         <div className='main-box-body-row column-direction'>
-                            <div className='main-box-body-row-item'>unlimited chats</div>
-                        </div>
-                        <div className='main-box-body-row column-direction'>
                             <div className='main-box-body-row-item'>unlimited messages per day</div>
                         </div>
                         <div className='main-box-body-row column-direction'>

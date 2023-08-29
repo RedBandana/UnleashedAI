@@ -222,7 +222,7 @@ function Main() {
     <div className={`chat ${themeIsLight ? 'theme-light' : 'theme-dark'}`}>
       <Helmet>
         <title>Unleashed AI Chat</title>
-        <meta name="description" content="Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries with Unleashed AI." />
+        <meta name="description" content="Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized prompts with Unleashed AI." />
         <meta name="keywords" content="unleashed,ai,chat,chatbot" />
         <link rel="canonical" href="https://unleashedai.org/" />
       </Helmet>

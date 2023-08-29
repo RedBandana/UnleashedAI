@@ -232,7 +232,7 @@ function LoginPage() {
     <div className={`login ${themeIsLight ? 'theme-light' : 'theme-dark'}`}>
       <Helmet>
         <title>Log In | Unleashed AI Chat</title>
-        <meta name="description" content="Login or sign up now to Unleashed AI. Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries with Unleashed AI." />
+        <meta name="description" content="Login or sign up now to Unleashed AI. Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized prompts with Unleashed AI." />
         <meta name="keywords" content="unleashed,ai,chat,chatbot,login,signup,register,signin" />
         <link rel="canonical" href="https://unleashedai.org/login" />
       </Helmet>
@@ -311,7 +311,6 @@ function LoginPage() {
               {isSignUp ? 'Sign up' : 'Log in'}
             </button>
           </section>
-
           <section className="toggle-container">
             <div>{isSignUp ? 'Already have an account?' : "Don't have an account?"}</div>
             <button className='login-button-second' onClick={handleToggleSignUp}>
@@ -323,7 +322,7 @@ function LoginPage() {
       <section className='login-button-container'>
         <button className='login-button' onClick={handleGuestSession}>Try as guest</button>
         <h2 className='login-button-text'>
-          Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries with Unleashed AI.
+          Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized prompts with Unleashed&nbsp;AI.
         </h2>
       </section>
       <Footer />

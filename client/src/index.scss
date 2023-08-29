@@ -47,6 +47,12 @@ body {
     color: var(--color-text-main);
 }
 
+@media (max-width: 450px) {
+    .main-box-container {
+      max-width: 95%;
+    }
+  }
+
 .main-box-header {
     width: 100%;
 }

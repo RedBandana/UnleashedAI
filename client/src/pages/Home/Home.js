@@ -41,14 +41,12 @@ function Home() {
         <div className={`home container-default-parent ${themeIsLight ? 'theme-light' : 'theme-dark'}`}>
             <Helmet>
                 <title>Unleashed AI Chat</title>
-                <meta name="description" content="Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries with Unleashed AI." />
+                <meta name="description" content="Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized prompts with Unleashed AI." />
                 <meta name="keywords" content="unleashed,ai,chat,chatbot" />
             </Helmet>
             <div className='text-center container-main container-home'>
                 <h1><a className='a-none' href='/'>Unleashed AI</a></h1>
-                <section className='home-main'>
-                    <p>Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries with Unleashed AI.</p>
-                </section>
+                <h2 className='home-subtitle'>Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized prompts with Unleashed&nbsp;AI.</h2>
                 <section className='home-demo'>
                     <h3 className='main-button translate-y-main'><a className='links-main' href="/chat">Try now</a></h3>
                 </section>

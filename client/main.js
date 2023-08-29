@@ -16,8 +16,7 @@ function createWindow() {
     });
 
     mainWindow.setMenuBarVisibility(false);
-    // mainWindow.loadURL('http://localhost:3000');
-    mainWindow.loadURL(path.join(__dirname, '/build/index.html'));
+    mainWindow.loadURL('https://unleashedai.org/');
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
