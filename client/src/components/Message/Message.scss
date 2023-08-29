@@ -54,7 +54,7 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  padding: 3px 3px;
+  padding: 0 5px;
   color: var(--color-third);
 }
 
@@ -65,7 +65,7 @@
 .chat-message-timestamp {
   cursor: default;
   font-size: 12px;
-  max-width: 20px;
+  max-width: 28px;
 }
 
 .chat-message-container {
