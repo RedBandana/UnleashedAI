@@ -57,7 +57,7 @@
 .setting-inputs {
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
+  overflow-y: auto;
   height: 310px;
   padding-right: 10px;
   padding-top: 5px;
