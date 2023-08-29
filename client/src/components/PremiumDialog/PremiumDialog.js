@@ -53,7 +53,7 @@ const PremiumDialog = () => {
             {
                 showAlertDialog && (
                     <AlertDialog
-                        title="Unleashed AI"
+                        title="billing help"
                         text="If you need help with a billing issue, please contact us at info@unleashedai.com"
                         onOk={handleCloseAlertDialog} onClose={handleCloseAlertDialog}
                     />

@@ -82,8 +82,6 @@ const AccountSettings = ({ text }) => {
     };
 
     function handleBlur(event) {
-        // validateFieldsOnChange();
-
         if (event.target.value === '') {
             event.target.parentNode.classList.remove('active');
         }

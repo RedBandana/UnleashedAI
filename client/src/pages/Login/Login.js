@@ -14,6 +14,7 @@ import { Capacitor } from '@capacitor/core';
 import { MOBILE_DEVICE_PATTERNS } from '../../utils/constants';
 import { clearChatsSuccess } from '../../redux/actions/chatActions';
 import Footer from '../../components/Footer/Footer';
+import AlertDialog from '../../components/AlertDialog/AlertDialog';
 
 
 function LoginPage() {
@@ -36,6 +37,7 @@ function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [showAlertDialog, setShowAlertDialog] = useState(false);
 
   useEffect(() => {
     const isMobile = Capacitor.isNativePlatform() || MOBILE_DEVICE_PATTERNS.test(navigator.userAgent);
@@ -107,8 +109,8 @@ function LoginPage() {
     dispatch(registerUserRequest({ email, password }));
   };
 
-  function handleUserSession() {
-    dispatch(fetchUserRequest());
+  function handleCloseAlertDialog() {
+    setShowAlertDialog(false);
   }
 
   function handleGuestSession() {
@@ -218,14 +220,20 @@ function LoginPage() {
     }
   }
 
-  function handleSession() {
-    const token = getCookie('sessionToken');
-    if (token) {
-      handleUserSession();
+  function handleForgotPassword() {
+    if (!email) {
+      setEmailError('Please fill out this field');
+      return;
+    }
+    else if (!validateEmail(email)) {
+      setEmailError('Email is not valid');
+      return;
     }
     else {
-      handleGuestSession();
+      setEmailError('');
     }
+
+    setShowAlertDialog(true);
   }
 
   return (
@@ -236,6 +244,15 @@ function LoginPage() {
         <meta name="keywords" content="unleashed,ai,chat,chatbot,login,signup,register,signin" />
         <link rel="canonical" href="https://unleashedai.org/login" />
       </Helmet>
+      {
+        showAlertDialog && (
+          <AlertDialog
+            title="instructions sent"
+            text={`We have sent instructions to change your password to **${email}**. Please verify your inbox and spam folder.`}
+            onOk={handleCloseAlertDialog} onClose={handleCloseAlertDialog}
+          />
+        )
+      }
       <div className="login-page">
         <div className="login-container">
           <h1 className='login-title '><a className='a-none' href='/'>Unleashed AI</a></h1>
@@ -277,7 +294,7 @@ function LoginPage() {
 
             {!isSignUp && (
               <div className='login-form links-main'>
-                <div className='login-button-second hide'>Forgot password?</div>
+                <div className='login-button-second' onClick={handleForgotPassword}>Forgot password?</div>
               </div>
             )}
             {isSignUp && (

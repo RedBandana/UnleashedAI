@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import './AlertDialog.scss';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 const AlertDialog = ({ title, text, onYes, onNo, onOk, onClose }) => {
 
@@ -45,7 +46,9 @@ const AlertDialog = ({ title, text, onYes, onNo, onOk, onClose }) => {
             <div className='bordered-top'></div>
           )}
           <div className='main-box-body'>
-            <div className="main-box-body-row">{text}</div>
+            <div className='main-box-body-row'>
+              <ReactMarkdown children={text} />
+            </div>
             <div className='main-box-body-row main-box-body-buttons-list'>
               {onYes && (
                 <button className="main-box-body-row-button" onClick={handleOnYes}>

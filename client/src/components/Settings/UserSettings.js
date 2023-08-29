@@ -92,7 +92,7 @@ const UserSettings = () => {
     return (
         <div className='user-settings dialog'>
             {showAlertDialog && (
-                <AlertDialog text='Are you sure you want to clear all chats?'
+                <AlertDialog title={'confirmation'} text='Are you sure you want to clear all chats?'
                     onClose={() => { setShowAlertDialog(false) }}
                     onYes={handleOnClearItems} onNo={handleAlertNo} />
             )}
