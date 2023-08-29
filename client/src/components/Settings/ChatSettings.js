@@ -18,10 +18,13 @@ const Settings = () => {
     const [isInitialized, setIsInitialize] = useState(false);
     const settingInputsRef = useRef(null);
 
+    const defaultToken = 0;
     const minTokens = 0;
     const [maxTokens, setMaxTokens] = useState(0);
+    const defaultAnswers = 1;
     const minAnswers = 1;
     const maxAnswers = 10;
+    const defaultMemory = 10;
     const minMemory = 1;
     const [maxMemory, setMaxMemory] = useState(100);
     const defaultTemperature = 1;
@@ -30,10 +33,10 @@ const Settings = () => {
     const defaultTopP = 1;
     const minTopP = 0.1;
     const maxTopP = 1;
-    const defaultPresencePenalty = 1;
+    const defaultPresencePenalty = 0;
     const minPresencePenalty = -2;
     const maxPresencePenalty = 2;
-    const defaultFrequencePenalty = 1;
+    const defaultFrequencePenalty = 0;
     const minFrequencePenalty = -2;
     const maxFrequencePenalty = 2;
 
@@ -41,10 +44,14 @@ const Settings = () => {
         if (!isInitialized && chat) {
             dispatch(setSettings(chat.settings));
             setMaxTokens(getModelMaxTokens(chat.settings.model));
-            validateNull();
             setIsInitialize(true);
         }
-    }, [chat]);
+
+        if (isInitialized) {
+            validateNull();
+        }
+
+    }, [chat, isInitialized]);
 
     useEffect(() => {
         validateMaxTokens();
@@ -105,18 +112,18 @@ const Settings = () => {
         }
         handleInputChange(event);
     }
-    
+
     function handleDevOptionsChange(event) {
         handleCheckboxChange(event);
     }
-    
+
     function scrollToBottom() {
         settingInputsRef.current.scrollTo({
             top: settingInputsRef.current.scrollHeight,
             behavior: "smooth",
         });
     }
-    
+
     function handleTopPChange(event) {
         if (!validateTopP(event.target.value)) {
             return;
@@ -139,6 +146,10 @@ const Settings = () => {
     }
 
     function validateMaxTokens(value) {
+        if (!value) {
+            return true;
+        }
+
         if (value < minTokens) {
             const finalSettings = { ...formSettings, ['max_tokens']: minTokens }
             dispatch(setSettings(finalSettings));
@@ -154,6 +165,10 @@ const Settings = () => {
     }
 
     function validateAnswers(value) {
+        if (!value) {
+            return true;
+        }
+
         if (value < minAnswers) {
             const finalSettings = { ...formSettings, ['n']: minAnswers }
             dispatch(setSettings(finalSettings));
@@ -169,6 +184,10 @@ const Settings = () => {
     }
 
     function validateMemory(value) {
+        if (!value) {
+            return true;
+        }
+
         if (value < minMemory) {
             const finalSettings = { ...formSettings, ['memory']: minMemory }
             dispatch(setSettings(finalSettings));
@@ -184,6 +203,10 @@ const Settings = () => {
     }
 
     function validateTopP(value) {
+        if (!value) {
+            return true;
+        }
+
         if (value < minTopP) {
             const finalSettings = { ...formSettings, ['top_p']: minTopP }
             dispatch(setSettings(finalSettings));
@@ -199,6 +222,10 @@ const Settings = () => {
     }
 
     function validatePresencePenalty(value) {
+        if (!value) {
+            return true;
+        }
+
         if (value < minPresencePenalty) {
             const finalSettings = { ...formSettings, ['presence_penalty']: minPresencePenalty }
             dispatch(setSettings(finalSettings));
@@ -214,6 +241,10 @@ const Settings = () => {
     }
 
     function validateFrequencePenalty(value) {
+        if (!value) {
+            return true;
+        }
+
         if (value < minFrequencePenalty) {
             const finalSettings = { ...formSettings, ['frequency_penalty']: minFrequencePenalty }
             dispatch(setSettings(finalSettings));
@@ -229,6 +260,10 @@ const Settings = () => {
     }
 
     function validateTemperature(value) {
+        if (!value) {
+            return true;
+        }
+
         if (value < minTemperature) {
             const finalSettings = { ...formSettings, ['temperature']: minTemperature }
             dispatch(setSettings(finalSettings));
@@ -247,41 +282,37 @@ const Settings = () => {
         if (!formSettings) {
             return;
         }
+        const finalSettings = { ...formSettings };
 
         if (!isValidNumber(formSettings.max_tokens)) {
-            const finalSettings = { ...formSettings, ['max_tokens']: minTokens }
-            dispatch(setSettings(finalSettings));
+            finalSettings['max_tokens'] = defaultToken;
         }
 
         if (!isValidNumber(formSettings.n)) {
-            const finalSettings = { ...formSettings, ['n']: minAnswers }
-            dispatch(setSettings(finalSettings));
+            finalSettings['n'] = defaultAnswers;
         }
 
         if (!isValidNumber(formSettings.memory)) {
-            const finalSettings = { ...formSettings, ['memory']: minMemory }
-            dispatch(setSettings(finalSettings));
+            finalSettings['memory'] = defaultMemory;
         }
 
         if (!isValidNumber(formSettings.temperature)) {
-            const finalSettings = { ...formSettings, ['temperature']: defaultTemperature }
-            dispatch(setSettings(finalSettings));
+            finalSettings['temperature'] = defaultTemperature;
         }
 
         if (!isValidNumber(formSettings.top_p)) {
-            const finalSettings = { ...formSettings, ['top_p']: defaultTopP }
-            dispatch(setSettings(finalSettings));
+            finalSettings['top_p'] = defaultTopP;
         }
 
         if (!isValidNumber(formSettings.presence_penalty)) {
-            const finalSettings = { ...formSettings, ['presence_penalty']: defaultPresencePenalty }
-            dispatch(setSettings(finalSettings));
+            finalSettings['presence_penalty'] = defaultPresencePenalty;
         }
 
         if (!isValidNumber(formSettings.frequency_penalty)) {
-            const finalSettings = { ...formSettings, ['frequency_penalty']: defaultFrequencePenalty }
-            dispatch(setSettings(finalSettings));
+            finalSettings['frequency_penalty'] = defaultFrequencePenalty;
         }
+
+        dispatch(setSettings(finalSettings));
     }
 
     function getTemperaturePercent() {
@@ -404,7 +435,7 @@ const Settings = () => {
                         </div>
                         <div className="dev-options-container" data-show-dev-options={formSettings.devOptions}>
                             <div className="settings-documentation links-main">
-                                Documentation
+                                <div className="hide">Documentation</div>
                             </div>
                             <div className="setting-item">
                                 <label htmlFor="stop">stop sequences</label>

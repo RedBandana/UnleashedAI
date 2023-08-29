@@ -4,6 +4,7 @@ body {
     margin: 0;
     font-family: var(--font-family-main);
     background-color: var(--color-background);
+    color: var(--color-text-main)
 }
 
 .hide {
@@ -134,6 +135,7 @@ body {
 .links-main {
     color: var(--color-accent-main);
     cursor: pointer;
+    text-decoration: none;
 }
 
 .links-main a {
@@ -164,4 +166,21 @@ body {
 
 .dialog-container {
     width: 350px;
+}
+
+.translate-y-main {
+    transition: transform 0.25s ease-in-out;
+}
+
+.translate-y-main:hover {
+    transform: translateY(-2px);
+}
+
+.main-button {
+    font-size: 1.25rem;
+}
+
+.a-none {
+    text-decoration: none;
+    color: var(--color-text-main);
 }

@@ -17,7 +17,7 @@ function PrivacyPolicy() {
             </Helmet>
             <div className='privacy-policy-container container-main'>
                 <div className="privacy-policy-text">
-                    <h1>PRIVACY POLICY</h1>
+                    <h1>UNLEASHED AI PRIVACY POLICY</h1>
                     <section>
                         <h2>I. INTRODUCTION</h2>
                         <p>Unleashed AI is committed to protecting the privacy of all visitors, users, and others who access our website (collectively, "Users"). This Privacy Policy applies to all personal information and User Data collected through the Unleashed AI website.</p>

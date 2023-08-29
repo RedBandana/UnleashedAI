@@ -23,6 +23,7 @@
 
 .login-button-container {
     margin-top: 20px;
+    margin-bottom: 50px;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -30,7 +31,8 @@
 
 .login-button-text {
     color: var(--color-text-main);
-    margin: 0 20%;
+    max-width: 600px;
+    margin: 0 5%;
     text-align: center;
     margin-top: 20px;
     font-size: 1rem;

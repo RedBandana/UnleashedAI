@@ -75,20 +75,7 @@
   opacity: 0;
 }
 
-.text-input-settings-icon {
-  padding: 1px 1px !important;
-}
-
-.rotate-loading {
-  animation: rotate 2s infinite linear;
-}
-
-@keyframes rotate {
-  0% {
-      transform: rotate(0deg);
-  }
-
-  100% {
-      transform: rotate(360deg);
-  }
+.settings-saving:hover {
+  color: var(--color-options-main-default) !important;
+  cursor: default;
 }

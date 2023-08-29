@@ -5,6 +5,7 @@ import TermsOfUse from './pages/Policies/TermsOfUse/TermsOfUse';
 import NotFound from './pages/NotFound/NotFound';
 import { RequireUser } from './routes/privateRoutes';
 import Main from './pages/Main/Main';
+import Home from './pages/Home/Home';
 
 function App() {
   return (
@@ -13,11 +14,12 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-use" element={<TermsOfUse />} />
-        <Route path='/' element={
+        <Route path='/chat' element={
           <RequireUser>
             <Main />
           </RequireUser>
         } />
+        <Route path="/" element={<Home />} />
         <Route path="/*" element={<NotFound />} />
       </Routes>
     </div>

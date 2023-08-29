@@ -110,11 +110,11 @@ function TextInput(props) {
                 <button type="submit" className='chatbot-send-button' ref={submitButtonRef}>
                     <i className="fas fa-paper-plane chatbot-send-icon"></i>
                 </button>
-                <button className="chatbot-settings-button" ref={settingsButtonRef} onClick={(event) => {
+                <button className={`chatbot-settings-button ${isChatEditLoading ? 'settings-saving' : ''}`} ref={settingsButtonRef} onClick={(event) => {
                     event.preventDefault();
                     handleToggleSettings();
                 }}>
-                    <i className={`fas fa-cog text-input-settings-icon ${isChatEditLoading ? 'rotate-loading': ''}`}></i>
+                    <i className={`fas fa-cog text-input-settings-icon`}></i>
                 </button>
             </div>
         </form>

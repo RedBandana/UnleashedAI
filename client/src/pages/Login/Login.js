@@ -72,7 +72,7 @@ function LoginPage() {
       return;
     }
 
-    navigate(state?.path || "/");
+    navigate(state?.path || "/chat");
   }, [user])
 
   function handleEmailChange(event) {
@@ -231,15 +231,15 @@ function LoginPage() {
   return (
     <div className={`login ${themeIsLight ? 'theme-light' : 'theme-dark'}`}>
       <Helmet>
-        <title>Login | Unleashed AI Chat</title>
+        <title>Log In | Unleashed AI Chat</title>
         <meta name="description" content="Login or sign up now to Unleashed AI. Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries with Unleashed AI." />
         <meta name="keywords" content="unleashed,ai,chat,chatbot,login,signup,register,signin" />
         <link rel="canonical" href="https://unleashedai.org/login" />
       </Helmet>
       <div className="login-page">
         <div className="login-container">
-          <h1 className='login-title'>Unleashed AI</h1>
-          <div className="form-container">
+          <h1 className='login-title '><a className='a-none' href='/'>Unleashed AI</a></h1>
+          <section className="form-container">
             <div className={`form-group ${email ? 'active' : ''}`}>
               <input className='login-input'
                 type="email"
@@ -308,24 +308,24 @@ function LoginPage() {
               </div>
             )}
             <button className='login-button' onClick={isSignUp ? handleSignUp : handleLogin}>
-              {isSignUp ? 'Sign up' : 'Login'}
+              {isSignUp ? 'Sign up' : 'Log in'}
             </button>
-          </div>
+          </section>
 
-          <div className="toggle-container">
+          <section className="toggle-container">
             <div>{isSignUp ? 'Already have an account?' : "Don't have an account?"}</div>
             <button className='login-button-second' onClick={handleToggleSignUp}>
               {isSignUp ? 'Login' : 'Sign up'}
             </button>
-          </div>
+          </section>
         </div>
       </div>
-      <div className='login-button-container'>
+      <section className='login-button-container'>
         <button className='login-button' onClick={handleGuestSession}>Try as guest</button>
         <h2 className='login-button-text'>
           Experience the limitless possibilities of ChatGPT and discover the true potential behind personalized queries with Unleashed AI.
         </h2>
-      </div>
+      </section>
       <Footer />
       {
         loading && (

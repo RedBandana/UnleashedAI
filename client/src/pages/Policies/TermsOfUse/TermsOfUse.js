@@ -17,7 +17,7 @@ function TermsOfUse() {
             </Helmet>
             <div className='terms-of-use-container container-main'>
                 <div className="terms-of-use-text">
-                    <h1>TERMS OF USE</h1>
+                    <h1>UNLEASHED AI TERMS OF USE</h1>
                     <section>
                         <h2>I. ACCEPTANCE OF TERMS</h2>
                         <p>By accessing Unleashed AI, you agree to be bound by these Terms of Use, all applicable laws and regulations, and agree that you are responsible for compliance with any applicable local laws. If you do not agree with any of these terms, you are prohibited from using or accessing this site.</p>
