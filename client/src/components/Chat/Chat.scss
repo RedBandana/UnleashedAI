@@ -130,11 +130,11 @@
   z-index: 1;
 }
 
-.chatbot[data-sidebar-is-open="true"][data-is-mobile="false"] .chatbot-footer {
+.chatbot[data-sidebar-is-open="true"][data-is-mobile="false"] .chatbot-footer.text-input {
   width: calc(100vw - $sidebar-width);
 }
 
-.chatbot[data-sidebar-is-open="true"][data-is-mobile="true"] .chatbot-footer {
+.chatbot[data-sidebar-is-open="true"][data-is-mobile="true"] .chatbot-footer.text-input {
   width: auto;
 }
 
