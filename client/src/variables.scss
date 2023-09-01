@@ -6,7 +6,7 @@ body {
     --font-family-main: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     --font-size-main: 1rem;
     --font-size-code: 1rem;
-    
+
     --color-chat-user: #fff;
     --color-chat-bot: #f6f6f6;
     --color-settings: #fff;
@@ -30,7 +30,7 @@ body {
     --color-main-default: #fff;
     --color-second-default: #eee;
     --color-settings-box: #fff;
-    
+
     --color-alert: rgb(194, 108, 108);
     --color-alert-hover: rgb(194, 108, 108, 0.15);
     --color-sidebar: #252528;
@@ -38,7 +38,7 @@ body {
     --color-hover-sidebar: #3f4248;
     --color-settings-sidebar: #131518;
     --color-options-sidebar: #666;
-    --color-sidebar-item: rgba(0,0,0,0);
+    --color-sidebar-item: rgba(0, 0, 0, 0);
     --color-input-placeholder: #333;
     --color-input-label: #777;
     --color-input-icon: #ccc;
@@ -58,6 +58,12 @@ body {
     --border-radius-third: 50%;
 
     --text-overflow: ellipsis;
+
+    --chat-gradiant: linear-gradient(to bottom,
+            transparent 0%,
+            transparent 32%,
+            var(--color-background) 70%);
+    --char-gradiant-height: 120px;
 }
 
 .theme-dark {
@@ -87,7 +93,13 @@ body {
     --box-shadow-sidebar-open-mobile: 0px 0 260px #222;
 
     --border-main: 1px solid #ccc;
-    --border-chat: 1px solid rgba(0,0,0,0);
+    --border-chat: 1px solid rgba(0, 0, 0, 0);
+
+    --chat-gradiant: linear-gradient(to bottom,
+            transparent 0%,
+            transparent 35%,
+            var(--color-background) 75%);
+    --char-gradiant-height: 175px;
 }
 
 .native-platform {

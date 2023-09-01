@@ -210,7 +210,7 @@ function Sidebar(props) {
             </div>
             <div className='sidebar-settings-row' onClick={handleLogOut}>
               <div className='sidebar-settings-row-item'>
-                {user?.type == 0 ? 'leave' : 'log out'}
+                {user?.type === 0 ? 'leave' : 'log out'}
               </div>
               <div className='sidebar-settings-row-icon'>
                 <div className="fas fa-sign-out-alt"></div>
