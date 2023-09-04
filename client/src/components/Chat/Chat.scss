@@ -114,7 +114,8 @@
   bottom: 0;
   padding-bottom: 25px;
   z-index: 2;
-  transition: width 0.25s ease-in-out;
+  left: 0;
+  transition: width 0.25s ease-in-out, left 0.25s ease-in-out;
 }
 
 .chatbot-container::after {
@@ -134,12 +135,8 @@
   width: calc(100vw - $sidebar-width);
 }
 
-.chatbot[data-sidebar-is-open="true"][data-is-mobile="false"] .chatbot-footer.text-input {
-  width: calc(100vw - $sidebar-width);
-}
-
-.chatbot[data-sidebar-is-open="true"][data-is-mobile="true"] .chatbot-footer.text-input {
-  width: auto;
+.chatbot[data-sidebar-is-open="true"][data-is-mobile="true"] .chatbot-footer {
+  left: $sidebar-width;
 }
 
 .chatbot-dots {
