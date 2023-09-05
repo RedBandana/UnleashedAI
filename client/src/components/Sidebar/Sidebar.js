@@ -220,7 +220,7 @@ function Sidebar(props) {
         )}
         <div className='bordered-top'></div>
         <div className="sidebar-footer">
-          <div className='sidebar-footer-row' onClick={handleOpenUpgradePlus}>
+          <div className='sidebar-footer-row hide' onClick={handleOpenUpgradePlus}>
             <div className="sidebar-footer-row-item">upgrade to Plus</div>
             <div className='sidebar-footer-row-icon accent-color' onClick={handleOpenUpgradePlus}>
               <div className="fas fa-rocket"></div>
