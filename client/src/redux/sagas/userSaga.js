@@ -54,12 +54,22 @@ function* createGuestSaga() {
   }
 }
 
+function* forgotPasswordSaga(action) {
+  try {
+    const payload = yield call(userService.forgetPassword, action.payload);
+    yield put(userActions.forgotPasswordSuccess(payload));
+  } catch (error) {
+    yield put(userActions.forgotPasswordFailure(error.message));
+  }
+}
+
 function* userSaga() {
   yield takeLatest(userActions.fetchUserRequest().type, fetchUserSaga);
   yield takeLatest(userActions.registerUserRequest().type, registerUserSaga);
   yield takeLatest(userActions.loginUserRequest().type, loginUserSaga);
   yield takeLatest(userActions.updateUserRequest().type, updateUserSaga);
   yield takeLatest(userActions.createGuestRequest().type, createGuestSaga);
+  yield takeLatest(userActions.forgotPasswordRequest().type, forgotPasswordSaga);
 }
 
 export default userSaga;

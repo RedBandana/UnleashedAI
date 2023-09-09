@@ -2,7 +2,7 @@ import { Service } from 'typedi';
 import { DatabaseService } from './database.service';
 import { DBCollectionService } from './db-collection.service';
 import { DBModelName } from "@app/enums/db-model-name";
-import { IUserRequest, UserModel } from '@app/db-models/user';
+import { UserModel } from '@app/db-models/user';
 import { IChat, IChatDto, IChatRequest, IMessage, IMessageDto } from '@app/db-models/chat';
 import { ChatUtils } from '@app/utils/chat.utils';
 import { UserPipeline, UserProjection } from '@app/db-models/dto/user.dto';
@@ -108,7 +108,7 @@ export class UserService extends DBCollectionService {
         return user;
     }
 
-    async updateUser(userId: string, user: IUserRequest): Promise<any> {
+    async updateUser(userId: string, user: any): Promise<any> {
         const updateOperations: any = {};
 
         if (user.newPassword) {

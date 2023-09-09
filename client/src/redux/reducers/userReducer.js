@@ -6,6 +6,7 @@ const initialState = {
   loading: false,
   error: null,
   updateDone: false,
+  emailSent: false,
 };
 
 const userReducer = handleActions(
@@ -89,6 +90,23 @@ const userReducer = handleActions(
       error: null,
     }),
     [action.createGuestFailure]: (state, { payload }) => ({
+      ...state,
+      loading: false,
+      error: payload,
+    }),
+    [action.forgotPasswordRequest]: (state) => ({
+      ...state,
+      emailSent: false,
+      loading: true,
+      error: null,
+    }),
+    [action.forgotPasswordSuccess]: (state, { payload }) => ({
+      ...state,
+      emailSent: true,
+      loading: false,
+      error: null,
+    }),
+    [action.forgotPasswordFailure]: (state, { payload }) => ({
       ...state,
       loading: false,
       error: payload,

@@ -53,3 +53,12 @@ export const getCurrentUser = async () => {
   }
 };
 
+export const forgetPassword = async (userData) => {
+  try {
+    const response = await axios.post(`${API_URL}/forgot-password`, userData, getHttpResponseConfig());
+    return response.data;
+  } catch (error) {
+    const message = error.response.data.message ?? error.message;
+    throw new Error(message);
+  }
+};

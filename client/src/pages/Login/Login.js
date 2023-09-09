@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { createGuestRequest, fetchUserRequest, loginUserRequest, logoutUserSuccess, registerUserRequest } from '../../redux/actions/userActions';
+import { createGuestRequest, fetchUserRequest, forgotPasswordRequest, loginUserRequest, logoutUserSuccess, registerUserRequest } from '../../redux/actions/userActions';
 import { useEffect, useState } from 'react';
 import { getCookie, validateEmail } from '../../utils/functions';
 import { getThemeIsLight } from '../../redux/selectors/uiSelectors';
@@ -9,7 +9,7 @@ import Loading from '../../components/Loading/Loading';
 import { Helmet } from "react-helmet";
 
 import './Login.scss';
-import { fetchUserError, fetchUserLoading, fetchUserValue } from '../../redux/selectors/userSelectors';
+import { fetchUserEmailSent, fetchUserError, fetchUserLoading, fetchUserValue } from '../../redux/selectors/userSelectors';
 import { Capacitor } from '@capacitor/core';
 import { MOBILE_DEVICE_PATTERNS } from '../../utils/constants';
 import { clearChatsSuccess } from '../../redux/actions/chatActions';
@@ -24,6 +24,7 @@ function LoginPage() {
 
   const themeIsLight = useSelector(getThemeIsLight);
   const loading = useSelector(fetchUserLoading);
+  const emailSent = useSelector(fetchUserEmailSent);
   const error = useSelector(fetchUserError);
   const user = useSelector(fetchUserValue);
 
@@ -76,6 +77,10 @@ function LoginPage() {
 
     navigate(state?.path || "/chat");
   }, [user])
+
+  useEffect(() => {
+    setShowAlertDialog(emailSent);
+  }, [emailSent])
 
   function handleEmailChange(event) {
     setEmail(event.target.value);
@@ -233,7 +238,7 @@ function LoginPage() {
       setEmailError('');
     }
 
-    setShowAlertDialog(true);
+    dispatch(forgotPasswordRequest({ email }));
   }
 
   return (
@@ -293,7 +298,7 @@ function LoginPage() {
             </div>
 
             {!isSignUp && (
-              <div className='login-form links-main hide'>
+              <div className='login-form links-main'>
                 <div className='login-button-second' onClick={handleForgotPassword}>Forgot password?</div>
               </div>
             )}

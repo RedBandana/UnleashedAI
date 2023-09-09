@@ -11,8 +11,10 @@ import { generateSessionToken, verifyAdminSessionToken, verifySessionToken } fro
 import { IRequest } from '@app/interfaces/request';
 
 import * as bcrypt from 'bcrypt';
-import { IUserRequest } from '@app/db-models/user';
+import * as crypto from 'crypto';
 import { createHashedPassword, validateEmail } from '@app/utils/functions';
+import { IUserRequest } from '@app/db-models/user';
+import { mailTransporter } from '@app/utils/mail-transproter';
 
 @Service()
 export class UserController {
@@ -40,7 +42,7 @@ export class UserController {
                 const userId = req.user.userId;
                 const user: any = await this.userService.getDocumentById(userId, UserProjection.userAuth);
                 if (!user) {
-                    res.status(400).json({ message: 'Something went wrong. Please try again later.' });
+                    res.status(400).json({ message: 'Something went wrong, please try again later' });
                     return;
                 }
 
@@ -111,6 +113,96 @@ export class UserController {
 
                 const sessionToken = generateSessionToken(user._id);
                 Controller.handleGetResponse(res, { id: user._id, sessionToken });
+            } catch (error) {
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
+            }
+        });
+
+        this.router.post("/forgot-password", async (req: Request, res: Response) => {
+            try {
+                const { email } = req.body;
+                const formattedEmail = email?.toLowerCase();
+                if (!validateEmail(formattedEmail)) {
+                    res.status(400).json({ message: 'Invalid email' });
+                    return;
+                }
+
+                const user: any = await this.userService.getDocumentByEmail(formattedEmail, UserProjection.userAuth);
+                if (!user) {
+                    res.status(400).json({ message: 'Email does not exist' });
+                    return;
+                }
+
+                const token = crypto.randomBytes(20).toString('hex');
+                const now = new Date();
+                now.setHours(now.getHours() + 1);
+
+                const userEdit = {
+                    passwordResetToken: token,
+                    passwordResetExpires: now,
+                };
+                
+                await this.userService.updateUser(user._id, userEdit);
+                console.log('2', token, now);
+
+                const resetLink = `${process.env.BASE_URL}/login?prt=${token}`;
+                const mailOptions = {
+                    to: email,
+                    from: process.env.EMAIL_USERNAME,
+                    template: 'forgot-password',
+                    subject: 'Unleashed AI Password Reset',
+                    text: `Unleashed AI Password Reset Click on the link below to reset your password: ${resetLink}`,
+                    html: `<h1>Unleashed AI Password Reset</h1><p>Click <a href='${resetLink}' target='_blank'>here</a> to reset your password</p>`,
+                    context: { token },
+                };
+
+                mailTransporter.sendMail(mailOptions, (err: any) => {
+                    if (err) {
+                        console.log('error', err);
+                        res.status(400).send({ message: 'Cannot send forgot password email' });
+                        return;
+                    }
+
+                    Controller.handlePostResponse(res, { message: 'You received an email, please verify your inbox and spam folder' });
+                    return;
+                });
+
+            } catch (error) {
+                console.log('error', error);
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
+            }
+        });
+
+        this.router.post("/reset-password", async (req: Request, res: Response) => {
+            try {
+                const { email, token, password } = req.body;
+                const formattedEmail = email?.toLowerCase();
+                if (!validateEmail(formattedEmail)) {
+                    res.status(400).json({ message: 'Invalid email' });
+                    return;
+                }
+
+                const user: any = await this.userService.getDocumentByEmail(formattedEmail, UserProjection.userAuth);
+                if (!user) {
+                    res.status(400).json({ message: 'Email does not exist' });
+                    return;
+                }
+
+                if (token !== user.passwordResetToken) {
+                    res.status(400).send({ message: 'Something went wrong, please try again later' });
+                    return;
+                }
+
+                const now = new Date();
+                if (now > user.passwordResetExpires) {
+                    res.status(400).send({ message: 'Reset password time limit expired' });
+                    return;
+                }
+
+                const userEdit = { newPassword: password } as IUserRequest;
+                const finalUser = await this.userService.updateUser(user._id, userEdit);
+                const sessionToken = generateSessionToken(finalUser._id);
+                Controller.handlePostResponse(res, { id: finalUser._id, sessionToken });
             } catch (error) {
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
             }

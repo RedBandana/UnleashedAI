@@ -51,6 +51,16 @@ const Message = ({ index, message, onDelete, onSelectChoice, onRender, shouldRen
   }, []);
 
   useEffect(() => {
+    if (!optionsRef.current) {
+      return;
+    }
+
+    const deltaX = 6;
+    optionsRef.current.style.transform = `translateX(-${optionsRef.current?.offsetWidth - deltaX}px)`;
+
+  }, [optionsRef.current?.offsetWidth]);
+
+  useEffect(() => {
     if (shouldRender) {
       const chatMessage = document.getElementById(`chat-message-${message.id}`);
       fixHtmlMarkdown(Prism, [chatMessage])
@@ -97,6 +107,10 @@ const Message = ({ index, message, onDelete, onSelectChoice, onRender, shouldRen
     if (choiceIndex >= 0 && choiceIndex < message.choiceCount) {
       onSelectChoice(message.id, choiceIndex);
     }
+  }
+
+  function handleTodo() {
+
   }
 
   if (hide) {
@@ -151,6 +165,12 @@ const Message = ({ index, message, onDelete, onSelectChoice, onRender, shouldRen
               </div>
               <div className="chat-message-options-item" onClick={handleCopyClick}>
                 <i className="fa fas fa-clipboard"></i>
+              </div>
+              <div className="chat-message-options-item hide" onClick={handleTodo}>
+                <i className="fas fa-code-fork"></i>
+              </div>
+              <div className="chat-message-options-item hide" onClick={handleTodo}>
+                <i className="fas fa-redo"></i>
               </div>
               <div className="chat-message-options-item chat-message-timestamp">
                 <div>{timestamp}</div>
