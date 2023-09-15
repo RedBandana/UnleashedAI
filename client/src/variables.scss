@@ -11,6 +11,7 @@ body {
     --color-chat-bot: #f6f6f6;
     --color-settings: #fff;
     --color-settings-dialog: #fff;
+    --color-text-input: #fff;
 
     --color-background: #f6f6f6;
     --color-navbar: #f6f6f6;
@@ -50,6 +51,7 @@ body {
     --box-shadow-sidebar-open-mobile: 0px 0 260px #333;
 
     --border-main: 1px solid #ccc;
+    --border-second: 1px solid #bababa;
     --border-accent: 1px solid #2374E1;
     --border-chat: 1px solid #dadada;
     --border-none: none;
@@ -61,7 +63,7 @@ body {
 
     --chat-gradiant: linear-gradient(to bottom,
             transparent 0%,
-            transparent 32%,
+            transparent 36%,
             var(--color-background) 70%);
     --char-gradiant-height: 110px;
 }
@@ -82,6 +84,8 @@ body {
     --color-settings-box: #2b2d31;
     --color-settings-dialog: #131518;
 
+    --color-text-input: #252528;
+
     --color-chat-user: #484a53;
     --color-chat-bot: #313338;
     --color-reply: #2b2d31;
@@ -93,6 +97,7 @@ body {
     --box-shadow-sidebar-open-mobile: 0px 0 260px #222;
 
     --border-main: 1px solid #ccc;
+    --border-second: 1px solid #131518;
     --border-chat: 1px solid rgba(0, 0, 0, 0);
 
     --chat-gradiant: linear-gradient(to bottom,

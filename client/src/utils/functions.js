@@ -112,3 +112,7 @@ export function validateEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 };
+
+export function isScrolledToBottom(el) {
+  return el.scrollHeight - el.scrollTop === el.clientHeight;
+}

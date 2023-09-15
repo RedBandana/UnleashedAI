@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './TextInput.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleSettings } from '../../redux/actions/uiActions';
+import { setReply, toggleSettings } from '../../redux/actions/uiActions';
 import { getIsMobile, getReply } from '../../redux/selectors/uiSelectors';
 import { editChatLoading } from '../../redux/selectors/chatSelectors';
+import { isScrolledToBottom } from '../../utils/functions';
 
 function TextInput(props) {
     const { onSubmit, canSubmit } = props;
@@ -23,6 +24,13 @@ function TextInput(props) {
         updateButtonDisplay();
         resizeTextAreaHeight();
     }, [inputValue]);
+
+    useEffect(() => {
+        if (!reply) {
+            return;
+        }
+        textareaRef.current.focus();
+    }, [reply])
 
     function handleKeyDown(event) {
         if (event.key !== "Enter") {
@@ -79,32 +87,38 @@ function TextInput(props) {
         dispatch(toggleSettings());
     };
 
+    function handleReplyClick() {
+        const messageElement = document.getElementById(`chat-message-container-${reply.id}`);
+        if (messageElement) {
+            messageElement.scrollIntoView({ behavior: "smooth" });
+        }
+    }
+
+    function handleCloseReplyClick(event) {
+        event.preventDefault();
+        dispatch(setReply(null));
+    }
+
     function resizeTextAreaHeight() {
         const textarea = textareaRef.current;
+        const oldHeight = textarea.offsetHeight;
         textarea.style.height = "auto";
         textarea.style.height = `${textarea.scrollHeight}px`;
 
         if (textarea.selectionStart === textarea.value.length) {
             textarea.scrollTop = textarea.scrollHeight;
         }
-
-        updateChatbotPaddingBottom(textarea);
+        const deltaHeight = textarea.offsetHeight - oldHeight;
+        updateChatbotPaddingBottom(textarea.offsetHeight, deltaHeight);
     }
 
-    function updateChatbotPaddingBottom(textarea) {
+    function updateChatbotPaddingBottom(height, deltaHeight) {
         const chatBody = document.getElementsByClassName('chatbot-body')[0];
         if (chatBody) {
-            if (textarea.offsetHeight > 50) {
-                chatBody.style.paddingBottom = `${65 + textarea.offsetHeight}px`;
+            chatBody.style.paddingBottom = `${50 + height}px`;
+            if (!isScrolledToBottom(chatBody)) {
+                chatBody.scrollTop += deltaHeight;
             }
-            else {
-                chatBody.style.paddingBottom = "100px";
-            }
-
-            chatBody.scrollTo({
-                top: chatBody.scrollHeight,
-                behavior: "smooth",
-            });
         }
     }
 
@@ -117,31 +131,37 @@ function TextInput(props) {
 
     return (
         <form onSubmit={handleSubmit} className='text-input'>
-            <div className='text-input-reply'>
-                <div className='text-input-reply-text'>
-                    <div className='reply-to-text'>Hello! How can I assist you today? How to remove border radius at the bottom corners in css</div>
-                    <div className='reply-to-close'>x</div>
-                </div>
+            <div className='text-input-row'>
+                {reply && (
+                    <div className='text-input-reply' id={`reply-message-${reply.id}`}>
+                        <div className='text-input-reply-text'>
+                            <div className='reply-to-text' onClick={handleReplyClick}>{reply.text}</div>
+                            <div className='reply-to-close' onClick={handleCloseReplyClick}>x</div>
+                        </div>
+                    </div>
+                )}
             </div>
-            <textarea
-                className='text-input-textarea'
-                ref={textareaRef}
-                rows="1"
-                placeholder="send a message"
-                value={inputValue}
-                onChange={handleOnInputChange}
-                onKeyDown={handleKeyDown}
-            />
-            <div className='text-input-buttons'>
-                <button type="submit" className='chatbot-send-button' ref={submitButtonRef}>
-                    <i className="fas fa-paper-plane chatbot-send-icon"></i>
-                </button>
-                <button className={`chatbot-settings-button ${isChatEditLoading ? 'settings-saving' : ''}`} ref={settingsButtonRef} onClick={(event) => {
-                    event.preventDefault();
-                    handleToggleSettings();
-                }}>
-                    <i className={`fas fa-cog text-input-settings-icon`}></i>
-                </button>
+            <div className='text-input-row text-input-row-textarea'>
+                <textarea
+                    className='text-input-textarea'
+                    ref={textareaRef}
+                    rows="1"
+                    placeholder="send a message"
+                    value={inputValue}
+                    onChange={handleOnInputChange}
+                    onKeyDown={handleKeyDown}
+                />
+                <div className='text-input-buttons'>
+                    <button type="submit" className='chatbot-send-button' ref={submitButtonRef}>
+                        <i className="fas fa-paper-plane chatbot-send-icon"></i>
+                    </button>
+                    <button className={`chatbot-settings-button ${isChatEditLoading ? 'settings-saving' : ''}`} ref={settingsButtonRef} onClick={(event) => {
+                        event.preventDefault();
+                        handleToggleSettings();
+                    }}>
+                        <i className={`fas fa-cog text-input-settings-icon`}></i>
+                    </button>
+                </div>
             </div>
         </form>
     );

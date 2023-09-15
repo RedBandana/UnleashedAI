@@ -33,8 +33,13 @@ import 'prismjs/components/prism-swift';
 import 'prismjs/components/prism-uri';
 import 'prismjs/components/prism-yaml';
 import { fixHtmlMarkdown } from "../../utils/functions";
+import { useDispatch, useSelector } from "react-redux";
+import { setReply } from "../../redux/actions/uiActions";
+import { REPLY_TEXT_MAX_LENGTH } from "../../utils/constants";
 
 const Message = ({ index, message, onDelete, onSelectChoice, onRender, shouldRender }) => {
+
+  const dispatch = useDispatch();
 
   const [showOptions, setShowOptions] = useState(false);
   const messageClass = message.isUser ? "chat-message-user" : "chat-message-bot";
@@ -88,6 +93,10 @@ const Message = ({ index, message, onDelete, onSelectChoice, onRender, shouldRen
     setShowOptions(false);
   }
 
+  function handleReplyClick() {
+    const reply = { id: message.id, text: message.content.substring(0, REPLY_TEXT_MAX_LENGTH) }
+    dispatch(setReply(reply))
+  }
   function handleClickOutside(event) {
     if (optionsRef.current && !optionsRef.current.contains(event.target)
       && event.target.className !== "chat-message-options-container") {
@@ -119,17 +128,19 @@ const Message = ({ index, message, onDelete, onSelectChoice, onRender, shouldRen
 
   return (
     <div className={`chat-message ${messageClass}`}>
-      <div className={`chat-message-container ${textClass}`}>
-        <div className="chat-message-reply">
-          <div className="chat-message-reply-text">
-            <div className="reply-icon">
-              <i class="fa-solid fa-reply fa-flip-both"></i>
-            </div>
-            <div className="reply-text">
-              Your message has been received. How can I assist you today? How to remove border radius at the bottom corners in css
+      <div className={`chat-message-container ${textClass}`} id={`chat-message-container-${message.id}`}>
+        {message.replyTo && (
+          <div className="chat-message-reply" id={`reply-to-message-${message.replyTo.id}`}>
+            <div className="chat-message-reply-text">
+              <div className="reply-icon">
+                <i class="fa-solid fa-reply fa-flip-both"></i>
+              </div>
+              <div className="reply-text">
+                {message.replyTo.text}
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <div className="chat-message-bubble-container">
           <div className={`chat-message-bubble ${textClass}`}>
             <div className="chat-message-text" id={`chat-message-${message.id}`}>
@@ -183,7 +194,7 @@ const Message = ({ index, message, onDelete, onSelectChoice, onRender, shouldRen
                   <div className="chat-message-options-item" onClick={handleCopyClick}>
                     <i className="fa fas fa-clipboard"></i>
                   </div>
-                  <div className="chat-message-options-item" onClick={handleTodo}>
+                  <div className="chat-message-options-item" onClick={handleReplyClick}>
                     <i className="fas fa-reply"></i>
                   </div>
                 </div>

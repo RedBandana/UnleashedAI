@@ -1,24 +1,36 @@
 @import "../../variables.scss";
 
-
 .text-input {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   margin: auto;
-  width: 70%;
   position: relative;
 }
 
+.text-input-row {
+  display: flex;
+  flex-direction: row;
+  width: 70%;
+}
+
+.text-input-row-textarea {
+  border: var(--border-second);
+  border-radius: var(--border-radius-second);
+  background-color: var(--color-text-input);
+  z-index: 1;
+}
+
 @media (max-width:810px) {
-  .text-input {
+  .text-input-row {
     width: 90%;
   }
 }
 
 .text-input-reply {
-  width: 100%;
+  width: 98%;
+  margin: auto;
   border-radius: var(--border-radius-second) var(--border-radius-second) 0 0;
   background-color: var(--color-reply);
   transform: translateY(2px);
@@ -32,27 +44,30 @@
   justify-content: space-between;
   align-items: center;
   flex-direction: row;
+  opacity: 0.8;
 }
 
-.theme-dark .reply-to-text:hover,
-.reply-to-text:hover {
+.text-input-reply-text:hover {
   opacity: 1;
 }
 
-.theme-dark .reply-to-text,
-.theme-dark .reply-to-close {
+.theme-dark .text-input-reply-text {
   opacity: 0.4;
 }
 
+.theme-dark .text-input-reply-text:hover {
+  opacity: 1;
+}
+
 .reply-to-text {
-  opacity: 0.8;
   text-overflow: var(--text-overflow);
   white-space: nowrap;
   overflow: hidden;
+  width: 100%;
 }
 
 .reply-to-close {
-  opacity: 0.65;
+  opacity: 0.6;
   font-weight: bold;
   margin-left: 5px;
   padding: 3px;
@@ -63,14 +78,19 @@
   opacity: 1;
 }
 
+.text-input-buttons {
+  display: flex;
+  align-self: flex-end;
+  margin-bottom: 8px;
+  margin-right: 5px;
+}
+
 .text-input button {
   background-color: transparent;
   color: var(--color-options-main-default);
   border: var(--border-none);
-  padding: 10px 10px;
   font-size: 1.25rem;
   cursor: pointer;
-  position: absolute;
   bottom: 1px;
 }
 
@@ -79,18 +99,22 @@
 }
 
 .text-input-textarea {
+  border: none;
+  outline: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background-color: transparent;
+  resize: none;
+
   width: 100%;
-  resize: vertical;
   padding: 5px;
+  padding-bottom: 0;
+  padding-right: 0;
   font-size: var(--font-size-main);
-  border-radius: var(--border-radius-second);
-  border: var(--border-main);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   max-height: 140px;
-  box-shadow: var(--box-shadow-second);
-  padding-right: 0px;
-  color: var(--color-text-main-default);
-  z-index: 1;
+  color: var(--color-text-main);
 }
 
 .chatbot-send-icon {
@@ -105,13 +129,16 @@
 .chatbot-settings-button {
   color: var(--color-text-main-default);
   right: 1px;
+  z-index: 2;
 }
 
 .chatbot-send-button {
   transition: right 0.25s ease-in-out, opacity 0.25s ease-in-out;
-  right: 25px;
+  right: 0;
   color: var(--color-text-main-default);
   opacity: 1;
+  z-index: 2;
+  position: relative;
 }
 
 .chatbot-send-button.fade:hover {
@@ -119,7 +146,7 @@
 }
 
 .chatbot-send-button.fade {
-  right: 10px;
+  right: -15px;
   opacity: 0;
 }
 

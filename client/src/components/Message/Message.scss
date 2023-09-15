@@ -75,8 +75,8 @@
 .chat-message-icons-container {
   padding: 15px 10px;
   cursor: pointer;
-  margin-left: 20px;
   margin-bottom: 10px;
+  transform: translateX(-5px) !important;
 }
 
 .chat-message-options-icon {
