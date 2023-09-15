@@ -6,3 +6,4 @@ export const getChatSelectedIndex = (state) => state.ui.chatSelectedIndex;
 export const getUserSettingsIsOpen = (state) => state.ui.userSettingsIsOpen;
 export const getPremiumDialogIsOpen = (state) => state.ui.premiumDialogIsOpen;
 export const getIsMobile = (state) => state.ui.isMobile;
+export const getReply = (state) => state.ui.reply;

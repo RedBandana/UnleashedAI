@@ -11,6 +11,7 @@ const initialState = {
   themeIsLight: true,
   chatSelectedIndex: 0,
   messagesPage: 1,
+  reply: null,
 };
 
 const uiReducer = handleActions(
@@ -58,6 +59,10 @@ const uiReducer = handleActions(
     [actions.setPremiumDialogIsOpen]: (state, { payload }) => ({
       ...state,
       premiumDialogIsOpen: payload,
+    }),
+    [actions.setReply]: (state, { payload }) => ({
+      ...state,
+      reply: payload,
     }),
   },
   initialState

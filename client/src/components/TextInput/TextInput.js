@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import './TextInput.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleSettings } from '../../redux/actions/uiActions';
-import { getIsMobile } from '../../redux/selectors/uiSelectors';
+import { getIsMobile, getReply } from '../../redux/selectors/uiSelectors';
 import { editChatLoading } from '../../redux/selectors/chatSelectors';
 
 function TextInput(props) {
@@ -16,6 +16,7 @@ function TextInput(props) {
     const settingsButtonRef = useRef(null);
 
     const isMobile = useSelector(getIsMobile);
+    const reply = useSelector(getReply);
     const [inputValue, setInputValue] = useState('');
 
     useEffect(() => {
@@ -86,6 +87,25 @@ function TextInput(props) {
         if (textarea.selectionStart === textarea.value.length) {
             textarea.scrollTop = textarea.scrollHeight;
         }
+
+        updateChatbotPaddingBottom(textarea);
+    }
+
+    function updateChatbotPaddingBottom(textarea) {
+        const chatBody = document.getElementsByClassName('chatbot-body')[0];
+        if (chatBody) {
+            if (textarea.offsetHeight > 50) {
+                chatBody.style.paddingBottom = `${65 + textarea.offsetHeight}px`;
+            }
+            else {
+                chatBody.style.paddingBottom = "100px";
+            }
+
+            chatBody.scrollTo({
+                top: chatBody.scrollHeight,
+                behavior: "smooth",
+            });
+        }
     }
 
     function emptyTextArea() {
@@ -97,6 +117,12 @@ function TextInput(props) {
 
     return (
         <form onSubmit={handleSubmit} className='text-input'>
+            <div className='text-input-reply'>
+                <div className='text-input-reply-text'>
+                    <div className='reply-to-text'>Hello! How can I assist you today? How to remove border radius at the bottom corners in css</div>
+                    <div className='reply-to-close'>x</div>
+                </div>
+            </div>
             <textarea
                 className='text-input-textarea'
                 ref={textareaRef}

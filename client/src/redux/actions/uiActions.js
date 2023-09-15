@@ -11,3 +11,4 @@ export const setChatSelectedIndex = createAction('SET_CHAT_INDEX');
 export const setUserSettingsIsOpen = createAction('SET_USER_SETTINGS_VISIBILITY');
 export const setPremiumDialogIsOpen = createAction('SET_PREMIUM_DIALOG_VISIBILITY');
 export const setIsMobile = createAction('SET_MOBILE');
+export const setReply = createAction('SET_REPLY');

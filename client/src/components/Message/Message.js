@@ -120,63 +120,79 @@ const Message = ({ index, message, onDelete, onSelectChoice, onRender, shouldRen
   return (
     <div className={`chat-message ${messageClass}`}>
       <div className={`chat-message-container ${textClass}`}>
-        <div className={`chat-message-bubble ${textClass}`}>
-          <div className="chat-message-text" id={`chat-message-${message.id}`}>
-            <ReactMarkdown children={message.content} remarkPlugins={[remarkGfm]} />
+        <div className="chat-message-reply">
+          <div className="chat-message-reply-text">
+            <div className="reply-icon">
+              <i class="fa-solid fa-reply fa-flip-both"></i>
+            </div>
+            <div className="reply-text">
+              Your message has been received. How can I assist you today? How to remove border radius at the bottom corners in css
+            </div>
           </div>
-          {message.choiceCount > 1 && (
-            <div className={`chat-message-controls-container ${textClass}`}>
-              <button
-                className={`chat-message-control ${message.choiceIndex === 0 ? "chat-message-control-inactive" : ""}`}
-                onClick={handlePrevClick}>
-                <i className="fa fa-chevron-left"></i>
-              </button>
-              <div className="chat-message-dots-container">
-                {
-                  (() => {
-                    const dots = [];
-                    for (let i = 0; i < message.choiceCount; i++) {
-                      dots.push(
-                        <div
-                          key={i}
-                          className={`chat-message-dot ${i === message.choiceIndex ? "chat-message-dot-active" : ""}`}
-                        ></div>
-                      );
-                    }
-                    return dots;
-                  })()
-                }
-              </div>
-              <button
-                className={`chat-message-control ${message.choiceIndex === message.choiceCount - 1 ? "chat-message-control-inactive" : ""}`}
-                onClick={handleNextClick}
-              >
-                <i className="fa fa-chevron-right"></i>
-              </button>
-            </div>
-          )}
         </div>
-        <div className={`chat-message-icons-container ${message.id != null ? '' : 'chat-message-icons-container-disabled'}`} onClick={handleOptionsClick} ref={optionsRef}>
-          <i className="fa fa-ellipsis-v chat-message-options-icon"></i>
-          {showOptions && (
-            <div className="chat-message-options-container" ref={optionsRef}>
-              <div className="chat-message-options-item" onClick={handleDeleteClick}>
-                <i className="fa fa-trash"></i>
-              </div>
-              <div className="chat-message-options-item" onClick={handleCopyClick}>
-                <i className="fa fas fa-clipboard"></i>
-              </div>
-              <div className="chat-message-options-item hide" onClick={handleTodo}>
-                <i className="fas fa-code-fork"></i>
-              </div>
-              <div className="chat-message-options-item hide" onClick={handleTodo}>
-                <i className="fas fa-redo"></i>
-              </div>
-              <div className="chat-message-options-item chat-message-timestamp">
-                <div>{timestamp}</div>
-              </div>
+        <div className="chat-message-bubble-container">
+          <div className={`chat-message-bubble ${textClass}`}>
+            <div className="chat-message-text" id={`chat-message-${message.id}`}>
+              <ReactMarkdown children={message.content} remarkPlugins={[remarkGfm]} />
             </div>
-          )}
+            {message.choiceCount > 1 && (
+              <div className={`chat-message-controls-container ${textClass}`}>
+                <button
+                  className={`chat-message-control ${message.choiceIndex === 0 ? "chat-message-control-inactive" : ""}`}
+                  onClick={handlePrevClick}>
+                  <i className="fa fa-chevron-left"></i>
+                </button>
+                <div className="chat-message-dots-container">
+                  {
+                    (() => {
+                      const dots = [];
+                      for (let i = 0; i < message.choiceCount; i++) {
+                        dots.push(
+                          <div
+                            key={i}
+                            className={`chat-message-dot ${i === message.choiceIndex ? "chat-message-dot-active" : ""}`}
+                          ></div>
+                        );
+                      }
+                      return dots;
+                    })()
+                  }
+                </div>
+                <button
+                  className={`chat-message-control ${message.choiceIndex === message.choiceCount - 1 ? "chat-message-control-inactive" : ""}`}
+                  onClick={handleNextClick}
+                >
+                  <i className="fa fa-chevron-right"></i>
+                </button>
+              </div>
+            )}
+          </div>
+          <div className={`chat-message-icons-container ${message.id != null ? '' : 'chat-message-icons-container-disabled'}`} onClick={handleOptionsClick} ref={optionsRef}>
+            <i className="fa fa-ellipsis-v chat-message-options-icon"></i>
+            {showOptions && (
+              <div className="chat-message-options-container" ref={optionsRef}>
+                <div className="chat-message-options-items hide">
+                  <div className="chat-message-options-item" onClick={handleTodo}>
+                    <i className="fas fa-redo"></i>
+                  </div>
+                </div>
+                <div className="chat-message-options-items">
+                  <div className="chat-message-options-item" onClick={handleDeleteClick}>
+                    <i className="fa fa-trash"></i>
+                  </div>
+                  <div className="chat-message-options-item" onClick={handleCopyClick}>
+                    <i className="fa fas fa-clipboard"></i>
+                  </div>
+                  <div className="chat-message-options-item" onClick={handleTodo}>
+                    <i className="fas fa-reply"></i>
+                  </div>
+                </div>
+                <div className="chat-message-timestamp">
+                  <div>{timestamp}</div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

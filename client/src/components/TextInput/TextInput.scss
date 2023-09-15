@@ -5,6 +5,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   margin: auto;
   width: 70%;
   position: relative;
@@ -14,6 +15,52 @@
   .text-input {
     width: 90%;
   }
+}
+
+.text-input-reply {
+  width: 100%;
+  border-radius: var(--border-radius-second) var(--border-radius-second) 0 0;
+  background-color: var(--color-reply);
+  transform: translateY(2px);
+  cursor: pointer;
+}
+
+.text-input-reply-text {
+  padding: 0 5px;
+  padding-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+}
+
+.theme-dark .reply-to-text:hover,
+.reply-to-text:hover {
+  opacity: 1;
+}
+
+.theme-dark .reply-to-text,
+.theme-dark .reply-to-close {
+  opacity: 0.4;
+}
+
+.reply-to-text {
+  opacity: 0.8;
+  text-overflow: var(--text-overflow);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.reply-to-close {
+  opacity: 0.65;
+  font-weight: bold;
+  margin-left: 5px;
+  padding: 3px;
+  cursor: pointer;
+}
+
+.reply-to-close:hover {
+  opacity: 1;
 }
 
 .text-input button {
@@ -41,8 +88,9 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   max-height: 140px;
   box-shadow: var(--box-shadow-second);
-  padding-right: 58px;
+  padding-right: 0px;
   color: var(--color-text-main-default);
+  z-index: 1;
 }
 
 .chatbot-send-icon {
