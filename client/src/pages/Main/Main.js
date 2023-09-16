@@ -10,7 +10,7 @@ import AlertDialog from '../../components/AlertDialog/AlertDialog';
 import ChatEmpty from '../../components/Chat/ChatEmpty';
 
 import { createChatRequest, deleteChatRequest, editChatRequest, fetchChatsRequest, fetchChatRequest, clearChatsRequest, fetchChatsPageRequest } from '../../redux/actions/chatActions';
-import { clearMessagesSuccess, createMessageRequest, deleteMessageRequest, fetchChoiceRequest, fetchMessagesPageRequest, fetchMessagesRequest } from '../../redux/actions/messageActions';
+import { clearMessagesSuccess, createMessageRequest, deleteMessageRequest, fetchChoiceRequest, fetchMessagesPageRequest, fetchMessagesRequest, setCanReceiveMessage } from '../../redux/actions/messageActions';
 import { setChatSelectedIndex, setIsMobile, setReply, setSidebarIsOpen, setThemeIsLight, toggleTheme } from '../../redux/actions/uiActions';
 import { getChatSelectedIndex, getThemeIsLight } from '../../redux/selectors/uiSelectors';
 import { createChatValue, deleteChatValue, fetchChatValue, fetchChatsValue } from '../../redux/selectors/chatSelectors';
@@ -101,6 +101,7 @@ function Main() {
     dispatch(fetchMessagesRequest({ chatId: chatId, page: 1, count: COUNT_MESSAGES }));
     dispatch(setChatSelectedIndex(sidebarIndex));
     dispatch(setReply(null));
+    dispatch(setCanReceiveMessage(false));
     setMessagesPage(1);
   }
 

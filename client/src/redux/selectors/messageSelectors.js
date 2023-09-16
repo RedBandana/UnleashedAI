@@ -22,3 +22,5 @@ export const createMessageError = (state) => state.messages.createMessageError;
 
 export const deleteMessageLoading = (state) => state.messages.deleteMessageLoading;
 export const deleteMessageError = (state) => state.messages.deleteMessageError;
+
+export const canReceiveMessage = (state) => state.messages.canReceiveMessage;

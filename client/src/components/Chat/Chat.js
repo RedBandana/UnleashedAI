@@ -9,11 +9,12 @@ import TypingDots from '../TypingDots/TypingDots';
 
 import './Chat.scss';
 import { getIsMobile, getReply, getSettings, getSettingsIsOpen, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
-import { createMessageLoading, createMessageReceived, fetchChoiceValue, fetchMessagesLoading, fetchMessagesPageReceived, fetchMessagesReceived } from '../../redux/selectors/messageSelectors';
+import { canReceiveMessage, createMessageLoading, createMessageReceived, fetchChoiceValue, fetchMessagesLoading, fetchMessagesPageReceived, fetchMessagesReceived } from '../../redux/selectors/messageSelectors';
 import { setSettingsIsOpen } from '../../redux/actions/uiActions';
 import { deleteChatValue } from '../../redux/selectors/chatSelectors';
 import Loading from '../Loading/Loading';
 import { fixHtmlMarkdown } from '../../utils/functions';
+import { setCanReceiveMessage } from '../../redux/actions/messageActions';
 
 function Chat(props) {
     const { id, messages, crudEvents } = props;
@@ -31,6 +32,7 @@ function Chat(props) {
     const settingsIsOpen = useSelector(getSettingsIsOpen);
     const formSettings = useSelector(getSettings);
     const isWaitingAnswer = useSelector(createMessageLoading);
+    const canReceiveAnswer = useSelector(canReceiveMessage);
     const isLoading = useSelector(fetchMessagesLoading);
     const messagesReceived = useSelector(fetchMessagesReceived);
     const messagesPageReceived = useSelector(fetchMessagesPageReceived);
@@ -89,7 +91,7 @@ function Chat(props) {
     }, [messagesPageReceived]);
 
     useEffect(() => {
-        if (!messageReceived || messages.length === 0) {
+        if (!messageReceived || messages.length === 0 || !canReceiveAnswer) {
             return;
         }
         const newMessages = messages.slice(-2);
@@ -212,6 +214,7 @@ function Chat(props) {
         }
 
         addMessageHtmlToDisplay(message);
+        dispatch(setCanReceiveMessage(true));
 
         const messageRequest = { content: text, replyToId };
         crudEvents.onCreate(id, messageRequest);

@@ -21,6 +21,7 @@ const initialState = {
   createMessageReceived: false,
   deleteMessageLoading: false,
   deleteMessageError: null,
+  canReceiveMessage: false,
 };
 
 const messageReducer = handleActions(
@@ -152,6 +153,10 @@ const messageReducer = handleActions(
       message: null,
       messagesReceived: false,
       createMessageReceived: false,
+    }),
+    [action.setCanReceiveMessage]: (state, { payload }) => ({
+      ...state,
+      canReceiveMessage: payload,
     }),
   },
   initialState

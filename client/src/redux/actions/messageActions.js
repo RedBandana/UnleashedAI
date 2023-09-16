@@ -29,3 +29,4 @@ export const deleteMessageSuccess = createAction('DELETE_MESSAGE_SUCCESS');
 export const deleteMessageFailure = createAction('DELETE_MESSAGE_FAILURE');
 
 export const clearMessagesSuccess = createAction('CLEAR_MESSAGES_SUCCESS');
+export const setCanReceiveMessage = createAction('SET_CAN_RECEIVE_MESSAGE');
