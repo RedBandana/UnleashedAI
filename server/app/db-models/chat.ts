@@ -103,7 +103,7 @@ const SettingsSchema = new Schema<ISettings>({
 
 export const ReplyToSchema = new Schema<IReplyTo>({
   messageIndex: { type: Number, required: true },
-  messageId: { type: ObjectId, required: true },
+  messageId: { type: Schema.Types.ObjectId, required: true },
   displayText: { type: String, required: true },
 })
 
