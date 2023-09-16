@@ -44,7 +44,6 @@ export abstract class DBCollectionService {
         return await this.query.lean().sort({ createdOn: -1 }).select(projection).exec();
     }
 
-    // TODO: make sure that the pipeline: [{ $limit: 1 }] really improve performance
     async getAll(option?: DBRequestOptions, projection?: { [key: string]: boolean }): Promise<Document[]> {
         return await this.filterBy({}, option, projection);
     }
