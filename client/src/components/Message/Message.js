@@ -97,6 +97,18 @@ const Message = ({ index, message, onDelete, onSelectChoice, onRender, shouldRen
     const reply = { id: message.id, text: message.content.substring(0, REPLY_TEXT_MAX_LENGTH) }
     dispatch(setReply(reply))
   }
+
+  function handleMessageReplyClick() {
+    if (!message.replyTo) {
+      return;
+    }
+    
+    const messageElement = document.getElementById(`chat-message-container-${message.replyTo.id}`);
+    if (messageElement) {
+        messageElement.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
   function handleClickOutside(event) {
     if (optionsRef.current && !optionsRef.current.contains(event.target)
       && event.target.className !== "chat-message-options-container") {
@@ -130,7 +142,7 @@ const Message = ({ index, message, onDelete, onSelectChoice, onRender, shouldRen
     <div className={`chat-message ${messageClass}`}>
       <div className={`chat-message-container ${textClass}`} id={`chat-message-container-${message.id}`}>
         {message.replyTo && (
-          <div className="chat-message-reply" id={`reply-to-message-${message.replyTo.id}`}>
+          <div className="chat-message-reply" id={`reply-to-message-${message.replyTo.id}`} onClick={handleMessageReplyClick}>
             <div className="chat-message-reply-text">
               <div className="reply-icon">
                 <i class="fa-solid fa-reply fa-flip-both"></i>

@@ -9,6 +9,7 @@ import { UserPipeline, UserProjection } from '@app/db-models/dto/user.dto';
 import { Converter } from '@app/utils/converter';
 import { UserType } from '@app/enums/usertypes';
 import { createHashedPassword } from '@app/utils/functions';
+import { REPLY_TEXT_MAX_LENGTH } from '@app/utils/constants';
 
 const COLLECTION_NAME = DBModelName.USER;
 
@@ -67,13 +68,18 @@ export class UserService extends DBCollectionService {
         return messages;
     }
 
-    async getMessageByIndex(userId: string, chatIndex: number, messageIndex: number): Promise<IMessage> {
+    async getMessageByIndex(userId: string, chatIndex: number, messageIndex: number): Promise<IMessageDto> {
         const user = await this.getOneDocumentByAggregate(UserPipeline.messageIndex(userId, chatIndex, messageIndex));
         Converter.messageToDtoNoReturn(user.message);
         return user.message;
     }
 
-    async getMessageLatest(userId: string, chatIndex: number): Promise<IMessage> {
+    async getMessageByIndexAllFields(userId: string, chatIndex: number, messageIndex: number): Promise<IMessage> {
+        const user = await this.getOneDocumentByAggregate(UserPipeline.messageIndex(userId, chatIndex, messageIndex));
+        return user.message;
+    }
+
+    async getMessageLatest(userId: string, chatIndex: number): Promise<IMessageDto> {
         const user = await this.getOneDocumentByAggregate(UserPipeline.messageLatest(userId, chatIndex));
         Converter.messageToDtoNoReturn(user.message);
         return user.message;
@@ -184,10 +190,20 @@ export class UserService extends DBCollectionService {
         await this.query.lean().exec();
     }
 
-    async createMessage(userId: string, chatIndex: number, content: string): Promise<IMessageDto> {
+    async createMessage(userId: string, chatIndex: number, content: string, replyMessage: any): Promise<IMessageDto> {
         const user = await this.getOneDocumentByAggregate(UserPipeline.chatIndexAllMessageCount(userId, chatIndex));
         const messageIndex = user.chat.messageCount ?? 0;
         const message = ChatUtils.getDefaultUserMessage(messageIndex, content);
+
+        if (replyMessage) {
+            const replyText = replyMessage.isUser ? replyMessage.content : replyMessage.choices[replyMessage.choiceIndex];
+            message.replyTo = {
+                messageId: replyMessage._id as any,
+                messageIndex: replyMessage.index,
+                displayText: replyText?.substring(0, REPLY_TEXT_MAX_LENGTH) as any,
+            };
+        }
+
         this.query = this.model.updateOne(
             { _id: userId },
             { $push: { [`chats.${chatIndex}.messages`]: message } }

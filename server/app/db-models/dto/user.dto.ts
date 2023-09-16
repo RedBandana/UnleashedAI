@@ -93,6 +93,7 @@ export abstract class UserProjection {
     "message.createdOn": true,
     "message.choices": true,
     "message.choiceIndex": true,
+    "message.replyTo": true,
   }
 
   static messages: { [key: string]: any } = {
@@ -103,6 +104,7 @@ export abstract class UserProjection {
     "messages.createdOn": true,
     "messages.choices": true,
     "messages.choiceIndex": true,
+    "messages.replyTo": true,
   }
 }
 

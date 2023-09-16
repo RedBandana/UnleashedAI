@@ -8,7 +8,7 @@ import TextInput from '../TextInput/TextInput';
 import TypingDots from '../TypingDots/TypingDots';
 
 import './Chat.scss';
-import { getIsMobile, getSettings, getSettingsIsOpen, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
+import { getIsMobile, getReply, getSettings, getSettingsIsOpen, getSidebarIsOpen } from '../../redux/selectors/uiSelectors';
 import { createMessageLoading, createMessageReceived, fetchChoiceValue, fetchMessagesLoading, fetchMessagesPageReceived, fetchMessagesReceived } from '../../redux/selectors/messageSelectors';
 import { setSettingsIsOpen } from '../../redux/actions/uiActions';
 import { deleteChatValue } from '../../redux/selectors/chatSelectors';
@@ -38,7 +38,8 @@ function Chat(props) {
     const chatDeleted = useSelector(deleteChatValue);
     const choice = useSelector(fetchChoiceValue);
     const isMobile = useSelector(getIsMobile);
-
+    const reply = useSelector(getReply);
+    
     const { v4: uuidv4 } = require('uuid');
 
     useEffect(() => {
@@ -194,16 +195,25 @@ function Chat(props) {
         return true;
     }
 
-    function handleAdd(inputValue) {
+    function handleAdd(payload) {
+        const {inputValue, replyToId} = payload;
         const text = inputValue.trim();
         const message = {
             content: text,
             isUser: true,
             createdOn: new Date(),
         }
+
+        if (replyToId) {
+            message.replyTo = {
+                id: replyToId,
+                text: reply?.text
+            };
+        }
+
         addMessageHtmlToDisplay(message);
 
-        const messageRequest = { content: text };
+        const messageRequest = { content: text, replyToId };
         crudEvents.onCreate(id, messageRequest);
     }
 

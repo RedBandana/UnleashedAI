@@ -10,6 +10,7 @@ export interface IMessage {
   isActive: boolean;
   isUser: boolean;
   createdOn: Date;
+  replyTo?: IReplyTo;
 }
 
 export interface IMessageDto {
@@ -19,10 +20,24 @@ export interface IMessageDto {
   choiceCount?: number;
   isUser: boolean;
   createdOn: Date;
+  replyTo?: IReplyToDto;
 }
 
 export interface IMessageRequest {
   content: string;
+  replyToId: number;
+}
+
+export interface IReplyTo {
+  _id?: ObjectId;
+  messageId: ObjectId;
+  messageIndex: number;
+  displayText: string;
+}
+
+export interface IReplyToDto {
+  id: number;
+  text: string;
 }
 
 export interface IChat {
@@ -86,11 +101,18 @@ const SettingsSchema = new Schema<ISettings>({
   logit_bias: { type: Map, of: Number },
 });
 
+export const ReplyToSchema = new Schema<IReplyTo>({
+  messageIndex: { type: Number, required: true },
+  messageId: { type: ObjectId, required: true },
+  displayText: { type: String, required: true },
+})
+
 export const MessageSchema = new Schema<IMessage>({
   choices: { type: [String] },
   choiceIndex: { type: Number },
   content: { type: String },
   index: { type: Number, required: true },
+  replyTo: { type: ReplyToSchema },
   isActive: { type: Boolean, required: true, default: true },
   isUser: { type: Boolean, required: true },
   createdOn: { type: Date, required: true, default: Date.now },

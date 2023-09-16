@@ -36,13 +36,14 @@
 }
 
 .theme-dark .chat-message-reply-text {
-  opacity: 0.4;
+  opacity: 0.5;
 }
 
 .reply-text {
   text-overflow: var(--text-overflow);
   white-space: nowrap;
   overflow: hidden;
+  width: 100%;
 }
 
 .chatbot[data-sidebar-is-open="true"][data-is-mobile="false"] .chat-message-bubble {

@@ -70,7 +70,8 @@ function TextInput(props) {
         event.preventDefault();
 
         if (canSubmit(inputValue)) {
-            onSubmit(inputValue);
+            const payload = { inputValue, replyToId: reply?.id };
+            onSubmit(payload);
             emptyTextArea();
         }
     }

@@ -125,28 +125,37 @@ export class ChatController {
                 const userId = req.user.userId;
                 const { chatIndex } = req.params;
                 const chatNo = Number(chatIndex);
-                const userContent: IMessageRequest = req.body;
+                const request: IMessageRequest = req.body;
+                const replyToNo = Number(request.replyToId);
 
-                const userMessage = await userService.createMessage(userId, chatNo, userContent.content);
+                let replyMessage: any;
+                if (replyToNo) {
+                    replyMessage = await userService.getMessageByIndexAllFields(userId, chatNo, replyToNo);
+                }
+
+                const userMessage = await userService.createMessage(userId, chatNo, request.content, replyMessage);
                 const chat: any = await userService.getChatByIndex(userId, chatNo);
                 const messages = await userService.getMessages(userId, chatNo, 1, chat.settings.memory);
-                messages.push(userMessage);
+
+                if (replyMessage) {
+                    Converter.messageToDtoNoReturn(replyMessage);
+                    messages.splice(messages.length - 1, 0, replyMessage);
+                }
 
                 const chatbotSettings = Converter.chatToChatbotSettings(chat.settings);
                 const finalMessages = ChatUtils.getRequestMessages(messages, chat.settings);
                 finalMessages.forEach(m => chatbotSettings.messages.push(Converter.messageToChatbotMessage(m)));
-
+                
                 const botChoices = await openAIService.sendChatCompletion(chatbotSettings);
                 const botMessage = await userService.createBotMessage(userId, chatNo, botChoices);
 
                 const chatUpdate: any = {};
                 chatUpdate[`chats.${chatIndex}.latestMessageCreatedOn`] = botMessage.createdOn;
                 if (chat.messageCount === 1 && chat.title === 'new chat') {
-                    let words = userContent.content.trim().split(' ');
+                    let words = request.content.trim().split(' ');
                     chatUpdate[`chats.${chatIndex}.title`] = words.slice(0, 5).join(' ');
                 }
                 await userService.updateChatForce(userId, chatNo, chatUpdate);
-
 
                 //bot socket emit
                 res.status(StatusCodes.OK).send([userMessage, botMessage]);

@@ -298,7 +298,7 @@ function LoginPage() {
             </div>
 
             {!isSignUp && (
-              <div className='login-form links-main'>
+              <div className='login-form links-main hide'>
                 <div className='login-button-second' onClick={handleForgotPassword}>Forgot password?</div>
               </div>
             )}

@@ -46,6 +46,16 @@ export class Converter {
             delete message.index;
         }
 
+        if (message.replyTo) {
+            message.replyTo.id = message.replyTo.messageIndex;
+            message.replyTo.text = message.replyTo.displayText;
+
+            delete message.replyTo._id;
+            delete message.replyTo.messageIndex;
+            delete message.replyTo.messageId;
+            delete message.replyTo.displayText;
+        }
+ 
         if (message.isUser) {
             delete message.choiceIndex;
         }

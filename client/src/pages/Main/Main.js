@@ -154,6 +154,8 @@ function Main() {
       chatId: chatId,
       message: message
     }));
+
+    dispatch(setReply(null));
   }
 
   function handleOnDeleteMessage(chatId, messageId) {
