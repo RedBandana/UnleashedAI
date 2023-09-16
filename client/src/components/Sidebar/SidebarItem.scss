@@ -47,6 +47,8 @@
 .sidebaritem-buttons {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
 }
 
 .sidebaritem-button-edit,
@@ -58,6 +60,8 @@
   border: var(--border-none);
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  padding: 1px 4px;
+  margin: 0;
 }
 
 .sidebaritem-button-edit i,
