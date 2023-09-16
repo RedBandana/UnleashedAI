@@ -80,9 +80,11 @@
 
 .text-input-buttons {
   display: flex;
-  align-self: flex-end;
-  margin-bottom: 8px;
+  justify-content: space-between;
+  flex-direction: row;
   margin-right: 5px;
+  margin-bottom: 1px;
+  max-width: 56px;
 }
 
 .text-input button {
