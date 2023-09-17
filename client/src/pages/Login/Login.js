@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { createGuestRequest, fetchUserRequest, forgotPasswordRequest, loginUserRequest, logoutUserSuccess, registerUserRequest } from '../../redux/actions/userActions';
 import { useEffect, useState } from 'react';
 import { getCookie, validateEmail } from '../../utils/functions';
@@ -11,7 +11,7 @@ import { Helmet } from "react-helmet";
 import './Login.scss';
 import { fetchUserEmailSent, fetchUserError, fetchUserLoading, fetchUserValue } from '../../redux/selectors/userSelectors';
 import { Capacitor } from '@capacitor/core';
-import { MOBILE_DEVICE_PATTERNS } from '../../utils/constants';
+import { LOGIN_TYPES, MOBILE_DEVICE_PATTERNS } from '../../utils/constants';
 import { clearChatsSuccess } from '../../redux/actions/chatActions';
 import Footer from '../../components/Footer/Footer';
 import AlertDialog from '../../components/AlertDialog/AlertDialog';
@@ -21,12 +21,14 @@ function LoginPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { state } = useLocation();
+  const query = new URLSearchParams(useLocation().search);
 
   const themeIsLight = useSelector(getThemeIsLight);
   const loading = useSelector(fetchUserLoading);
   const emailSent = useSelector(fetchUserEmailSent);
   const error = useSelector(fetchUserError);
   const user = useSelector(fetchUserValue);
+  const resetToken = query.get('resetToken');
 
   const [themeIsInitialized, setThemeIsInitialized] = useState(false);
   const [email, setEmail] = useState('');
@@ -37,7 +39,7 @@ function LoginPage() {
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [loginType, setLoginType] = useState(LOGIN_TYPES.LOGIN);
   const [showAlertDialog, setShowAlertDialog] = useState(false);
 
   useEffect(() => {
@@ -56,6 +58,12 @@ function LoginPage() {
     }
     setThemeIsInitialized(true);
   }, []);
+
+  useEffect(() => {
+    if (resetToken) {
+      setLoginType(LOGIN_TYPES.RESETPASSWORD);
+    }
+  }, [resetToken])
 
   useEffect(() => {
     if (themeIsLight) {
@@ -95,7 +103,12 @@ function LoginPage() {
   };
 
   function handleToggleSignUp() {
-    setIsSignUp(!isSignUp);
+    if (loginType !== LOGIN_TYPES.SIGNUP) {
+      setLoginType(LOGIN_TYPES.SIGNUP);
+    }
+    else {
+      setLoginType(LOGIN_TYPES.LOGIN);
+    }
   };
 
   function handleLogin() {
@@ -113,6 +126,13 @@ function LoginPage() {
 
     dispatch(registerUserRequest({ email, password }));
   };
+
+  function handleResetPassword() {
+    if (!validateFieldsOnSubmit()) {
+      return;
+    }
+
+  }
 
   function handleCloseAlertDialog() {
     setShowAlertDialog(false);
@@ -157,7 +177,7 @@ function LoginPage() {
       setPasswordError('');
     }
 
-    if (isSignUp) {
+    if (loginType !== LOGIN_TYPES.LOGIN) {
       if (!confirmPassword) {
         success = false;
         setConfirmPasswordError('Please fill out this field');
@@ -189,7 +209,7 @@ function LoginPage() {
       setPasswordError('');
     }
 
-    if (isSignUp && password && confirmPassword &&
+    if (loginType !== LOGIN_TYPES.LOGIN && password && confirmPassword &&
       password !== confirmPassword) {
       success = false;
       setConfirmPasswordError('Passwords do not match');
@@ -217,11 +237,14 @@ function LoginPage() {
 
     event.preventDefault();
 
-    if (isSignUp) {
+    if (loginType === LOGIN_TYPES.LOGIN) {
+      handleLogin();
+    }
+    else if (loginType === LOGIN_TYPES.SIGNUP) {
       handleSignUp();
     }
-    else {
-      handleLogin();
+    else if (loginType === LOGIN_TYPES.RESETPASSWORD) {
+      handleResetPassword();
     }
   }
 
@@ -297,12 +320,12 @@ function LoginPage() {
               {passwordError && <div className="login-input-error">{passwordError}</div>}
             </div>
 
-            {!isSignUp && (
+            {loginType === LOGIN_TYPES.LOGIN && (
               <div className='login-form links-main hide'>
                 <div className='login-button-second' onClick={handleForgotPassword}>Forgot password?</div>
               </div>
             )}
-            {isSignUp && (
+            {loginType !== LOGIN_TYPES.LOGIN && (
               <div className={`form-group ${confirmPassword ? 'active' : ''}`}>
                 <input className='login-input'
                   type={showConfirmPassword ? "text" : "password"}
@@ -329,14 +352,26 @@ function LoginPage() {
                 {error}
               </div>
             )}
-            <button className='login-button' onClick={isSignUp ? handleSignUp : handleLogin}>
-              {isSignUp ? 'Sign up' : 'Log in'}
-            </button>
+            {loginType === LOGIN_TYPES.LOGIN && (
+              <button className='login-button' onClick={handleLogin}>
+                Log in
+              </button>
+            )}
+            {loginType === LOGIN_TYPES.SIGNUP && (
+              <button className='login-button' onClick={handleSignUp}>
+                Sign up
+              </button>
+            )}
+            {loginType === LOGIN_TYPES.RESETPASSWORD && (
+              <button className='login-button' onClick={handleResetPassword}>
+                Reset password
+              </button>
+            )}
           </section>
           <section className="toggle-container">
-            <div>{isSignUp ? 'Already have an account?' : "Don't have an account?"}</div>
+            <div>{loginType === LOGIN_TYPES.SIGNUP ? 'Already have an account?' : "Don't have an account?"}</div>
             <button className='login-button-second' onClick={handleToggleSignUp}>
-              {isSignUp ? 'Login' : 'Sign up'}
+              {loginType === LOGIN_TYPES.SIGNUP ? 'Login' : 'Sign up'}
             </button>
           </section>
         </div>

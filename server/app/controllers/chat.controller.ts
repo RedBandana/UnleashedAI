@@ -129,7 +129,7 @@ export class ChatController {
                 const replyToNo = Number(request.replyToId);
 
                 let replyMessage: any;
-                if (replyToNo != null) {
+                if (!isNaN(replyToNo)) {
                     replyMessage = await userService.getMessageByIndexAllFields(userId, chatNo, replyToNo);
                 }
 
