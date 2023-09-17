@@ -206,7 +206,7 @@ function Chat(props) {
             createdOn: new Date(),
         }
 
-        if (replyToId) {
+        if (replyToId != null) {
             message.replyTo = {
                 id: replyToId,
                 text: reply?.text

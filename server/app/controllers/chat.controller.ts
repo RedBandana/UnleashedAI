@@ -129,7 +129,7 @@ export class ChatController {
                 const replyToNo = Number(request.replyToId);
 
                 let replyMessage: any;
-                if (replyToNo) {
+                if (replyToNo != null) {
                     replyMessage = await userService.getMessageByIndexAllFields(userId, chatNo, replyToNo);
                 }
 
@@ -137,15 +137,23 @@ export class ChatController {
                 const chat: any = await userService.getChatByIndex(userId, chatNo);
                 const messages = await userService.getMessages(userId, chatNo, 1, chat.settings.memory);
 
-                if (replyMessage) {
-                    Converter.messageToDtoNoReturn(replyMessage);
-                    messages.splice(messages.length - 1, 0, replyMessage);
+                for (let i = messages.length - 1; i >= 0; i--) {
+                    const msg = messages[i];
+                    if (!msg.replyTo) {
+                        continue;
+                    }
+
+                    const replyMsg: any = {
+                        content: msg.replyTo.text,
+                        isUser: msg.replyTo.isUser
+                    }
+                    messages.splice(i, 0, replyMsg);
                 }
 
                 const chatbotSettings = Converter.chatToChatbotSettings(chat.settings);
                 const finalMessages = ChatUtils.getRequestMessages(messages, chat.settings);
                 finalMessages.forEach(m => chatbotSettings.messages.push(Converter.messageToChatbotMessage(m)));
-                
+
                 const botChoices = await openAIService.sendChatCompletion(chatbotSettings);
                 const botMessage = await userService.createBotMessage(userId, chatNo, botChoices);
 

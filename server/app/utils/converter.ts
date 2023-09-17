@@ -48,12 +48,14 @@ export class Converter {
 
         if (message.replyTo) {
             message.replyTo.id = message.replyTo.messageIndex;
-            message.replyTo.text = message.replyTo.displayText;
+            message.replyTo.text = message.replyTo.messageContent;
+            message.replyTo.isUser = message.replyTo.messageIsUser;
 
             delete message.replyTo._id;
             delete message.replyTo.messageIndex;
             delete message.replyTo.messageId;
-            delete message.replyTo.displayText;
+            delete message.replyTo.messageContent;
+            delete message.replyTo.messageIsUser;
         }
  
         if (message.isUser) {

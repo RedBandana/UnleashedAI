@@ -9,7 +9,6 @@ import { UserPipeline, UserProjection } from '@app/db-models/dto/user.dto';
 import { Converter } from '@app/utils/converter';
 import { UserType } from '@app/enums/usertypes';
 import { createHashedPassword } from '@app/utils/functions';
-import { REPLY_TEXT_MAX_LENGTH } from '@app/utils/constants';
 
 const COLLECTION_NAME = DBModelName.USER;
 
@@ -200,7 +199,8 @@ export class UserService extends DBCollectionService {
             message.replyTo = {
                 messageId: replyMessage._id as any,
                 messageIndex: replyMessage.index,
-                displayText: replyText?.substring(0, REPLY_TEXT_MAX_LENGTH) as any,
+                messageContent: replyText,
+                messageIsUser: replyMessage.isUser,
             };
         }
 

@@ -32,12 +32,14 @@ export interface IReplyTo {
   _id?: ObjectId;
   messageId: ObjectId;
   messageIndex: number;
-  displayText: string;
+  messageContent: string;
+  messageIsUser: boolean;
 }
 
 export interface IReplyToDto {
   id: number;
   text: string;
+  isUser: boolean;
 }
 
 export interface IChat {
@@ -104,7 +106,8 @@ const SettingsSchema = new Schema<ISettings>({
 export const ReplyToSchema = new Schema<IReplyTo>({
   messageIndex: { type: Number, required: true },
   messageId: { type: Schema.Types.ObjectId, required: true },
-  displayText: { type: String, required: true },
+  messageContent: { type: String, required: true },
+  messageIsUser: { type: Boolean, required: true },
 })
 
 export const MessageSchema = new Schema<IMessage>({
