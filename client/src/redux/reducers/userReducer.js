@@ -111,6 +111,22 @@ const userReducer = handleActions(
       loading: false,
       error: payload,
     }),
+    [action.resetPasswordRequest]: (state) => ({
+      ...state,
+      loading: true,
+      error: null,
+    }),
+    [action.resetPasswordSuccess]: (state, { payload }) => ({
+      ...state,
+      user: payload,
+      loading: false,
+      error: null,
+    }),
+    [action.resetPasswordFailure]: (state, { payload }) => ({
+      ...state,
+      loading: false,
+      error: payload,
+    }),
     [action.logoutUserSuccess]: (state) => ({
       ...state,
       user: null,

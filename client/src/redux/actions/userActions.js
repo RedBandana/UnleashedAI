@@ -24,4 +24,8 @@ export const forgotPasswordRequest = createAction('FORGOT_PASSWORD_REQUEST');
 export const forgotPasswordSuccess = createAction('FORGOT_PASSWORD_SUCCESS');
 export const forgotPasswordFailure = createAction('FORGOT_PASSWORD_FAILURE');
 
+export const resetPasswordRequest = createAction('RESET_PASSWORD_REQUEST');
+export const resetPasswordSuccess = createAction('RESET_PASSWORD_SUCCESS');
+export const resetPasswordFailure = createAction('RESET_PASSWORD_FAILURE');
+
 export const logoutUserSuccess = createAction('LOGOUT_USER_SUCCESS');

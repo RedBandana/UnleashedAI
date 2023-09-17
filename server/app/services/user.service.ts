@@ -113,20 +113,34 @@ export class UserService extends DBCollectionService {
         return user;
     }
 
-    async updateUser(userId: string, user: any): Promise<any> {
-        const updateOperations: any = {};
+    async updateUser(userId: string, updateRequest: any): Promise<any> {
+        const updatedFields: any = {};
 
-        if (user.newPassword) {
-            updateOperations['password'] = await createHashedPassword(user.newPassword);
+        if (updateRequest.newPassword) {
+            updatedFields['password'] = await createHashedPassword(updateRequest.newPassword);
         }
 
-        if (user.newEmail) {
-            updateOperations['email'] = user.newEmail;
+        if (updateRequest.newEmail) {
+            updatedFields['email'] = updateRequest.newEmail;
         }
 
         this.query = this.model.updateOne(
             { _id: userId },
-            { $set: updateOperations }
+            { $set: updatedFields }
+        );
+        await this.query.lean().exec();
+        const newUser = await this.getDocumentByIdLean(userId, UserProjection.user);
+        return newUser;
+    }
+
+    async updateUserForce(userId: string, updatedFields: any): Promise<any> {
+        if (updatedFields.password) {
+            updatedFields.password = await createHashedPassword(updatedFields.password);
+        }
+
+        this.query = this.model.updateOne(
+            { _id: userId },
+            { $set: updatedFields }
         );
         await this.query.lean().exec();
         const newUser = await this.getDocumentByIdLean(userId, UserProjection.user);

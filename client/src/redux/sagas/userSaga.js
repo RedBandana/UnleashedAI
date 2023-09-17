@@ -63,6 +63,17 @@ function* forgotPasswordSaga(action) {
   }
 }
 
+function* resetPasswordSaga(action) {
+  try {
+    const newUser = yield call(userService.resetPassword, action.payload);
+    setUserSessionCookie(newUser.sessionToken);
+    delete newUser.sessionToken;
+    yield put(userActions.resetPasswordSuccess(newUser));
+  } catch (error) {
+    yield put(userActions.resetPasswordFailure(error.message));
+  }
+}
+
 function* userSaga() {
   yield takeLatest(userActions.fetchUserRequest().type, fetchUserSaga);
   yield takeLatest(userActions.registerUserRequest().type, registerUserSaga);
@@ -70,6 +81,7 @@ function* userSaga() {
   yield takeLatest(userActions.updateUserRequest().type, updateUserSaga);
   yield takeLatest(userActions.createGuestRequest().type, createGuestSaga);
   yield takeLatest(userActions.forgotPasswordRequest().type, forgotPasswordSaga);
+  yield takeLatest(userActions.resetPasswordRequest().type, resetPasswordSaga);
 }
 
 export default userSaga;

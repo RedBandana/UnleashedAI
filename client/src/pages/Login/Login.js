@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { createGuestRequest, fetchUserRequest, forgotPasswordRequest, loginUserRequest, logoutUserSuccess, registerUserRequest } from '../../redux/actions/userActions';
+import { createGuestRequest, fetchUserRequest, forgotPasswordRequest, loginUserRequest, logoutUserSuccess, registerUserRequest, resetPasswordRequest } from '../../redux/actions/userActions';
 import { useEffect, useState } from 'react';
 import { getCookie, validateEmail } from '../../utils/functions';
 import { getThemeIsLight } from '../../redux/selectors/uiSelectors';
@@ -132,6 +132,7 @@ function LoginPage() {
       return;
     }
 
+    dispatch(resetPasswordRequest({ email, password, token: resetToken }))
   }
 
   function handleCloseAlertDialog() {
@@ -272,15 +273,13 @@ function LoginPage() {
         <meta name="keywords" content="unleashed,ai,chat,chatbot,login,signup,register,signin" />
         <link rel="canonical" href="https://unleashedai.org/login" />
       </Helmet>
-      {
-        showAlertDialog && (
-          <AlertDialog
-            title="instructions sent"
-            text={`We have sent instructions to change your password to **${email}**. Please verify your inbox and spam folder.`}
-            onOk={handleCloseAlertDialog} onClose={handleCloseAlertDialog}
-          />
-        )
-      }
+      {showAlertDialog && (
+        <AlertDialog
+          title="instructions sent"
+          text={`We have sent instructions to change your password to **${email}**. Please verify your inbox and spam folder.`}
+          onOk={handleCloseAlertDialog} onClose={handleCloseAlertDialog}
+        />
+      )}
       <div className="login-page">
         <div className="login-container">
           <h1 className='login-title '><a className='a-none' href='/'>Unleashed AI</a></h1>
@@ -321,7 +320,7 @@ function LoginPage() {
             </div>
 
             {loginType === LOGIN_TYPES.LOGIN && (
-              <div className='login-form links-main hide'>
+              <div className='login-form links-main'>
                 <div className='login-button-second' onClick={handleForgotPassword}>Forgot password?</div>
               </div>
             )}
@@ -376,6 +375,11 @@ function LoginPage() {
           </section>
         </div>
       </div>
+      {loading && (
+        <div className='login-loading'>
+          <Loading />
+        </div>
+      )}
       <section className='login-button-container'>
         <button className='login-button' onClick={handleGuestSession}>Try as guest</button>
         <h2 className='login-button-text'>
@@ -383,13 +387,6 @@ function LoginPage() {
         </h2>
       </section>
       <Footer />
-      {
-        loading && (
-          <div className='login-loading'>
-            <Loading />
-          </div>
-        )
-      }
     </div>
   );
 }

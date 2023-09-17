@@ -137,15 +137,10 @@ export class UserController {
                 const now = new Date();
                 now.setHours(now.getHours() + 1);
 
-                const userEdit = {
-                    passwordResetToken: token,
-                    passwordResetExpires: now,
-                };
-                
-                await this.userService.updateUser(user._id, userEdit);
-                console.log('2', token, now);
+                const userEdit = { passwordResetToken: token, passwordResetExpires: now };
+                await this.userService.updateUserForce(user._id, userEdit);
 
-                const resetLink = `${process.env.BASE_URL}/login?prt=${token}`;
+                const resetLink = `${process.env.BASE_URL}/login?resetToken=${token}`;
                 const mailOptions = {
                     to: email,
                     from: process.env.EMAIL_USERNAME,
@@ -158,7 +153,6 @@ export class UserController {
 
                 mailTransporter.sendMail(mailOptions, (err: any) => {
                     if (err) {
-                        console.log('error', err);
                         res.status(400).send({ message: 'Cannot send forgot password email' });
                         return;
                     }
@@ -168,7 +162,6 @@ export class UserController {
                 });
 
             } catch (error) {
-                console.log('error', error);
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
             }
         });
@@ -199,9 +192,10 @@ export class UserController {
                     return;
                 }
 
-                const userEdit = { newPassword: password } as IUserRequest;
-                const finalUser = await this.userService.updateUser(user._id, userEdit);
+                const userEdit = { password: password, passwordResetToken: '', passwordResetExpires: now };
+                const finalUser = await this.userService.updateUserForce(user._id, userEdit);
                 const sessionToken = generateSessionToken(finalUser._id);
+
                 Controller.handlePostResponse(res, { id: finalUser._id, sessionToken });
             } catch (error) {
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);

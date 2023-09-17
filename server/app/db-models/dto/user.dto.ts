@@ -24,6 +24,8 @@ export abstract class UserProjection {
     "name": true,
     "email": true,
     "password": true,
+    "passwordResetToken": true,
+    "passwordResetExpires": true,
   }
 
   static allChatCount: { [key: string]: any } = {

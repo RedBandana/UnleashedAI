@@ -62,3 +62,13 @@ export const forgetPassword = async (userData) => {
     throw new Error(message);
   }
 };
+
+export const resetPassword = async (userData) => {
+  try {
+    const response = await axios.post(`${API_URL}/reset-password`, userData, getHttpResponseConfig());
+    return response.data;
+  } catch (error) {
+    const message = error.response.data.message ?? error.message;
+    throw new Error(message);
+  }
+};
