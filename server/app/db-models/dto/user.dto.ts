@@ -28,6 +28,15 @@ export abstract class UserProjection {
     "passwordResetExpires": true,
   }
 
+  static userConfirm: { [key: string]: any } = {
+    "_id": true,
+    "name": true,
+    "email": true,
+    "isVerified": true,
+    "verifyAccountToken": true,
+    "verifyAccountExpires": true,
+  }
+
   static allChatCount: { [key: string]: any } = {
     "_id": true,
     "chatCount": { $size: "$chats" },

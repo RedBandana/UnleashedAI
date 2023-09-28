@@ -90,6 +90,81 @@ export class UserController {
             }
         });
 
+        this.router.get('/me/verify-account', verifySessionToken, async (req: IRequest, res: Response) => {
+            try {
+                const userId = req.user.userId;
+                const user: any = await this.userService.getDocumentByIdLean(userId, UserProjection.userConfirm);
+                if (!user) {
+                    res.status(400).json({ message: 'Something went wrong, please try again later' });
+                    return;
+                }
+
+                const token = crypto.randomBytes(20).toString('hex');
+                const expirationTime = new Date();
+                expirationTime.setHours(expirationTime.getHours() + 1);
+
+                const userEdit = { verifyAccountToken: token, verifyAccountExpires: expirationTime };
+                await this.userService.updateUserForce(user._id, userEdit);
+
+                const verifyLink = `${process.env.BASE_URL}?confirmToken=${token}`;
+                const mailOptions = {
+                    to: user.email,
+                    from: process.env.EMAIL_USERNAME,
+                    template: 'verify-account',
+                    subject: 'Unleashed AI Verify Account',
+                    text: `Unleashed AI Verify Account Click on the link below to verify your account: ${verifyLink}`,
+                    html: `<h1>Unleashed AI Verify Account</h1><p>Click <a href='${verifyLink}' target='_blank'>here</a> to verify your account</p>`,
+                    context: { token },
+                };
+
+                mailTransporter.sendMail(mailOptions, (err: any) => {
+                    if (err) {
+                        res.status(400).send({ message: 'Cannot send verify account email' });
+                        return;
+                    }
+                    Controller.handleHttpResponse(res, { message: 'You received an email, please verify your inbox and spam folder' });
+                });
+            } catch (error) {
+                res.status(StatusCodes.NOT_FOUND).send(error.message);
+            }
+        });
+
+        this.router.post("/:userId/verify-account", async (req: Request, res: Response) => {
+            try {
+                const userId = decodeURIComponent(req.params.userId);
+                const { token } = req.body;
+
+                const user: any = await this.userService.getDocumentByIdLean(userId, UserProjection.userConfirm);
+                if (!user) {
+                    res.status(400).json({ message: 'User does not exist' });
+                    return;
+                }
+
+                if (user.isVerified) {
+                    Controller.handleHttpResponse(res, { message: 'Your account has been successfully verified' });
+                    return;
+                }
+
+                if (token !== user.verifyAccountToken) {
+                    res.status(400).send({ message: 'Something went wrong, please try again later' });
+                    return;
+                }
+
+                const currentTime = new Date();
+                if (currentTime > user.verifyAccountExpires) {
+                    res.status(400).send({ message: 'Account verification time limit expired' });
+                    return;
+                }
+
+                const userEdit = { isVerified: true, verifyAccountToken: '', verifyAccountExpires: currentTime };
+                await this.userService.updateUserForce(user._id, userEdit);
+
+                Controller.handleHttpResponse(res, { message: 'Your account has been successfully verified' });
+            } catch (error) {
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
+            }
+        });
+
         this.router.post("/login", async (req: Request, res: Response) => {
             try {
                 const { email, password } = req.body;
@@ -134,10 +209,10 @@ export class UserController {
                 }
 
                 const token = crypto.randomBytes(20).toString('hex');
-                const now = new Date();
-                now.setHours(now.getHours() + 1);
+                const expirationTime = new Date();
+                expirationTime.setHours(expirationTime.getHours() + 1);
 
-                const userEdit = { passwordResetToken: token, passwordResetExpires: now };
+                const userEdit = { passwordResetToken: token, passwordResetExpires: expirationTime };
                 await this.userService.updateUserForce(user._id, userEdit);
 
                 const resetLink = `${process.env.BASE_URL}/login?resetToken=${token}`;
@@ -156,9 +231,7 @@ export class UserController {
                         res.status(400).send({ message: 'Cannot send forgot password email' });
                         return;
                     }
-
-                    Controller.handlePostResponse(res, { message: 'You received an email, please verify your inbox and spam folder' });
-                    return;
+                    Controller.handleHttpResponse(res, { message: 'You received an email, please verify your inbox and spam folder' });
                 });
 
             } catch (error) {
@@ -186,17 +259,17 @@ export class UserController {
                     return;
                 }
 
-                const now = new Date();
-                if (now > user.passwordResetExpires) {
+                const currentTime = new Date();
+                if (currentTime > user.passwordResetExpires) {
                     res.status(400).send({ message: 'Reset password time limit expired' });
                     return;
                 }
 
-                const userEdit = { password: password, passwordResetToken: '', passwordResetExpires: now };
+                const userEdit = { password: password, passwordResetToken: '', passwordResetExpires: currentTime };
                 const finalUser = await this.userService.updateUserForce(user._id, userEdit);
                 const sessionToken = generateSessionToken(finalUser._id);
 
-                Controller.handlePostResponse(res, { id: finalUser._id, sessionToken });
+                Controller.handleHttpResponse(res, { id: finalUser._id, sessionToken });
             } catch (error) {
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
             }
@@ -207,7 +280,7 @@ export class UserController {
                 const user = await this.userService.createGuest();
                 const userDto = Converter.objectToProjected(user, UserProjection.user);
                 const sessionToken = generateSessionToken(userDto._id);
-                res.status(StatusCodes.CREATED).send({ id: userDto._id, sessionToken });
+                Controller.handlePostResponse(res, { id: userDto._id, sessionToken });
             } catch (error) {
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
             }
@@ -222,9 +295,9 @@ export class UserController {
         });
 
         this.router.get('/:userId', verifyAdminSessionToken, async (req: Request, res: Response) => {
-            const id = decodeURIComponent(req.params.userId);
             try {
-                const user = await this.userService.getDocumentByIdLean(id, UserProjection.user);
+                const userId = decodeURIComponent(req.params.userId);
+                const user = await this.userService.getDocumentByIdLean(userId, UserProjection.user);
                 Controller.handleGetResponse(res, user);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
@@ -232,8 +305,8 @@ export class UserController {
         });
 
         this.router.get('/email/:email', verifyAdminSessionToken, async (req: Request, res: Response) => {
-            const email = decodeURIComponent(req.params.email)?.toLowerCase();
             try {
+                const email = decodeURIComponent(req.params.email)?.toLowerCase();
                 const user = await this.userService.getDocumentByEmail(email, UserProjection.user);
                 Controller.handleGetResponse(res, user);
             } catch (error) {

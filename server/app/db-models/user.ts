@@ -10,6 +10,9 @@ export interface IUser extends Document {
   password: string;
   passwordResetToken: string;
   passwordResetExpires: Date;
+  verifyAccountToken: string;
+  verifyAccountExpires: Date;
+  isVerified: boolean;
   type: number,
   createdOn: Date;
   chats: IChat[];
@@ -27,6 +30,9 @@ const UserSchema = new Schema<IUser>({
   password: { type: String },
   passwordResetToken: { type: String },
   passwordResetExpires: { type: Date },
+  verifyAccountToken: { type: String },
+  verifyAccountExpires: { type: Date },
+  isVerified: { type: Boolean },
   createdOn: { type: Date, default: Date.now, required: true },
   type: { type: Number, default: 0, required: true },
   chats: { type: [ChatSchema], required: true, default: [] },
