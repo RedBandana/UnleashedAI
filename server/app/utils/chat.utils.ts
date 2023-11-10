@@ -44,11 +44,11 @@ export class ChatUtils {
 
     static getDefaultBotMessage(index: number, choices: string[]): IMessage {
         const message: IMessage = {
-            choices: choices, 
+            choices: choices,
             index: index,
             isActive: true,
-            choiceIndex: 0, 
-            isUser: false, 
+            choiceIndex: 0,
+            isUser: false,
             createdOn: new Date()
         }
 
@@ -64,7 +64,13 @@ export class ChatUtils {
     }
 
     static getModelMaxTokens = (model: string) => {
-        if (model === 'gpt-4') {
+        if (model === 'gpt-4-1106-preview') {
+            return 128000;
+        }
+        else if (model === 'gpt-4-vision-preview') {
+            return 128000;
+        }
+        else if (model === 'gpt-4') {
             return 8192;
         }
         else if (model === 'gpt-4-32k') {

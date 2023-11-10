@@ -162,6 +162,7 @@
 
 .chat-message-control-inactive {
   cursor: default;
+  color: var(--color-options-main);
 }
 
 .chat-message-dots-container {
@@ -176,6 +177,7 @@
   margin: 0 2px;
   height: 5px;
   border-radius: 50%;
+  background-color: var(--color-options-main);
 }
 
 .chat-message-dot-active {
