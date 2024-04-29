@@ -36,31 +36,29 @@ export function getCookieOptions(): CookieOptions {
     return cookieOptions;
 }
 
-export function signCookie() {
-    const keyName = 'unleashedai-cdn-sk00'; // Your signing key name
-    const base64UrlEncodedUrlOrPrefix = 'aHR0cHM6Ly9jZG4udW5sZWFzaGVkYWkub3JnL3VzZXJzLzAwLw=='; // Base64 URL encoded URL or prefix of your bucket
-    const signingKey = process.env.SIGNING_KEY ?? ''; // Your signing key
+export function signCookie(url: string) {
+    const keyName = process.env.SIGNING_KEY_NAME ?? ''; // Your signing key name
+    const key = process.env.SIGNING_KEY ?? ''; // Your signing key
+    const encodedUrl = btoa(url);
     const expirationTimestamp = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now
+    const policy = `URLPrefix=${encodedUrl}:Expires=${expirationTimestamp}:KeyName=${keyName}`;
+    const signature = getSignatureForUrl(key, policy);
 
-    // Create the unsigned policy string
-    const unsignedPolicy = `URLPrefix=${base64UrlEncodedUrlOrPrefix}:Expires=${expirationTimestamp}:KeyName=${keyName}`;
-
-    // Sign the policy using HMAC-SHA-1 with the signing key
-    const signature = crypto.createHmac('sha1', signingKey)
-        .update(unsignedPolicy)
-        .digest('base64')
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=+$/, ''); // URL-safe Base64 encode the signature
-
-    // Create the cookie value
-    const cookieValue = `${unsignedPolicy}:Signature=${signature}`;
-
-    // Example: Effective domain and path where the cookie should be sent
+    const cookieValue = `${policy}:Signature=${signature}`;
     const domain = 'unleashedai.org';
     const path = '/';
 
-    // Create Set-Cookie header value
     const setCookieValue = `Cloud-CDN-Cookie=${cookieValue}; Domain=${domain}; Path=${path}; Expires=${new Date(expirationTimestamp * 1000).toUTCString()}; HttpOnly`;
     return setCookieValue;
+
+}
+
+function getSignatureForUrl(key: string, policy: string) {
+    const decodedKey = Buffer.from(key, 'base64');
+    const hmac = crypto.createHmac('sha1', decodedKey);
+    hmac.update(policy);
+    const digest = hmac.digest();
+    const signature = Buffer.from(digest).toString('base64url');
+
+    return signature;
 }
