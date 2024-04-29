@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import multer = require('multer');
 import { FileProjection, IFile } from '@app/db-models/file';
 import { verifyAdminSessionToken } from './authentication';
-import { getCookieOptions, getSignatureForUrl, getUnixTimeInMs } from '@app/utils/functions';
+import { getCookieOptions, signCookie } from '@app/utils/functions';
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -33,18 +33,13 @@ export class FileController {
 
         this.router.get('/sign', async (req: Request, res: Response) => {
             try {
-                const urlPrefix = 'https://cdn.unleashedai.org/users/00/';
-                const expireTime = getUnixTimeInMs(1);
-                const keyName = 'unleashedai-cdn-sk00';
-                const key = process.env.SIGNING_KEY ?? '';
-                const policy = `URLPrefix=${urlPrefix}:Expires=${expireTime}:KeyName=${keyName}`;
-                const signature = getSignatureForUrl(key, policy);
-                console.log('policy', policy);
-                console.log('signature', signature);
-
                 const cookieOptions = getCookieOptions();
-                res.cookie('Cloud-CDN-Cookie', policy, cookieOptions);
-                res.cookie('Signature', signature, cookieOptions);
+                const cookieInfo = signCookie();
+                console.log('policy', cookieInfo.policy);
+                console.log('signature', cookieInfo.signature);
+                
+                res.cookie('Cloud-CDN-Cookie', cookieInfo.policy, cookieOptions);
+                res.cookie('Signature', cookieInfo.signature, cookieOptions);
                 res.status(StatusCodes.OK).send('Cookie signed');
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);

@@ -1,5 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
+import * as fs from 'fs';
+
 import { CookieOptions } from 'express';
 
 export function validateEmail(email: string): boolean {
@@ -35,7 +37,43 @@ export function getCookieOptions(): CookieOptions {
     return cookieOptions;
 }
 
-export function getSignatureForUrl(privateKey: string, input: string): string {
+export function signCookie() {
+    const urlPrefix = 'https://cdn.unleashedai.org/users/00/';
+    const expiration = getUnixTimeInMs(1);
+    const keyName = 'unleashedai-cdn-sk00';
+    const keyFilePath = 'private/unleashedai-cdn-sk00.pem';
+    
+    // Read the key file (assuming the key is in base64 format)
+    const base64Key = fs.readFileSync(keyFilePath, 'utf8');
+    const key = Buffer.from(base64Key, 'base64');
+
+    // Validate URL Prefix
+    try {
+        const parsedUrl = new URL(urlPrefix);
+        if (!parsedUrl.protocol.startsWith('http')) {
+            throw new Error('urlPrefix must start with either http:// or https://');
+        }
+        if (parsedUrl.search) {
+            throw new Error('urlPrefix must not include query parameters');
+        }
+    } catch (e) {
+        throw new Error(`urlPrefix malformed or invalid URL: ${urlPrefix}`);
+    }
+
+    // Encode the URL Prefix
+    const encodedUrlPrefix = Buffer.from(urlPrefix).toString('base64url');
+
+    const policy = `URLPrefix=${encodedUrlPrefix}:Expires=${expiration}:KeyName=${keyName}`;
+    const signature = getSignatureForUrl(key, policy);
+
+    const cookieInfo = {
+        policy, signature
+    };
+
+    return cookieInfo;
+}
+
+export function getSignatureForUrl(privateKey: Buffer, input: string): string {
     const hmac = crypto.createHmac('sha1', privateKey);
     hmac.update(input);
     const signature = hmac.digest('base64url');
