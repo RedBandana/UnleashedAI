@@ -29,7 +29,7 @@ export function getCookieOptions(): CookieOptions {
         sameSite: 'none', // The cookie will be sent with both same-site and cross-site requests since the request initiator's site (mysite.com) is different from the server's site (server.mysite.com)
         secure: true,
         maxAge: 1000 * 60 * 60 * 24 * 7,
-        domain: 'cdn.unleashedai.org'
+        domain: 'unleashedai.org'
     };
 
     return cookieOptions;
