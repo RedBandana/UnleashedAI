@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import multer = require('multer');
 import { FileProjection, IFile } from '@app/db-models/file';
 import { verifyAdminSessionToken } from './authentication';
-import { getCookieOptions, signCookie } from '@app/utils/functions';
+import { signCookie } from '@app/utils/functions';
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -33,11 +33,9 @@ export class FileController {
 
         this.router.get('/sign', async (req: Request, res: Response) => {
             try {
-                const cookieOptions = getCookieOptions();
                 const cookieInfo = signCookie();
                 console.log('cookieInfo', cookieInfo);
-
-                res.cookie('Cloud-CDN-Cookie', cookieInfo, cookieOptions);
+                res.setHeader('Set-Cookie', cookieInfo);
                 res.status(StatusCodes.OK).send('Cookie signed');
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);

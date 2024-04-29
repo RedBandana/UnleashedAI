@@ -1,6 +1,5 @@
 import * as bcrypt from 'bcrypt';
 const crypto = require('crypto');
-const base64url = require('base64url');
 
 import { CookieOptions } from 'express';
 
@@ -38,20 +37,30 @@ export function getCookieOptions(): CookieOptions {
 }
 
 export function signCookie() {
-    const urlPrefix = 'https://cdn.unleashedai.org/users/00/';
-    const expiration = getUnixTimeInMs(1);
-    const keyName = 'unleashedai-cdn-sk00';
-    const encodedUrlPrefix = base64url(urlPrefix);
+    const keyName = 'unleashedai-cdn-sk00'; // Your signing key name
+    const base64UrlEncodedUrlOrPrefix = 'aHR0cHM6Ly9jZG4udW5sZWFzaGVkYWkub3JnL3VzZXJzLzAwLw=='; // Base64 URL encoded URL or prefix of your bucket
+    const signingKey = process.env.SIGNING_KEY ?? ''; // Your signing key
+    const expirationTimestamp = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now
 
-    const keyString = process.env.SIGNING_KEY ?? '';
-    const keyBytes = Buffer.from(keyString, 'utf-8');
-    const hmac = crypto.createHmac('sha1', keyBytes);
+    // Create the unsigned policy string
+    const unsignedPolicy = `URLPrefix=${base64UrlEncodedUrlOrPrefix}:Expires=${expirationTimestamp}:KeyName=${keyName}`;
 
-    const policy = `URLPrefix=${encodedUrlPrefix}:Expires=${expiration}:KeyName=${keyName}`;
-   
-    hmac.update(policy);
-    const signature = base64url.fromBase64(hmac.digest('base64url'));
+    // Sign the policy using HMAC-SHA-1 with the signing key
+    const signature = crypto.createHmac('sha1', signingKey)
+        .update(unsignedPolicy)
+        .digest('base64')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/, ''); // URL-safe Base64 encode the signature
 
-    const cookieInfo = `${policy}:Signature=${signature}`;
-    return cookieInfo;
+    // Create the cookie value
+    const cookieValue = `${unsignedPolicy}:Signature=${signature}`;
+
+    // Example: Effective domain and path where the cookie should be sent
+    const domain = 'unleashedai.org';
+    const path = '/';
+
+    // Create Set-Cookie header value
+    const setCookieValue = `Cloud-CDN-Cookie=${cookieValue}; Domain=${domain}; Path=${path}; Expires=${new Date(expirationTimestamp * 1000).toUTCString()}; HttpOnly`;
+    return setCookieValue;
 }
