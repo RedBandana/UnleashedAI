@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import * as crypto from 'crypto';
+const crypto = require('crypto');
 const base64url = require('base64url');
 
 import { CookieOptions } from 'express';
@@ -41,25 +41,17 @@ export function signCookie() {
     const urlPrefix = 'https://cdn.unleashedai.org/users/00/';
     const expiration = getUnixTimeInMs(1);
     const keyName = 'unleashedai-cdn-sk00';
-    const keyString = process.env.SIGNING_KEY ?? '';
-
-    const keyBytes = Buffer.from(keyString);
     const encodedUrlPrefix = base64url(urlPrefix);
 
-    // Encode the URL Prefix
+    const keyString = process.env.SIGNING_KEY ?? '';
+    const keyBytes = Buffer.from(keyString, 'utf-8');
+    const hmac = crypto.createHmac('sha1', keyBytes);
+
     const policy = `URLPrefix=${encodedUrlPrefix}:Expires=${expiration}:KeyName=${keyName}`;
-    const signature = getSignatureForUrl(keyBytes, policy);
-
-    const cookieInfo = {
-        policy, signature
-    };
-
-    return cookieInfo;
-}
-
-export function getSignatureForUrl(privateKey: Buffer, input: string): string {
-    const hmac = crypto.createHmac('sha1', privateKey);
-    hmac.update(input);
+   
+    hmac.update(policy);
     const signature = base64url.fromBase64(hmac.digest('base64url'));
-    return signature;
+
+    const cookieInfo = `${policy}:Signature=${signature}`;
+    return cookieInfo;
 }

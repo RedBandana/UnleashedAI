@@ -35,11 +35,9 @@ export class FileController {
             try {
                 const cookieOptions = getCookieOptions();
                 const cookieInfo = signCookie();
-                console.log('policy', cookieInfo.policy);
-                console.log('signature', cookieInfo.signature);
-                
-                res.cookie('Cloud-CDN-Cookie', cookieInfo.policy, cookieOptions);
-                res.cookie('Signature', cookieInfo.signature, cookieOptions);
+                console.log('cookieInfo', cookieInfo);
+
+                res.cookie('Cloud-CDN-Cookie', cookieInfo, cookieOptions);
                 res.status(StatusCodes.OK).send('Cookie signed');
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);
