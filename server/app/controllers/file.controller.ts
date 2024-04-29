@@ -34,7 +34,6 @@ export class FileController {
         this.router.get('/sign', async (req: Request, res: Response) => {
             try {
                 const cookieInfo = signCookie("https://cdn.unleashedai.org/users/00/");
-                console.log('cookieInfo', cookieInfo);
                 res.setHeader('Set-Cookie', cookieInfo);
                 res.status(StatusCodes.OK).send('Cookie signed');
             } catch (error) {

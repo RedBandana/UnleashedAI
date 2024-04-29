@@ -12,7 +12,7 @@ import { IRequest } from '@app/interfaces/request';
 
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
-import { createHashedPassword, validateEmail } from '@app/utils/functions';
+import { createHashedPassword, signCookie, validateEmail } from '@app/utils/functions';
 import { IUserRequest } from '@app/db-models/user';
 import { mailTransporter } from '@app/utils/mail-transproter';
 
@@ -31,6 +31,8 @@ export class UserController {
             try {
                 const userId = req.user.userId;
                 const user = await this.userService.getDocumentByIdLean(userId, UserProjection.user);
+                const cookieInfo = signCookie("https://cdn.unleashedai.org/users/00/");
+                res.setHeader('Set-Cookie', cookieInfo);
                 Controller.handleGetResponse(res, user);
             } catch (error) {
                 res.status(StatusCodes.NOT_FOUND).send(error.message);

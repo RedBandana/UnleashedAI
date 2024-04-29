@@ -48,9 +48,10 @@ export function signCookie(url: string) {
     const domain = 'unleashedai.org';
     const path = '/';
 
-    const setCookieValue = `Cloud-CDN-Cookie=${cookieValue}; Domain=${domain}; Path=${path}; Expires=${new Date(expirationTimestamp * 1000).toUTCString()}; HttpOnly`;
-    return setCookieValue;
+    const setCookieValue = `Cloud-CDN-Cookie=${cookieValue}; Domain=${domain}; Path=${path}; HttpOnly`;
+    console.log('setCookieValue', setCookieValue);
 
+    return setCookieValue;
 }
 
 function getSignatureForUrl(key: string, policy: string) {
