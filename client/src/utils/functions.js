@@ -48,10 +48,7 @@ export function parseToRightType(obj, property, value) {
 }
 
 export function getModelMaxTokens(model) {
-  if (model === 'gpt-4-1106-preview') {
-    return 128000;
-  }
-  else if (model === 'gpt-4-vision-preview') {
+  if (model === 'gpt-4-turbo' || model === 'gpt-4o') {
     return 128000;
   }
   else if (model === 'gpt-4') {
@@ -61,16 +58,13 @@ export function getModelMaxTokens(model) {
     return 32768;
   }
   else if (model === 'gpt-3.5-turbo') {
-    return 4096;
+    return 16385;
   }
   else if (model === 'code-davinci-002') {
     return 80001;
   }
-  else if (model === 'gpt-3.5-turbo-16k') {
-    return 16384;
-  }
   else {
-    return 4096;
+    return 8192;
   }
 }
 

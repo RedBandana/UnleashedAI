@@ -63,32 +63,26 @@ export class ChatUtils {
         return totalTokens;
     }
 
-    static getModelMaxTokens = (model: string) => {
-        if (model === 'gpt-4-1106-preview') {
-            return 128000;
-        }
-        else if (model === 'gpt-4-vision-preview') {
-            return 128000;
+    static getModelMaxTokens(model: string) {
+        if (model === 'gpt-4-turbo' || model === 'gpt-4o') {
+          return 128000;
         }
         else if (model === 'gpt-4') {
-            return 8192;
+          return 8192;
         }
         else if (model === 'gpt-4-32k') {
-            return 32768;
+          return 32768;
         }
         else if (model === 'gpt-3.5-turbo') {
-            return 4096;
+          return 16385;
         }
         else if (model === 'code-davinci-002') {
-            return 80001;
-        }
-        else if (model === 'gpt-3.5-turbo-16k') {
-            return 16384;
+          return 80001;
         }
         else {
-            return 4096;
+          return 8192;
         }
-    }
+      }
 
     static getRequestMessages = (messages: IMessageDto[], settings: ISettings) => {
         const modelMaxToken = this.getModelMaxTokens(settings.model);
