@@ -65,7 +65,7 @@ export const ChatbotSettingsSchema = new Schema<ChatbotSettings>({
   messages: {
     type: [ChatbotMessageSchema], required: true
   },
-  model: { type: String, required: true, default: 'gpt-3.5-turbo' },
+  model: { type: String, required: true, default: 'gpt-4o-mini' },
   temperature: { type: Number, required: true, default: 0.7 },
   stream: { type: Boolean },
   top_p: { type: Number },

@@ -84,7 +84,7 @@ export interface ISettings {
 }
 
 const SettingsSchema = new Schema<ISettings>({
-  model: { type: String, required: true, default: "gpt-3.5-turbo" },
+  model: { type: String, required: true, default: "gpt-4o-mini" },
   system: {
     type: String,
     required: true,

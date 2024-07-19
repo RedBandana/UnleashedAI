@@ -48,7 +48,7 @@ export function parseToRightType(obj, property, value) {
 }
 
 export function getModelMaxTokens(model) {
-  if (model === 'gpt-4-turbo' || model === 'gpt-4o') {
+  if (model === 'gpt-4o-mini' || model === 'gpt-4o' || model === 'gpt-4-turbo') {
     return 128000;
   }
   else if (model === 'gpt-4') {
