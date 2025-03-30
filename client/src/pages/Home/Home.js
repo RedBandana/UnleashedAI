@@ -52,7 +52,6 @@ function Home() {
                 </section>
                 <section className='home-about-us'>
                     <div>Contact us at info@unleashedai.org</div>
-                    <div>Other project: <a className='links-main' href="https://rate-it.org/" target='_blank'>Rate It</a></div>
                 </section>
             </div>
             <Footer />
