@@ -1,4 +1,4 @@
-# UnleashedAI
+# Unleashed AI
 Unleashed AI is a custom front-end interface for OpenAI's chat completion API.
 
 ## Getting started
